@@ -16,7 +16,7 @@ public class RutaExample {
 	public static void main(String[] args) 
 			throws Exception
 	{
-		String rutaScript = "DECLARE MyType; CW{-> MyType};";
+		String rutaScript = "DECLARE MyType; W{-> MyType};";
 
 		Pair<AnalysisEngineDescription, TypeSystemDescription> descs = RutaUtil.initRutaFE(rutaScript);
 				

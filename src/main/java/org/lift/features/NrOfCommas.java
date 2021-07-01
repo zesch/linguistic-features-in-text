@@ -2,6 +2,7 @@ package org.lift.features;
 
 import java.util.Set;
 
+import org.apache.uima.fit.descriptor.LanguageCapability;
 import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -17,6 +18,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  * Counts the appearance commas
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
+@LanguageCapability({ "de","en" })
 public class NrOfCommas 
 	extends FeatureExtractor_ImplBase
 {
