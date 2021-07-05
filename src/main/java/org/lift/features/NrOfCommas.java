@@ -15,7 +15,7 @@ import org.lift.type.FeatureExtractionTarget;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
- * Counts the appearance commas
+ * Counts the number of commas
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
