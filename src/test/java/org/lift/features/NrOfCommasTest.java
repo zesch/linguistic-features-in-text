@@ -1,4 +1,4 @@
-package org.lift.features.test;
+package org.lift.features;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.junit.Assert.assertEquals;
@@ -9,10 +9,8 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
-import org.lift.features.NrOfCommas;
-import org.lift.features.NrOfCommasAlternative;
 import org.lift.features.api.Feature;
-import org.lift.features.test.util.FeatureTestUtil;
+import org.lift.features.util.FeatureTestUtil;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 

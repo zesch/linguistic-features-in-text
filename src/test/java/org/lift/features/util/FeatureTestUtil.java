@@ -1,4 +1,4 @@
-package org.lift.features.test.util;
+package org.lift.features.util;
 
 import java.util.Set;
 

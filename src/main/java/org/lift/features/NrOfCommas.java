@@ -10,7 +10,6 @@ import org.lift.features.api.Feature;
 import org.lift.features.api.FeatureExtractor_ImplBase;
 import org.lift.features.api.FeatureType;
 import org.lift.features.api.LiftFeatureExtrationException;
-import org.lift.type.FeatureExtractionTarget;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
@@ -26,7 +25,7 @@ public class NrOfCommas
 	public static final String NR_OF_COMMAS = "nrOfCommas";
 	
 	@Override
-	public Set<Feature> extract(JCas jcas, FeatureExtractionTarget target) 
+	public Set<Feature> extract(JCas jcas) 
 			throws LiftFeatureExtrationException
 	{		
 		int nrOfCommas = 0;

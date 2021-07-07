@@ -13,7 +13,6 @@ import org.lift.features.api.Feature;
 import org.lift.features.api.FeatureExtractor_ImplBase;
 import org.lift.features.api.FeatureType;
 import org.lift.features.api.LiftFeatureExtrationException;
-import org.lift.type.FeatureExtractionTarget;
 
 /**
  * Counts the appearance commas
@@ -35,7 +34,7 @@ public class CountFE
 	}
 	
 	@Override
-	public Set<Feature> extract(JCas jcas, FeatureExtractionTarget target) 
+	public Set<Feature> extract(JCas jcas) 
 			throws LiftFeatureExtrationException
 	{		
 		int nrOfFeature = 0;

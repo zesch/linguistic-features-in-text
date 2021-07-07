@@ -1,21 +1,17 @@
-package org.lift.features.test;
+package org.lift.structures;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
-import org.lift.features.CountFE;
-import org.lift.features.api.Feature;
-import org.lift.features.test.util.FeatureTestUtil;
+import org.lift.type.Structure;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
-public class CountFETest {
+public class CommaAnnotatorTest {
 
 	@Test
 	public void countFE_test()
@@ -34,15 +30,11 @@ public class CountFETest {
         Token t2 = new Token(jcas, 5, 6);
         t2.addToIndexes();
         
-		CountFE fe = new CountFE(
-				"commaCount",
-				Token.class.getName(),
-				feature -> feature.equals(",")
-		);
+		CommaAnnotator fe = new CommaAnnotator();
+		fe.process(jcas);
 		
-		Set<Feature> features = fe.extract(jcas);
-        assertEquals(1, features.size());
-        FeatureTestUtil.assertFeatures("commaCount", 0.5, features, 0.00001);
-        System.out.println(features);
+		for (Structure s : JCasUtil.select(jcas, Structure.class)) {
+			System.out.println(s);
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package org.lift.ruta;
+package org.lift.structures.ruta;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.uima.UIMAFramework;

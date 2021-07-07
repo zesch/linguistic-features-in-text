@@ -1,4 +1,4 @@
-package org.lift.ruta;
+package org.lift.structures.ruta;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -41,13 +41,22 @@ public class RutaUtil {
 		rutaAED.getAnalysisEngineMetaData().getConfigurationParameterSettings().setParameterValue(RutaEngine.PARAM_RULES, rutaScript);
 		rutaAED.getAnalysisEngineMetaData().setTypeSystem(rutaTSD);
 		
-		TypeSystemDescription scannedTSD = TypeSystemDescriptionFactory.createTypeSystemDescription();
-		List<TypeSystemDescription> tsds = new ArrayList<>();
-		tsds.add(scannedTSD);
-		tsds.add(rutaTSD);
-		TypeSystemDescription mergeTypeSystemDescription = CasCreationUtils.mergeTypeSystems(tsds, UIMAFramework.newDefaultResourceManager());
+		TypeSystemDescription mergeTypeSystemDescription = mergeTSDs(
+				TypeSystemDescriptionFactory.createTypeSystemDescription(),
+				rutaTSD
+		);
 
 	    return new ImmutablePair<AnalysisEngineDescription, TypeSystemDescription>(
 	            rutaAED, mergeTypeSystemDescription);
+	}
+	
+	public static TypeSystemDescription mergeTSDs(TypeSystemDescription ... descriptions)
+			throws ResourceInitializationException 
+	{
+		List<TypeSystemDescription> tsds = new ArrayList<>();
+		for (TypeSystemDescription tsd : descriptions) {
+			tsds.add(tsd);
+		}
+		return CasCreationUtils.mergeTypeSystems(tsds, UIMAFramework.newDefaultResourceManager());
 	}
 }

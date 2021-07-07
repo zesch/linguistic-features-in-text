@@ -10,7 +10,7 @@ public abstract class FeatureExtractor_ImplBase
 
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
-		return extract(jcas, null);
+		return extract(jcas);
 	}	
 
 	@Override
