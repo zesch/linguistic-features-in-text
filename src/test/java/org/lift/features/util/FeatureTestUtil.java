@@ -2,8 +2,8 @@ package org.lift.features.util;
 
 import java.util.Set;
 
-import org.dkpro.tc.api.features.Feature;
 import org.junit.Assert;
+import org.lift.api.Feature;
 
 public class FeatureTestUtil {
 

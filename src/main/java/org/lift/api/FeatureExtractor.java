@@ -20,7 +20,6 @@ package org.lift.api;
 import java.util.Set;
 
 import org.apache.uima.jcas.JCas;
-import org.dkpro.tc.api.features.Feature;
 
 /**
  * Common signature for feature extractors which extract their features from the entire document or

@@ -8,8 +8,8 @@ import java.util.Set;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
-import org.dkpro.tc.api.features.Feature;
 import org.junit.Test;
+import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
