@@ -9,10 +9,11 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.jcas.JCas;
 import org.dkpro.core.api.featurepath.FeaturePathException;
 import org.dkpro.core.api.featurepath.FeaturePathFactory;
-import org.lift.features.api.Feature;
-import org.lift.features.api.FeatureExtractor_ImplBase;
-import org.lift.features.api.FeatureType;
-import org.lift.features.api.LiftFeatureExtrationException;
+import org.dkpro.tc.api.exception.TextClassificationException;
+import org.dkpro.tc.api.features.Feature;
+import org.dkpro.tc.api.features.FeatureType;
+import org.lift.api.FeatureExtractor_ImplBase;
+import org.lift.api.LiftFeatureExtrationException;
 
 /**
  * Counts the appearance commas
@@ -54,7 +55,11 @@ public class CountFE
 		//Normalization on total count of words
 		double ratio = (double) nrOfFeature / overallCount;
 		
-		return new Feature(name, ratio, FeatureType.NUMERIC).asSet();
+		try {
+			return new Feature(name, ratio, FeatureType.NUMERIC).asSet();
+		} catch (TextClassificationException e) {
+			throw new LiftFeatureExtrationException(e);
+		}
 	}
 }
 

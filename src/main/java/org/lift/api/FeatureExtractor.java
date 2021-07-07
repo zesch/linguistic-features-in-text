@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.lift.features.api;
+package org.lift.api;
 
 import java.util.Set;
 
 import org.apache.uima.jcas.JCas;
+import org.dkpro.tc.api.features.Feature;
 
 /**
  * Common signature for feature extractors which extract their features from the entire document or

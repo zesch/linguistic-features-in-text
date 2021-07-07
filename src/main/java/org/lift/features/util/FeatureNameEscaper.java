@@ -1,10 +1,10 @@
-package org.lift.features.api;
+package org.lift.features.util;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
-import org.lift.features.util.FeatureUtil;
+import org.lift.api.LiftFeatureExtrationException;
 
 
 /**

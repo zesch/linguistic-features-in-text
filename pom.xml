@@ -80,6 +80,11 @@
       <artifactId>dkpro-core-api-featurepath-asl</artifactId>
     <version>2.2.0</version>
     </dependency>
+    <dependency>
+    <groupId>org.dkpro.tc</groupId>
+    <artifactId>dkpro-tc-api-features</artifactId>
+    <version>1.1.0</version>
+</dependency>
 	</dependencies>
       <build>
 	        <plugins>

@@ -1,8 +1,9 @@
-package org.lift.features.api;
+package org.lift.api;
 
 import java.util.Set;
 
 import org.apache.uima.jcas.JCas;
+import org.dkpro.tc.api.features.Feature;
 
 public abstract class FeatureExtractor_ImplBase 
 	implements FeatureExtractor

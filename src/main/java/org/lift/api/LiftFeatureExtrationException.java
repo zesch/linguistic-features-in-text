@@ -1,4 +1,4 @@
-package org.lift.features.api;
+package org.lift.api;
 
 /**
  * Exception thrown by DKPro TC components.
