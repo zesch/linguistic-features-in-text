@@ -8,7 +8,7 @@ import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 import org.lift.type.Structure;
 
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma;
+import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 public class ConnectivesTest {
 
@@ -26,13 +26,11 @@ public class ConnectivesTest {
         engine.process(jcas);
         jcas.setDocumentText("after ,");
 
-        Lemma l1 = new Lemma(jcas, 0, 4);
-        l1.setValue("after");
-        l1.addToIndexes();
+        Token t1 = new Token(jcas, 0, 4);
+        t1.addToIndexes();
         
-        Lemma l2 = new Lemma(jcas, 5, 6);
-        l2.setValue(",");
-        l2.addToIndexes();
+        Token t2 = new Token(jcas, 5, 6);
+        t2.addToIndexes();
         
 
 		engine.process(jcas);

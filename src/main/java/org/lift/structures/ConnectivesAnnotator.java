@@ -6,12 +6,12 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.type.Structure;
 
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma;
+import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
  * counts the appearance of the specified connectives
  */
-@TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"})
+@TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 public class ConnectivesAnnotator
 	extends ListBasedAnnotator_ImplBase
 {
@@ -20,10 +20,10 @@ public class ConnectivesAnnotator
 	public void process(JCas jcas) 
 			throws AnalysisEngineProcessException
 	{
-
-		for (Lemma lemma : JCasUtil.select(jcas, Lemma.class)) {
-			if (listSet.contains(lemma.getValue().toLowerCase())) {
-				Structure s = new Structure(jcas, lemma.getBegin(), lemma.getEnd());
+		// TOOD are there languages where we need to use lemmas?
+		for (Token token : JCasUtil.select(jcas, Token.class)) {
+			if (listSet.contains(token.getCoveredText())) {
+				Structure s = new Structure(jcas, token.getBegin(), token.getEnd());
 				s.setName("Connectives");
 				s.addToIndexes();
 			}
