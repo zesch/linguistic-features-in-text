@@ -22,9 +22,11 @@ public class CommaAnnotator
 
 	@Override
 	public void process(JCas jcas) throws AnalysisEngineProcessException {
-		String rutaScript = "IMPORT PACKAGE org.lift.type.Structure FROM desc.type.LiFT;" +
-				"W{REGEXP(\",\")-> CREATE(Structure, \"name\"=\"Comma\")};";
-		
+		String rutaScript = 
+"IMPORT org.lift.type.Structure FROM desc.type.LiFT;" +
+"IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;" +
+"Token{REGEXP(\",\")-> Structure};";
+
 		try {
 			Pair<AnalysisEngineDescription, TypeSystemDescription> descs = RutaUtil.initRutaFE(rutaScript);
 			AnalysisEngine ae = UIMAFramework.produceAnalysisEngine(descs.getKey());
