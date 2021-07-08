@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
   <properties>
     <uima.version>3.1.0</uima.version>
+    <dkpro.version>2.2.0</dkpro.version>
   </properties>
 
 	<repositories>
@@ -73,12 +74,17 @@
 <dependency>
       <groupId>org.dkpro.core</groupId>
       <artifactId>dkpro-core-api-segmentation-asl</artifactId>
-    <version>2.2.0</version>
+    <version>${dkpro.version}</version>
     </dependency>
     <dependency>
       <groupId>org.dkpro.core</groupId>
       <artifactId>dkpro-core-api-featurepath-asl</artifactId>
-    <version>2.2.0</version>
+    <version>${dkpro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.dkpro.core</groupId>
+      <artifactId>dkpro-core-api-frequency-asl</artifactId>
+    <version>${dkpro.version}</version>
     </dependency>
 	</dependencies>
       <build>

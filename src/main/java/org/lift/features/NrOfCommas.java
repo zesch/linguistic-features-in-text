@@ -7,7 +7,7 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor_ImplBase;
+import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
@@ -19,7 +19,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
 public class NrOfCommas 
-	extends FeatureExtractor_ImplBase
+	implements FeatureExtractor
 {
 
 	public static final String NR_OF_COMMAS = "nrOfCommas";

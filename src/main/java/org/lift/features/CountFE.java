@@ -10,7 +10,7 @@ import org.apache.uima.jcas.JCas;
 import org.dkpro.core.api.featurepath.FeaturePathException;
 import org.dkpro.core.api.featurepath.FeaturePathFactory;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor_ImplBase;
+import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
@@ -20,7 +20,7 @@ import org.lift.api.LiftFeatureExtrationException;
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 public class CountFE 
-	extends FeatureExtractor_ImplBase
+	implements FeatureExtractor
 {
 	
 	private final String name;
