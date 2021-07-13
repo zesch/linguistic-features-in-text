@@ -27,7 +27,7 @@ public class LexicalDensityFE
 		int numberOfContentWords = 0;
 
 		for (POS pos : JCasUtil.select(jcas, POS.class)) {
-	//		System.out.println(pos.getCoarseValue());
+			//System.out.println(pos.getCoveredText()+" "+pos.getCoarseValue());
 			if (isContentWord(pos.getCoarseValue())){
 				numberOfContentWords++;
 			}
@@ -45,7 +45,7 @@ public class LexicalDensityFE
 	// TODO: Are those all content words? What about adverbs?
 	// TODO: make parametrizable
 	private boolean isContentWord(String coarseValue) {
-		if (coarseValue.equals("ADJ") || coarseValue.equals("VERB") || coarseValue.startsWith("N")){
+		if (coarseValue != null && (coarseValue.equals("ADJ") || coarseValue.equals("VERB") || coarseValue.startsWith("N"))){
 			return true;
 		} else {
 			return false;

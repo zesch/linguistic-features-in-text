@@ -72,6 +72,11 @@
     <version>1.7.31</version>
 </dependency>
 <dependency>
+    <groupId>org.dkpro.core</groupId>
+    <artifactId>dkpro-core-io-xmi-asl</artifactId>
+    <version>${dkpro.version}</version>
+    </dependency>
+<dependency>
       <groupId>org.dkpro.core</groupId>
       <artifactId>dkpro-core-api-segmentation-asl</artifactId>
     <version>${dkpro.version}</version>
