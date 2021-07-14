@@ -26,15 +26,15 @@ public class LexicalDensityFE
 
 		int numberOfContentWords = 0;
 
+		int n=0;
 		for (POS pos : JCasUtil.select(jcas, POS.class)) {
-			//System.out.println(pos.getCoveredText()+" "+pos.getCoarseValue());
 			if (isContentWord(pos.getCoarseValue())){
 				numberOfContentWords++;
 			}
+			n++;
 		}
-	//	System.out.println(numberOfContentWords);
-		double ld = (1.0*numberOfContentWords)/JCasUtil.select(jcas, POS.class).size();
-	//	System.out.println(ld);
+
+		double ld = (double) numberOfContentWords / n ;
 		
 		Set<Feature> features = new HashSet<Feature>();
 		features.add(new Feature(FN_LD, ld, FeatureType.NUMERIC));
