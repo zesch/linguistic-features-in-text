@@ -12,7 +12,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  * counts the appearance of the specified connectives
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
-public class ConnectivesAnnotator
+public class SE_Connectives
 	extends ListBasedAnnotator_ImplBase
 {
 

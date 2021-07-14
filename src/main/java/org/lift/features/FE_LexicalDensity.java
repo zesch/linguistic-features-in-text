@@ -14,7 +14,7 @@ import org.lift.api.LiftFeatureExtrationException;
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
-public class LexicalDensityFE 
+public class FE_LexicalDensity 
 	implements FeatureExtractor
 {
 	

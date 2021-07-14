@@ -12,8 +12,8 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
-public class NrOfCommasAlternative 
-	extends CountFE
+public class FE_CommaRatioAlternative 
+	extends FE_GenericCounter
 {
 
 	// TODO better way to initialize this
@@ -21,10 +21,10 @@ public class NrOfCommasAlternative
 	private static String fp = Token.class.getName();
 	private static Predicate<String> pred = feature -> feature.equals(",");
 	
-	public NrOfCommasAlternative() {
+	public FE_CommaRatioAlternative() {
 		this(name, fp, pred);
 	}
-	public NrOfCommasAlternative(String name, String featurePath, Predicate<String> isFeature) {
+	public FE_CommaRatioAlternative(String name, String featurePath, Predicate<String> isFeature) {
 		super(name, featurePath, isFeature);
 	}
 }

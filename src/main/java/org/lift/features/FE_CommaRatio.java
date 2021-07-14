@@ -18,11 +18,11 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
-public class NrOfCommas 
+public class FE_CommaRatio 
 	implements FeatureExtractor
 {
 
-	public static final String NR_OF_COMMAS = "nrOfCommas";
+	public static final String NR_OF_COMMAS = "commaRatio";
 	
 	@Override
 	public Set<Feature> extract(JCas jcas) 
@@ -38,7 +38,7 @@ public class NrOfCommas
 		}
 
 		//Normalization on total count of words
-		double ratio = (double) nrOfCommas/nrOfTokens;
+		double ratio = (double) nrOfCommas / nrOfTokens;
 		return new Feature(NR_OF_COMMAS, ratio, FeatureType.NUMERIC).asSet();
 	}
 }

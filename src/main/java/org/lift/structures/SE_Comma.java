@@ -16,7 +16,7 @@ import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.util.InvalidXMLException;
 import org.lift.structures.ruta.RutaUtil;
 
-public class CommaAnnotator 
+public class SE_Comma 
 	extends JCasAnnotator_ImplBase
 {
 

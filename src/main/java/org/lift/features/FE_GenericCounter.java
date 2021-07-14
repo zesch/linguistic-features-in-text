@@ -15,11 +15,11 @@ import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
 /**
- * Counts the appearance commas
+ * Counts structures
  */
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
-public class CountFE 
+public class FE_GenericCounter 
 	implements FeatureExtractor
 {
 	
@@ -27,7 +27,7 @@ public class CountFE
 	private final String featurePath;
 	private final Predicate<String> isFeature;
 
-	public CountFE(String name, String featurePath, Predicate<String> isFeature) {
+	public FE_GenericCounter(String name, String featurePath, Predicate<String> isFeature) {
 		this.name = name;
 		this.featurePath = featurePath;
 		this.isFeature = isFeature;

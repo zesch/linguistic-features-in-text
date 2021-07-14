@@ -13,7 +13,7 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
-public class TypeTokenRatioFE 
+public class FE_TypeTokenRatio 
 	implements FeatureExtractor
 {
 

@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.lift.api.Feature;
 
-public class LexicalDensityTest {
+public class FE_LexicalDensityTest {
 
 	@Test
     public void lexicalDensityFeatureExtractorTest_de() 
@@ -31,7 +31,7 @@ public class LexicalDensityTest {
 		
 		for (JCas jcas : new JCasIterable(reader)) {
 
-        LexicalDensityFE extractor = new LexicalDensityFE();
+        FE_LexicalDensity extractor = new FE_LexicalDensity();
         List<Feature> features = new ArrayList<Feature>(extractor.extract(jcas));
 
         Assert.assertEquals(1, features.size());
@@ -39,7 +39,7 @@ public class LexicalDensityTest {
         Iterator<Feature> iter = features.iterator();
         Feature f = iter.next();
         System.out.println(f.toString());
-        assertFeature(LexicalDensityFE.FN_LD, 0.47159, f, 0.00001);
+        assertFeature(FE_LexicalDensity.FN_LD, 0.47159, f, 0.00001);
         break;
         
 		}

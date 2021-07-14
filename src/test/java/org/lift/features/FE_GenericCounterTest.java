@@ -14,7 +14,7 @@ import org.lift.features.util.FeatureTestUtil;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
-public class CountFETest {
+public class FE_GenericCounterTest {
 
 	@Test
 	public void countFE_test()
@@ -33,7 +33,7 @@ public class CountFETest {
         Token t2 = new Token(jcas, 5, 6);
         t2.addToIndexes();
         
-		CountFE fe = new CountFE(
+		FE_GenericCounter fe = new FE_GenericCounter(
 				"commaCount",
 				Token.class.getName(),
 				feature -> feature.equals(",")
