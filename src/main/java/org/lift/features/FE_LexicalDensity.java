@@ -7,7 +7,6 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
@@ -15,10 +14,13 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
 public class FE_LexicalDensity 
-	implements FeatureExtractor
+	extends FeatureExtractor_ImplBase
 {
 	
-	public static final String FN_LD = "LexicalDensity";
+	public FE_LexicalDensity() {
+		super("LexicalDensity", FE_LexicalDensity.class.getName());
+	}
+
 
 	@Override
 	public Set<Feature> extract(JCas jcas)
@@ -37,7 +39,7 @@ public class FE_LexicalDensity
 		double ld = (double) numberOfContentWords / n ;
 		
 		Set<Feature> features = new HashSet<Feature>();
-		features.add(new Feature(FN_LD, ld, FeatureType.NUMERIC));
+		features.add(new Feature(getInternalName(), ld, FeatureType.NUMERIC));
 
 		return features;
 	}

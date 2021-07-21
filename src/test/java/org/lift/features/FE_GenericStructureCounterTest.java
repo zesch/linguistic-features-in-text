@@ -22,8 +22,7 @@ public class FE_GenericStructureCounterTest {
 		throws Exception
 	{
 		
-		String name = "commaCount";
-		
+		String structureName = "comma";
 		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
 
         JCas jcas = engine.newJCas();
@@ -37,14 +36,14 @@ public class FE_GenericStructureCounterTest {
         t2.addToIndexes();
         
         Structure s1 = new Structure(jcas, t2.getBegin(), t2.getEnd());
-        s1.setName(name);
+        s1.setName(structureName);
         s1.addToIndexes();
         
-		FE_GenericStructureCounter fe = new FE_GenericStructureCounter(name);
+		FE_GenericStructureCounter fe = new FE_GenericStructureCounter(structureName);
 		
 		Set<Feature> features = fe.extract(jcas);
         assertEquals(1, features.size());
-        FeatureTestUtil.assertFeatures(name, 0.5, features, 0.00001);
+        FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001);
         System.out.println(features);
 	}
 }

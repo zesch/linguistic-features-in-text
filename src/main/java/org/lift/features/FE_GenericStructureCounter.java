@@ -6,7 +6,6 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.type.Structure;
@@ -19,12 +18,13 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 public class FE_GenericStructureCounter 
-	implements FeatureExtractor
+	extends FeatureExtractor_ImplBase
 {
 	
 	private final String structureName;
 
 	public FE_GenericStructureCounter(String structureName) {
+		super(structureName + "_counter", FE_GenericStructureCounter.class.getName() + "_" + structureName);
 		this.structureName = structureName;
 	}
 	
@@ -45,7 +45,7 @@ public class FE_GenericStructureCounter
 		//Normalization on total count of words
 		double ratio = (double) nrOfFeature / overallCount;
 		
-		return new Feature(structureName, ratio, FeatureType.NUMERIC).asSet();
+		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
 	}
 }
 

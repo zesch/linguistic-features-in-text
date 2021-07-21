@@ -17,14 +17,10 @@ public class FE_CommaRatioAlternative
 {
 
 	// TODO better way to initialize this
-	private static String name = "commaCount";
 	private static String fp = Token.class.getName();
 	private static Predicate<String> pred = feature -> feature.equals(",");
 	
 	public FE_CommaRatioAlternative() {
-		this(name, fp, pred);
-	}
-	public FE_CommaRatioAlternative(String name, String featurePath, Predicate<String> isFeature) {
-		super(name, featurePath, isFeature);
+		super(fp, pred);
 	}
 }

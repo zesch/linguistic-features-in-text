@@ -10,7 +10,6 @@ import org.apache.uima.jcas.JCas;
 import org.dkpro.core.api.featurepath.FeaturePathException;
 import org.dkpro.core.api.featurepath.FeaturePathFactory;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
@@ -20,15 +19,15 @@ import org.lift.api.LiftFeatureExtrationException;
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 public class FE_GenericCounter 
-	implements FeatureExtractor
+	extends FeatureExtractor_ImplBase
 {
 	
-	private final String name;
 	private final String featurePath;
 	private final Predicate<String> isFeature;
 
-	public FE_GenericCounter(String name, String featurePath, Predicate<String> isFeature) {
-		this.name = name;
+	public FE_GenericCounter(String featurePath, Predicate<String> isFeature) {
+		super(featurePath + "_counter", FE_GenericCounter.class.getName() + "__" + featurePath);
+		
 		this.featurePath = featurePath;
 		this.isFeature = isFeature;
 	}
@@ -54,7 +53,7 @@ public class FE_GenericCounter
 		//Normalization on total count of words
 		double ratio = (double) nrOfFeature / overallCount;
 		
-		return new Feature(name, ratio, FeatureType.NUMERIC).asSet();
+		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
 	}
 }
 

@@ -1,12 +1,9 @@
 package org.lift.features;
 
-import static org.lift.features.util.FeatureTestUtil.assertFeature;
+import static org.lift.features.util.FeatureTestUtil.assertFeatures;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
-import org.apache.uima.cas.TypeSystem;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.pipeline.JCasIterable;
@@ -32,14 +29,12 @@ public class FE_LexicalDensityTest {
 		for (JCas jcas : new JCasIterable(reader)) {
 
         FE_LexicalDensity extractor = new FE_LexicalDensity();
-        List<Feature> features = new ArrayList<Feature>(extractor.extract(jcas));
+        Set<Feature> features = extractor.extract(jcas);
 
         Assert.assertEquals(1, features.size());
+        System.out.println(features);
 
-        Iterator<Feature> iter = features.iterator();
-        Feature f = iter.next();
-        System.out.println(f.toString());
-        assertFeature(FE_LexicalDensity.FN_LD, 0.47159, f, 0.00001);
+        assertFeatures(extractor.getInternalName(), 0.47159, features, 0.00001);
         break;
         
 		}

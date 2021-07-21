@@ -7,18 +7,19 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.dkpro.core.api.frequency.util.FrequencyDistribution;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 public class FE_TypeTokenRatio 
-	implements FeatureExtractor
+	extends FeatureExtractor_ImplBase
 {
 
-	public static final String FN_TTR = "TypeTokenRatio";
-
+	public FE_TypeTokenRatio() {
+		super("TypeTokenRatio", FE_TypeTokenRatio.class.getName());
+	}
+	
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
 		FrequencyDistribution<String> fd = new FrequencyDistribution<String>();
@@ -32,7 +33,7 @@ public class FE_TypeTokenRatio
 		}
 
 		Set<Feature> features = new HashSet<Feature>();
-		features.add(new Feature(FN_TTR, ttr, FeatureType.NUMERIC));
+		features.add(new Feature(getInternalName(), ttr, FeatureType.NUMERIC));
 
 		return features;
 	}

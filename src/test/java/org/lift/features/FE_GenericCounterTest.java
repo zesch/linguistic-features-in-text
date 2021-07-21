@@ -34,14 +34,13 @@ public class FE_GenericCounterTest {
         t2.addToIndexes();
         
 		FE_GenericCounter fe = new FE_GenericCounter(
-				"commaCount",
 				Token.class.getName(),
-				feature -> feature.equals(",")
+				f  -> f.equals(",")
 		);
 		
 		Set<Feature> features = fe.extract(jcas);
         assertEquals(1, features.size());
-        FeatureTestUtil.assertFeatures("commaCount", 0.5, features, 0.00001);
+        FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001);
         System.out.println(features);
 	}
 }

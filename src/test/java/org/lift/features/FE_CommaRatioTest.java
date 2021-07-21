@@ -37,12 +37,10 @@ public class FE_CommaRatioTest {
 		Set<Feature> features = fe.extract(jcas);
         assertEquals(1, features.size());
         FeatureTestUtil.assertFeatures(FE_CommaRatio.NR_OF_COMMAS, 0.5, features, 0.00001);
-        System.out.println(features);
         
 		FE_CommaRatioAlternative fe2 = new FE_CommaRatioAlternative();
 		Set<Feature> features2 = fe2.extract(jcas);
         assertEquals(1, features2.size());
-        FeatureTestUtil.assertFeatures("commaCount", 0.5, features2, 0.00001);
-        System.out.println(features2);
+        FeatureTestUtil.assertFeatures(fe2.getInternalName(), 0.5, features2, 0.00001);
 	}
 }
