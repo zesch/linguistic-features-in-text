@@ -7,7 +7,6 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
-import org.lift.api.FeatureExtractor;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
@@ -19,10 +18,12 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
 public class FE_CommaRatio 
-	implements FeatureExtractor
+	extends FeatureExtractor_ImplBase
 {
 
-	public static final String NR_OF_COMMAS = "commaRatio";
+	public FE_CommaRatio() {
+		super("CommaRatio", FE_CommaRatio.class.getName());
+	}
 	
 	@Override
 	public Set<Feature> extract(JCas jcas) 
@@ -39,7 +40,7 @@ public class FE_CommaRatio
 
 		//Normalization on total count of words
 		double ratio = (double) nrOfCommas / nrOfTokens;
-		return new Feature(NR_OF_COMMAS, ratio, FeatureType.NUMERIC).asSet();
+		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
 	}
 }
 
