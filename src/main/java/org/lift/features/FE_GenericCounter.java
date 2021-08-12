@@ -1,5 +1,6 @@
 package org.lift.features;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -35,7 +36,8 @@ public class FE_GenericCounter
 	@Override
 	public Set<Feature> extract(JCas jcas) 
 			throws LiftFeatureExtrationException
-	{		
+	{
+		Set<Feature> featureSet = new HashSet<Feature>();
 		int nrOfFeature = 0;
 		int overallCount = 0;
 		
@@ -53,7 +55,9 @@ public class FE_GenericCounter
 		//Normalization on total count of words
 		double ratio = (double) nrOfFeature / overallCount;
 		
-		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
+		featureSet.add(new Feature("NORMALIZED_" + getInternalName(), ratio, FeatureType.NUMERIC));
+		featureSet.add(new Feature("FN_NR_OF_" + getInternalName(), nrOfFeature, FeatureType.NUMERIC));
+		return featureSet;
 	}
 }
 

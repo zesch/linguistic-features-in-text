@@ -39,8 +39,9 @@ public class FE_GenericCounterTest {
 		);
 		
 		Set<Feature> features = fe.extract(jcas);
-        assertEquals(1, features.size());
-        FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001);
+        assertEquals(2, features.size());
+        FeatureTestUtil.assertFeatures("NORMALIZED_" + fe.getInternalName(), 0.5, features, 0.00001);
+        FeatureTestUtil.assertFeatures("FN_NR_OF_" + fe.getInternalName(), 1, features);
         System.out.println(features);
 	}
 }

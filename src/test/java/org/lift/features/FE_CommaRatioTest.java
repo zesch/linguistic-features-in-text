@@ -37,10 +37,27 @@ public class FE_CommaRatioTest {
 		Set<Feature> features = fe.extract(jcas);
         assertEquals(1, features.size());
         FeatureTestUtil.assertFeature(fe.getInternalName(), 0.5, features.iterator().next(), 0.00001);
+	}
+	
+	@Test
+	public void nrOfCommasAlternativeTest() throws Exception {
+		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
+
+        JCas jcas = engine.newJCas();
+        engine.process(jcas);
+        jcas.setDocumentText("test ,");
+
+        Token t1 = new Token(jcas, 0, 4);
+        t1.addToIndexes();
         
-		FE_CommaRatioAlternative fe2 = new FE_CommaRatioAlternative();
-		Set<Feature> features2 = fe2.extract(jcas);
-        assertEquals(1, features2.size());
-        FeatureTestUtil.assertFeature(fe2.getInternalName(), 0.5, features2.iterator().next(), 0.00001);
+        Token t2 = new Token(jcas, 5, 6);
+        t2.addToIndexes();
+        
+        FE_CommaRatioAlternative fe = new FE_CommaRatioAlternative();
+		Set<Feature> features = fe.extract(jcas);
+
+        assertEquals(2, features.size());
+        FeatureTestUtil.assertFeatures("NORMALIZED_" + fe.getInternalName(), 0.5, features, 0.00001);
+        FeatureTestUtil.assertFeatures("FN_NR_OF_" + fe.getInternalName(), 1, features);
 	}
 }
