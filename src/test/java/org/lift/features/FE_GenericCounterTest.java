@@ -17,10 +17,9 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 public class FE_GenericCounterTest {
 
 	@Test
-	public void countFE_test()
+	public void countFE_Comma_test()
 		throws Exception
-	{
-		
+	{	
 		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
 
         JCas jcas = engine.newJCas();
@@ -44,4 +43,5 @@ public class FE_GenericCounterTest {
         FeatureTestUtil.assertFeatures("FN_NR_OF_" + fe.getInternalName(), 1, features);
         System.out.println(features);
 	}
+	
 }

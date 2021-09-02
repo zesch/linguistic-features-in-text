@@ -2,6 +2,7 @@ package org.lift.features;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.jcas.JCas;
+import org.dkpro.core.tokit.BreakIteratorSegmenter;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.junit.Assert.assertEquals;
@@ -15,7 +16,8 @@ import org.lift.features.util.FeatureTestUtil;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
-import de.tudarmstadt.ukp.dkpro.core.tokit.BreakIteratorSegmenter;
+
+
 
 public class FE_AvgAnnotationRatioTest {
 	

@@ -5,10 +5,10 @@
 	<groupId>org.lift.features</groupId>
 	<artifactId>org.lift.features</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-  <properties>
-    <uima.version>3.1.0</uima.version>
-    <dkpro.version>2.2.0</dkpro.version>
-  </properties>
+	<properties>
+		<uima.version>3.1.0</uima.version>
+		<dkpro.version>2.2.0</dkpro.version>
+	</properties>
 
 	<repositories>
 		<repository>
@@ -45,92 +45,102 @@
 	</repositories>
 
 	<dependencies>
-	<dependency>
-    <groupId>org.apache.uima</groupId>
-    <artifactId>uimafit-core</artifactId>
-    <version>${uima.version}</version>
-</dependency>
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.13.2</version>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>org.apache.uima</groupId>
-    <artifactId>jcasgen-maven-plugin</artifactId>
-    <version>${uima.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.uima</groupId>
-    <artifactId>ruta-core</artifactId>
-    <version>3.0.1</version>
-</dependency>
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>1.7.31</version>
-</dependency>
-<dependency>
-    <groupId>org.dkpro.core</groupId>
-    <artifactId>dkpro-core-io-xmi-asl</artifactId>
-    <version>${dkpro.version}</version>
-    </dependency>
-<dependency>
-      <groupId>org.dkpro.core</groupId>
-      <artifactId>dkpro-core-api-segmentation-asl</artifactId>
-    <version>${dkpro.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.dkpro.core</groupId>
-      <artifactId>dkpro-core-api-featurepath-asl</artifactId>
-    <version>${dkpro.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.dkpro.core</groupId>
-      <artifactId>dkpro-core-api-frequency-asl</artifactId>
-    <version>${dkpro.version}</version>
-    </dependency>
-    <dependency>
-		<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
-		<artifactId>de.tudarmstadt.ukp.dkpro.core.tokit-asl</artifactId>
-		<version>1.10.0</version>
-	</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimafit-core</artifactId>
+			<version>${uima.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>jcasgen-maven-plugin</artifactId>
+			<version>${uima.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>ruta-core</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.31</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-io-xmi-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-api-segmentation-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-api-featurepath-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-api-frequency-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-tokit-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-api-syntax-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-opennlp-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
 	</dependencies>
-      <build>
-	        <plugins>
-	             <plugin>
-	        <artifactId>maven-compiler-plugin</artifactId>
-	        <version>3.8.1</version>
-	        <configuration>
-	            <source>1.8</source>
-	            <target>1.8</target>
-	        </configuration>
-	    </plugin>
-    	 <plugin>
-            <!--generate types dynamically -->
-            <groupId>org.apache.uima</groupId>
-            <artifactId>jcasgen-maven-plugin</artifactId>
-            <version>${uima.version}</version>
-            <configuration>
-              <limitToProject>true</limitToProject>
-              <typeSystemIncludes>
-                <include>src/main/resources/desc/type/**/*.xml</include>
-              </typeSystemIncludes>
-              <typeSystemExcludes>
-                <exclude>src/main/resources/desc/type/**/*_customized.xml</exclude>
-              </typeSystemExcludes>
-            </configuration>
-            <executions>
-              <execution>
-                <!--call it in the generate-source phase -->
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!--generate types dynamically -->
+				<groupId>org.apache.uima</groupId>
+				<artifactId>jcasgen-maven-plugin</artifactId>
+				<version>${uima.version}</version>
+				<configuration>
+					<limitToProject>true</limitToProject>
+					<typeSystemIncludes>
+						<include>src/main/resources/desc/type/**/*.xml</include>
+					</typeSystemIncludes>
+					<typeSystemExcludes>
+						<exclude>src/main/resources/desc/type/**/*_customized.xml</exclude>
+					</typeSystemExcludes>
+				</configuration>
+				<executions>
+					<execution>
+						<!--call it in the generate-source phase -->
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

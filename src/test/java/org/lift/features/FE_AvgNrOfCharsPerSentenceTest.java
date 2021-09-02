@@ -10,12 +10,11 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.dkpro.core.tokit.BreakIteratorSegmenter;
 import org.junit.Test;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.util.FeatureTestUtil;
-
-import de.tudarmstadt.ukp.dkpro.core.tokit.BreakIteratorSegmenter;
 
 public class FE_AvgNrOfCharsPerSentenceTest {
 
