@@ -180,5 +180,55 @@ public class FE_AvgAnnotationRatioTest {
         FeatureTestUtil.assertFeatures("FN_" + baseString, 0.1, features, 0.0001);
         FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.3, features, 0.0001);
 	}
+	
+	@Test
+	public void avgAnnotationRatioFe_VerbPOSPerSentence_Test() throws Exception {
+		
+		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
+		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
+		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription description = createEngineDescription(segmenter,posTagger, lemmatizer);
+		AnalysisEngine engine = createEngine(description);
+		
+		JCas jcas = engine.newJCas();
+        jcas.setDocumentLanguage("en");
+        jcas.setDocumentText("This is a test and this a nice example.");
+        engine.process(jcas);
+        
+        String dividendFeaturePath = POS_VERB.class.getName();
+        String divisorFeaturePath = Sentence.class.getName();
+        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
+        
+        assertEquals(2, features.size());
+        String baseString = "POS_VERB_PER_SENTENCE";
+        FeatureTestUtil.assertFeatures("FN_" + baseString, 1, features, 0.0001);
+        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+	}
+	
+	@Test
+	public void avgAnnotationRatioFe_NounPOSPerSentence_Test() throws Exception {
+		
+		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
+		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
+		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription description = createEngineDescription(segmenter,posTagger, lemmatizer);
+		AnalysisEngine engine = createEngine(description);
+		
+		JCas jcas = engine.newJCas();
+        jcas.setDocumentLanguage("en");
+        jcas.setDocumentText("This is a test and this a nice example.");
+        engine.process(jcas);
+        
+        String dividendFeaturePath = POS_NOUN.class.getName();
+        String divisorFeaturePath = Sentence.class.getName();
+        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
+        
+        assertEquals(2, features.size());
+        String baseString = "POS_NOUN_PER_SENTENCE";
+        FeatureTestUtil.assertFeatures("FN_" + baseString, 2, features, 0.0001);
+        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+	}
 
 }
