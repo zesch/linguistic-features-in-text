@@ -116,6 +116,11 @@
 			<artifactId>dkpro-core-corenlp-gpl</artifactId>
 			<version>${dkpro.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-treetagger-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
