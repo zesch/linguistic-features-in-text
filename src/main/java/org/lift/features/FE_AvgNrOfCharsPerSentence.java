@@ -13,6 +13,9 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
 
+/**
+ * Extracts the ratio of characters per sentence.
+ */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"})
 public class FE_AvgNrOfCharsPerSentence extends FeatureExtractor_ImplBase {

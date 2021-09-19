@@ -12,6 +12,10 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 
+/**
+ * Calculates the lexical density by extracting the ratio of defined content words per overall POS tags.
+ * The default defines adjectives, verbs and nouns as content words. The forwarded JCas has to be POS tagged.
+ */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
 public class FE_LexicalDensity 
 	extends FeatureExtractor_ImplBase
@@ -20,7 +24,6 @@ public class FE_LexicalDensity
 	public FE_LexicalDensity() {
 		super("LexicalDensity", FE_LexicalDensity.class.getName());
 	}
-
 
 	@Override
 	public Set<Feature> extract(JCas jcas)

@@ -14,7 +14,7 @@ import org.lift.api.LiftFeatureExtrationException;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
- * Extracts the average number of characters per sentence
+ * Extracts the ratio of characters per token.
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 		"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })

@@ -11,6 +11,11 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 
+/**
+ * Extracts the lexical and verb variation. The verb variation is calculatd as the ratio of verbtypes per overall verbs.
+ * The lexical variation is calculated as the ratio of contentwordtypes per overall contentwords.
+ * The JCas hast to be POS tagged.
+ */
 public class FE_LexicalVariation extends FeatureExtractor_ImplBase {
 	
 	public static final String FN_LEXICAL_VARIATION = "LexicalVariation";

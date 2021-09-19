@@ -11,6 +11,10 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 
+/**
+ * Extracts the ratio of finite verbs per verbs. The forwarded JCas has to be tagged with the tagset "stts" for document language german,
+ * and tagset "ptp" for document language english. The default language is english.
+ */
 public class FE_FiniteVerbRatio extends FeatureExtractor_ImplBase {
 
 	public static final String FN_FINITE_VERB_RATIO = "FiniteVerbRatio";

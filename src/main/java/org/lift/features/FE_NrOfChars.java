@@ -8,6 +8,9 @@ import org.lift.api.Feature;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 
+/**
+ * Extracts the total number of characters.
+ */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 public class FE_NrOfChars extends FeatureExtractor_ImplBase{
 
