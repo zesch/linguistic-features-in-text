@@ -40,7 +40,7 @@ public class FE_GenericStructureCounterTest {
         s1.setName(structureName);
         s1.addToIndexes();
         
-		FE_GenericStructureCounter fe = new FE_GenericStructureCounter(structureName);
+		FEL_GenericStructureCounter fe = new FEL_GenericStructureCounter(structureName);
 		
 		Set<Feature> features = fe.extract(jcas);
 		

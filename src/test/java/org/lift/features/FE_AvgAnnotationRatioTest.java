@@ -45,7 +45,7 @@ public class FE_AvgAnnotationRatioTest {
 
         String dividendFeaturePath = Token.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
 
         String baseString = "TOKEN_PER_SENTENCE";
@@ -74,7 +74,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = NC.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "NC_PER_SENTENCE";
@@ -104,7 +104,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = VC.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "VC_PER_SENTENCE";
@@ -133,7 +133,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = PC.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "PC_PER_SENTENCE";
@@ -162,7 +162,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = POS_NOUN.class.getName();
         String divisorFeaturePath = Token.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "POS_NOUN_PER_TOKEN";
@@ -191,7 +191,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = POS_VERB.class.getName();
         String divisorFeaturePath = Token.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "POS_VERB_PER_TOKEN";
@@ -219,7 +219,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = POS_VERB.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "POS_VERB_PER_SENTENCE";
@@ -247,7 +247,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = POS_NOUN.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "POS_NOUN_PER_SENTENCE";
@@ -279,7 +279,7 @@ public class FE_AvgAnnotationRatioTest {
         
         String dividendFeaturePath = NC.class.getName();
         String divisorFeaturePath = Sentence.class.getName();
-        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         String baseString = "NC_PER_SENTENCE";

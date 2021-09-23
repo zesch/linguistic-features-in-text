@@ -17,14 +17,14 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
-public class FE_GenericStructureCounter 
+public class FEL_GenericStructureCounter 
 	extends FeatureExtractor_ImplBase
 {
 	
 	private final String structureName;
 
-	public FE_GenericStructureCounter(String structureName) {
-		super(structureName + "_counter", FE_GenericStructureCounter.class.getName() + "_" + structureName);
+	public FEL_GenericStructureCounter(String structureName) {
+		super(structureName + "_counter", FEL_GenericStructureCounter.class.getName() + "_" + structureName);
 		this.structureName = structureName;
 	}
 	

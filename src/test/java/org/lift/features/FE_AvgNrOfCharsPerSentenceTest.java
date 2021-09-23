@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.util.FeatureTestUtil;
+import org.lift.higherorder.FE_AvgNrOfCharsPerSentence;
 
 public class FE_AvgNrOfCharsPerSentenceTest {
 

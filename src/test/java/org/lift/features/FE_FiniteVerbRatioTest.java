@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
+import org.lift.higherorder.FE_FiniteVerbRatio;
 
 public class FE_FiniteVerbRatioTest {
 	
@@ -33,7 +34,7 @@ public class FE_FiniteVerbRatioTest {
 		
 		JCas jcas = engine.newJCas();
 		jcas.setDocumentLanguage("de");
-		jcas.setDocumentText("Ich möchte ein Beispiel testen.");
+		jcas.setDocumentText("Ich mï¿½chte ein Beispiel testen.");
 		engine.process(jcas);
 		
 		FE_FiniteVerbRatio extractor = new FE_FiniteVerbRatio();

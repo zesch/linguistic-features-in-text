@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
+import org.lift.higherorder.FE_AvgNrOfCharsPerToken;
 
 public class FE_AvgNrOfCharsPerTokenTest {
 

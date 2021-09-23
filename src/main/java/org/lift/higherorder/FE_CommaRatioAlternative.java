@@ -1,9 +1,10 @@
-package org.lift.features;
+package org.lift.higherorder;
 
 import java.util.function.Predicate;
 
 import org.apache.uima.fit.descriptor.LanguageCapability;
 import org.apache.uima.fit.descriptor.TypeCapability;
+import org.lift.features.FEL_GenericCounter;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
@@ -13,7 +14,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
 @LanguageCapability({ "de","en" })
 public class FE_CommaRatioAlternative 
-	extends FE_GenericCounter
+	extends FEL_GenericCounter
 {
 
 	// TODO better way to initialize this

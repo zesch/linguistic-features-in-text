@@ -15,13 +15,13 @@ import org.lift.api.LiftFeatureExtrationException;
  * Extracts the ratio of dividend per divisor. Dividend and divisor are defined by the feature path of a subclass from {@link Annotation}.
  * Example: new FE_AvgAnnotationRatio(Token.class.getName(), Sentence.class.getName()) extracts the Token per Sentence ratio.
  */
-public class FE_AvgAnnotationRatio extends FeatureExtractor_ImplBase{
+public class FEL_AvgAnnotationRatio extends FeatureExtractor_ImplBase{
 	
 	private final String dividendFeaturePath;
 	private final String divisorFeaturePath;
 
-	public FE_AvgAnnotationRatio(String dividendFeaturePath, String divisorFeaturePath) {
-		super(dividendFeaturePath + "_PER_" + divisorFeaturePath, FE_AvgAnnotationRatio.class.getName() + "__" + dividendFeaturePath + "_PER_" + divisorFeaturePath);
+	public FEL_AvgAnnotationRatio(String dividendFeaturePath, String divisorFeaturePath) {
+		super(dividendFeaturePath + "_PER_" + divisorFeaturePath, FEL_AvgAnnotationRatio.class.getName() + "__" + dividendFeaturePath + "_PER_" + divisorFeaturePath);
 		this.dividendFeaturePath = dividendFeaturePath;
 		this.divisorFeaturePath = divisorFeaturePath;
 	}

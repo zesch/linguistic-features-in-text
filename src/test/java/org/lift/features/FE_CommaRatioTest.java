@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
+import org.lift.higherorder.FE_CommaRatio;
+import org.lift.higherorder.FE_CommaRatioAlternative;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 

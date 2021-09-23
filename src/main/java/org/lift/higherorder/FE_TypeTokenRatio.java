@@ -1,4 +1,4 @@
-package org.lift.features;
+package org.lift.higherorder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +9,7 @@ import org.dkpro.core.api.frequency.util.FrequencyDistribution;
 import org.lift.api.Feature;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
+import org.lift.features.FeatureExtractor_ImplBase;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 

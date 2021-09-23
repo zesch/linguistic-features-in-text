@@ -19,15 +19,15 @@ import org.lift.api.LiftFeatureExtrationException;
  */
 
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
-public class FE_GenericCounter 
+public class FEL_GenericCounter 
 	extends FeatureExtractor_ImplBase
 {
 	
 	private final String featurePath;
 	private final Predicate<String> isFeature;
 
-	public FE_GenericCounter(String featurePath, Predicate<String> isFeature) {
-		super(featurePath + "_counter", FE_GenericCounter.class.getName() + "__" + featurePath);
+	public FEL_GenericCounter(String featurePath, Predicate<String> isFeature) {
+		super(featurePath + "_counter", FEL_GenericCounter.class.getName() + "__" + featurePath);
 		
 		this.featurePath = featurePath;
 		this.isFeature = isFeature;

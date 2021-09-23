@@ -13,6 +13,7 @@ import org.dkpro.core.io.xmi.XmiReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
+import org.lift.higherorder.FE_LexicalDensity;
 
 public class FE_LexicalDensityTest {
 

@@ -33,7 +33,7 @@ public class FE_GenericCounterTest {
         Token t2 = new Token(jcas, 5, 6);
         t2.addToIndexes();
         
-		FE_GenericCounter fe = new FE_GenericCounter(
+		FEL_GenericCounter fe = new FEL_GenericCounter(
 				Token.class.getName(),
 				f  -> f.equals(",")
 		);

@@ -1,4 +1,4 @@
-package org.lift.features;
+package org.lift.higherorder;
 
 import java.util.Set;
 
@@ -7,6 +7,7 @@ import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
+import org.lift.features.FeatureExtractor_ImplBase;
 
 /**
  * Extracts the total number of characters.
