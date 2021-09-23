@@ -1,5 +1,6 @@
 package org.lift.features;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.lift.features.util.FeatureTestUtil.assertFeatures;
 
 import java.util.Set;
@@ -9,8 +10,8 @@ import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.pipeline.JCasIterable;
 import org.apache.uima.jcas.JCas;
 import org.dkpro.core.io.xmi.XmiReader;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 
 public class FE_LexicalDensityTest {
@@ -31,10 +32,12 @@ public class FE_LexicalDensityTest {
         FE_LexicalDensity extractor = new FE_LexicalDensity();
         Set<Feature> features = extractor.extract(jcas);
 
-        Assert.assertEquals(1, features.size());
+        Assertions.assertAll(
+                () -> assertEquals(1, features.size()),
+                () -> assertFeatures(extractor.getInternalName(), 0.47159, features, 0.00001)
+        		);
+        
         System.out.println(features);
-
-        assertFeatures(extractor.getInternalName(), 0.47159, features, 0.00001);
         break;
         
 		}

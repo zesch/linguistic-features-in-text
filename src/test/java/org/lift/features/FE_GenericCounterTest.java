@@ -1,14 +1,15 @@
 package org.lift.features;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
@@ -38,9 +39,13 @@ public class FE_GenericCounterTest {
 		);
 		
 		Set<Feature> features = fe.extract(jcas);
-        assertEquals(2, features.size());
-        FeatureTestUtil.assertFeatures("NORMALIZED_" + fe.getInternalName(), 0.5, features, 0.00001);
-        FeatureTestUtil.assertFeatures("FN_NR_OF_" + fe.getInternalName(), 1, features);
+		
+		Assertions.assertAll(
+		        () -> assertEquals(2, features.size()),
+		        () -> FeatureTestUtil.assertFeatures("NORMALIZED_" + fe.getInternalName(), 0.5, features, 0.00001),
+		        () -> FeatureTestUtil.assertFeatures("FN_NR_OF_" + fe.getInternalName(), 1, features)
+				);
+
         System.out.println(features);
 	}
 	

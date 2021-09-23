@@ -4,18 +4,21 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
+import org.dkpro.core.matetools.MateLemmatizer;
 import org.dkpro.core.opennlp.OpenNlpChunker;
 import org.dkpro.core.opennlp.OpenNlpPosTagger;
 import org.dkpro.core.tokit.BreakIteratorSegmenter;
+import org.dkpro.core.treetagger.TreeTaggerChunker;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngineDescription;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
@@ -46,9 +49,12 @@ public class FE_AvgAnnotationRatioTest {
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
 
         String baseString = "TOKEN_PER_SENTENCE";
-        assertEquals(2, features.size());
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 5.0, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+        		() -> FeatureTestUtil.assertFeatures("FN_" + baseString, 5.0, features, 0.0001),
+        		() -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
 	}
 	
 	@Test
@@ -71,10 +77,14 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "NC_PER_SENTENCE";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
+        
 	}
 	
 	@Test
@@ -97,10 +107,13 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "VC_PER_SENTENCE";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 1.0, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 1.0, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
 	}
 	
 	@Test
@@ -123,10 +136,13 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "PC_PER_SENTENCE";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 1.0, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 1.0, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
 	}
 	
 	@Test
@@ -149,10 +165,13 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "POS_NOUN_PER_TOKEN";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 0.2, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.4, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 0.2, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.4, features, 0.0001)
+        		);       
 	}
 	
 	@Test
@@ -175,10 +194,13 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "POS_VERB_PER_TOKEN";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 0.1, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.3, features, 0.0001);
+        
+        Assertions.assertAll(
+                () -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 0.1, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.3, features, 0.0001)
+        		);
 	}
 	
 	@Test
@@ -200,10 +222,13 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "POS_VERB_PER_SENTENCE";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 1, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+        		() -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 1, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);       
 	}
 	
 	@Test
@@ -225,10 +250,45 @@ public class FE_AvgAnnotationRatioTest {
         FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
-        assertEquals(2, features.size());
         String baseString = "POS_NOUN_PER_SENTENCE";
-        FeatureTestUtil.assertFeatures("FN_" + baseString, 2, features, 0.0001);
-        FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001);
+        
+        Assertions.assertAll(
+                () -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 2, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
+	}
+	
+	@Test
+	public void avgAnnotationRatioFe_nounPhrasePerSentence_de_Test() throws Exception {
+		
+		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
+		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
+		AnalysisEngineDescription chunker = createEngineDescription(TreeTaggerChunker.class,
+				TreeTaggerChunker.PARAM_EXECUTABLE_PATH, "C:/Users/marvi/Documents/LanguageTechnologyLab/TreeTagger/bin/tree-tagger.exe",
+				TreeTaggerChunker.PARAM_CHUNK_MAPPING_LOCATION, "C:/Users/marvi/Documents/LanguageTechnologyLab/TreeTagger/german-chunker.par",
+				TreeTaggerChunker.PARAM_MODEL_ENCODING, "UTF-8");
+		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription description = createEngineDescription(segmenter,posTagger,chunker, lemmatizer);
+		AnalysisEngine engine = createEngine(description);
+		
+		JCas jcas = engine.newJCas();
+        jcas.setDocumentLanguage("de");
+        jcas.setDocumentText("Das ist ein Test in einem Satz. Das ist ein Test in einem Satz.");
+        engine.process(jcas);
+        
+        String dividendFeaturePath = NC.class.getName();
+        String divisorFeaturePath = Sentence.class.getName();
+        FE_AvgAnnotationRatio extractor = new FE_AvgAnnotationRatio(dividendFeaturePath, divisorFeaturePath);
+        Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
+        
+        String baseString = "NC_PER_SENTENCE";
+        
+        Assertions.assertAll(
+                () -> assertEquals(2, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001),
+                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		);
 	}
 
 }

@@ -2,7 +2,7 @@ package org.lift.features.util;
 
 import java.util.Set;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.lift.api.Feature;
 
 public class FeatureTestUtil {
@@ -21,9 +21,11 @@ public class FeatureTestUtil {
     public static void assertFeature(String expectedName, Object expectedValue,
             Feature actualFeature)
     {
-        Assert.assertNotNull(actualFeature);
-        Assert.assertEquals(expectedName, actualFeature.getName());
-        Assert.assertEquals(expectedValue, actualFeature.getValue());
+    	Assertions.assertAll(
+    	        () -> Assertions.assertNotNull(actualFeature),
+    	        () -> Assertions.assertEquals(expectedName, actualFeature.getName()),
+    	        () -> Assertions.assertEquals(expectedValue, actualFeature.getValue())
+    			);
     }
 
     /**
@@ -42,9 +44,11 @@ public class FeatureTestUtil {
     public static void assertFeature(String expectedName, double expectedValue,
             Feature actualFeature, double epsilon)
     {
-        Assert.assertNotNull(actualFeature);
-        Assert.assertEquals(expectedName, actualFeature.getName());
-        Assert.assertEquals(expectedValue, (Double) actualFeature.getValue(), epsilon);
+    	Assertions.assertAll(
+    	        () -> Assertions.assertNotNull(actualFeature),
+    	        () -> Assertions.assertEquals(expectedName, actualFeature.getName()),
+    	        () -> Assertions.assertEquals(expectedValue, (Double) actualFeature.getValue(), epsilon)
+    			);
     }
 
     /**
@@ -61,15 +65,15 @@ public class FeatureTestUtil {
     public static void assertFeatures(String expectedName, double expectedValue,
             Set<Feature> features, double epsilon)
     {
-        Assert.assertNotNull(features);
+        Assertions.assertNotNull(features);
         boolean found = false;
         for (Feature f : features) {
             if (f.getName().equals(expectedName)) {
                 found = true;
-                Assert.assertEquals(expectedValue, (Double) f.getValue(), epsilon);
+                Assertions.assertEquals(expectedValue, (Double) f.getValue(), epsilon);
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
     }
 
     /**
@@ -83,14 +87,14 @@ public class FeatureTestUtil {
      */
     public static void assertFeatures(String expectedName, int expectedValue, Set<Feature> features)
     {
-        Assert.assertNotNull(features);
+        Assertions.assertNotNull(features);
         boolean found = false;
         for (Feature f : features) {
             if (f.getName().equals(expectedName)) {
                 found = true;
-                Assert.assertEquals(expectedValue, (int) f.getValue());
+                Assertions.assertEquals(expectedValue, (int) f.getValue());
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
     }
 }

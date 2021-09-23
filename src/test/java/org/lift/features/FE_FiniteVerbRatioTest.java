@@ -2,7 +2,7 @@ package org.lift.features;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngineDescription;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
@@ -13,7 +13,8 @@ import org.dkpro.core.corenlp.CoreNlpLemmatizer;
 import org.dkpro.core.matetools.MateLemmatizer;
 import org.dkpro.core.opennlp.OpenNlpPosTagger;
 import org.dkpro.core.tokit.BreakIteratorSegmenter;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
@@ -39,8 +40,11 @@ public class FE_FiniteVerbRatioTest {
 		
 		Set<Feature> features = extractor.extract(jcas);
 		
-		assertEquals(1, features.size());
-		FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001);
+		Assertions.assertAll(
+				() -> assertEquals(1, features.size()),
+				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001)
+				);
+		
 	}
 	
 	@Test
@@ -61,8 +65,10 @@ public class FE_FiniteVerbRatioTest {
 		
 		Set<Feature> features = extractor.extract(jcas);
 		
-		assertEquals(1, features.size());
-		FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001);
+		Assertions.assertAll(
+				() -> assertEquals(1, features.size()),
+				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001)
+				);		
 	}	
 	
 }

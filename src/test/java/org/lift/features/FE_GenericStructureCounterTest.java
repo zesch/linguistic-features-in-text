@@ -1,14 +1,15 @@
 package org.lift.features;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 import org.lift.type.Structure;
@@ -42,8 +43,12 @@ public class FE_GenericStructureCounterTest {
 		FE_GenericStructureCounter fe = new FE_GenericStructureCounter(structureName);
 		
 		Set<Feature> features = fe.extract(jcas);
-        assertEquals(1, features.size());
-        FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001);
+		
+		Assertions.assertAll(
+		        () -> assertEquals(1, features.size()),
+		        () -> FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001)
+				);
+
         System.out.println(features);
 	}
 }

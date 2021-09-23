@@ -5,7 +5,7 @@ import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.lift.type.Structure;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;

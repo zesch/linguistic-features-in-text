@@ -12,6 +12,9 @@ import org.lift.api.LiftFeatureExtrationException;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
+/**
+ * Extracts the ratio of types per tokens.
+ */
 public class FE_TypeTokenRatio 
 	extends FeatureExtractor_ImplBase
 {
