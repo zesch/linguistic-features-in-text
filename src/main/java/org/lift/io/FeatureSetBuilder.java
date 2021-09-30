@@ -7,12 +7,12 @@ import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.FEL_AvgAnnotationRatio;
-import org.lift.higherorder.FE_AvgNrOfCharsPerSentence;
-import org.lift.higherorder.FE_AvgNrOfCharsPerToken;
-import org.lift.higherorder.FE_LexicalDensity;
-import org.lift.higherorder.FE_LexicalVariation;
-import org.lift.higherorder.FE_NrOfChars;
-import org.lift.higherorder.FE_TypeTokenRatio;
+import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerSentence;
+import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerToken;
+import org.lift.higherorder.genuine.FE_LexicalDensity;
+import org.lift.higherorder.genuine.FE_LexicalVariation;
+import org.lift.higherorder.genuine.FE_NrOfChars;
+import org.lift.higherorder.genuine.FE_TypeTokenRatio;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.NC;

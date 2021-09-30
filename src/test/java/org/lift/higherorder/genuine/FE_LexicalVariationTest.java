@@ -1,4 +1,4 @@
-package org.lift.features;
+package org.lift.higherorder.genuine;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngineDescription;
@@ -17,14 +17,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
-import org.lift.higherorder.FE_FiniteVerbRatio;
+import org.lift.higherorder.genuine.FE_LexicalVariation;
 
-public class FE_FiniteVerbRatioTest {
-	
-	public static final String FN_FINITE_VERB_RATIO = "FiniteVerbRatio";
-	
+public class FE_LexicalVariationTest {
+
 	@Test
-	public void finiteVerbRatioTest_de_noTagset() throws Exception {
+	public void lexicalVariationTest_de() throws Exception {
 		
 		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
 		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
@@ -34,22 +32,22 @@ public class FE_FiniteVerbRatioTest {
 		
 		JCas jcas = engine.newJCas();
 		jcas.setDocumentLanguage("de");
-		jcas.setDocumentText("Ich m�chte ein Beispiel testen.");
+		jcas.setDocumentText("Das ist ein Test und das ist ein Beispiel.");
 		engine.process(jcas);
 		
-		FE_FiniteVerbRatio extractor = new FE_FiniteVerbRatio();
+		FE_LexicalVariation extractor = new FE_LexicalVariation();
 		
 		Set<Feature> features = extractor.extract(jcas);
 		
 		Assertions.assertAll(
-				() -> assertEquals(1, features.size()),
-				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001)
+				() -> assertEquals(2, features.size()),
+				() -> FeatureTestUtil.assertFeatures(FE_LexicalVariation.FN_LEXICAL_VARIATION, 0.75, features, 0.0001),
+				() -> FeatureTestUtil.assertFeatures(FE_LexicalVariation.FN_VERB_VARIATION, 0.5, features, 0.0001)	
 				);
-		
 	}
 	
 	@Test
-	public void finiteVerbRatioTest_en_noTagset() throws Exception {
+	public void lexicalVariationTest_en() throws Exception {
 		
 		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
 		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
@@ -59,17 +57,18 @@ public class FE_FiniteVerbRatioTest {
 		
 		JCas jcas = engine.newJCas();
 		jcas.setDocumentLanguage("en");
-		jcas.setDocumentText("I want to test an example.");
+		jcas.setDocumentText("This is a test and this is an example.");
 		engine.process(jcas);
 		
-		FE_FiniteVerbRatio extractor = new FE_FiniteVerbRatio();
+		FE_LexicalVariation extractor = new FE_LexicalVariation();
 		
 		Set<Feature> features = extractor.extract(jcas);
 		
 		Assertions.assertAll(
-				() -> assertEquals(1, features.size()),
-				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001)
-				);		
+				() -> assertEquals(2, features.size()),
+				() -> FeatureTestUtil.assertFeatures(FE_LexicalVariation.FN_LEXICAL_VARIATION, 0.75, features, 0.0001),
+				() -> FeatureTestUtil.assertFeatures(FE_LexicalVariation.FN_VERB_VARIATION, 0.5, features, 0.0001)
+				);	
 	}	
 	
 }

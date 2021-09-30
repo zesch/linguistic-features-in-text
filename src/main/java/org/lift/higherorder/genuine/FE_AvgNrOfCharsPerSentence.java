@@ -1,4 +1,4 @@
-package org.lift.higherorder;
+package org.lift.higherorder.genuine;
 
 import java.util.Collection;
 import java.util.HashSet;

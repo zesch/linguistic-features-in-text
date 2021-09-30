@@ -1,4 +1,4 @@
-package org.lift.features;
+package org.lift.higherorder.genuine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.lift.features.util.FeatureTestUtil.assertFeatures;
@@ -13,7 +13,7 @@ import org.dkpro.core.io.xmi.XmiReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
-import org.lift.higherorder.FE_LexicalDensity;
+import org.lift.higherorder.genuine.FE_LexicalDensity;
 
 public class FE_LexicalDensityTest {
 

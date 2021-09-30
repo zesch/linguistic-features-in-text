@@ -10,6 +10,7 @@ import org.dkpro.core.opennlp.OpenNlpPosTagger;
 import org.dkpro.core.tokit.BreakIteratorSegmenter;
 import org.dkpro.core.treetagger.TreeTaggerChunker;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
@@ -83,8 +84,7 @@ public class FE_AvgAnnotationRatioTest {
         		() -> assertEquals(2, features.size()),
                 () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001),
                 () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
-        		);
-        
+        		);      
 	}
 	
 	@Test
@@ -260,14 +260,12 @@ public class FE_AvgAnnotationRatioTest {
 	}
 	
 	@Test
+	@Disabled("See Issue #4, Find an Alternative for TreeTaggerChunker")
 	public void avgAnnotationRatioFe_nounPhrasePerSentence_de_Test() throws Exception {
 		
 		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
 		AnalysisEngineDescription posTagger = createEngineDescription(OpenNlpPosTagger.class);
-		AnalysisEngineDescription chunker = createEngineDescription(TreeTaggerChunker.class,
-				TreeTaggerChunker.PARAM_EXECUTABLE_PATH, "C:/Users/marvi/Documents/LanguageTechnologyLab/TreeTagger/bin/tree-tagger.exe",
-				TreeTaggerChunker.PARAM_CHUNK_MAPPING_LOCATION, "C:/Users/marvi/Documents/LanguageTechnologyLab/TreeTagger/german-chunker.par",
-				TreeTaggerChunker.PARAM_MODEL_ENCODING, "UTF-8");
+		AnalysisEngineDescription chunker = createEngineDescription(TreeTaggerChunker.class);
 		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
 		AnalysisEngineDescription description = createEngineDescription(segmenter,posTagger,chunker, lemmatizer);
 		AnalysisEngine engine = createEngine(description);
