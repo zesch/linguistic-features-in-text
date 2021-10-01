@@ -6,9 +6,9 @@ We rely on a UIMA repesentation model based on the [DKPro Core](https://dkpro.gi
 This makes LiFT multi-lingual, supporting all the [languages](https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/model-reference.html) included in DKPro Core.
 However, not all structures might be supported in each language.
 
-LiFT distinguishes betwen linguistic structures (lemmas, POS tags, syllables, spelling errors, etc.) and features (of structures).
+LiFT distinguishes betwen linguistic structures (lemmas, POS tags, syllables, spelling errors, etc.) and features (based on these structures).
 Structures are represented in the document model and can be visualized.
-Features are numeric values that represent the properties of the document, e.g. SpellingErrorRatio may have a value of 0.06 meaning that 6% of all tokens in the text are spelling errors.
+Features are numeric values that represent properties of the document, e.g. SpellingErrorRatio may have a value of 0.06 meaning that 6% of all tokens in the text contain a spelling error.
 
 The project is under heavy development, but we are working towards a stable release.
 
@@ -30,6 +30,6 @@ We also support various meta-features of linguistic complexity:
 * type-token ratio (TTR)
 
 LiFT is currently maintained by:
-* EduNLP Group, University of Hagen
 * [ICALL Research Group](http://icall-research.de), University of Tübingen
 * [Language Technology Lab](https://www.ltl.uni-due.de), University of Duisburg-Essen
+* EduNLP Group, University of Hagen
