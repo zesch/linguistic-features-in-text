@@ -6,6 +6,7 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.type.Structure;
 
@@ -32,9 +33,14 @@ public class SE_CommaTest {
         
 		SE_Comma fe = new SE_Comma();
 		fe.process(jcas);
+		int expectedStructureBegin = 5;
+		int expectedStructureEnd = 6;
 		
 		for (Structure s : JCasUtil.select(jcas, Structure.class)) {
-			System.out.println(s);
+			Assertions.assertAll("Assert annotated Structure is as expected",
+					() -> Assertions.assertEquals(expectedStructureBegin, s.getBegin()),
+					() -> Assertions.assertEquals(expectedStructureEnd, s.getEnd())
+					);
 		}
 	}
 }
