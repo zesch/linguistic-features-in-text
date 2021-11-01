@@ -51,11 +51,11 @@
 			<version>${uima.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.8.1</version>
-            <scope>test</scope>
-        </dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.8.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.uima</groupId>
 			<artifactId>jcasgen-maven-plugin</artifactId>
@@ -120,6 +120,21 @@
 			<groupId>org.dkpro.core</groupId>
 			<artifactId>dkpro-core-treetagger-asl</artifactId>
 			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-stanfordnlp-gpl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dkpro.core</groupId>
+			<artifactId>dkpro-core-readability-asl</artifactId>
+			<version>${dkpro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.jweb1t</groupId>
+			<artifactId>com.googlecode.jweb1t</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
 	<build>
