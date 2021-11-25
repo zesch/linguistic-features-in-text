@@ -33,6 +33,7 @@ public class SEL_RutaScript extends JCasAnnotator_ImplBase {
 		+ script
 		+ "-> CREATE(Structure, \"name\"=\"" + structureName + "\")};";
 
+		System.out.println(rutaScript);
 		try {
 			Pair<AnalysisEngineDescription, TypeSystemDescription> descs = RutaUtil.initRutaFE(rutaScript);
 			AnalysisEngine ae = UIMAFramework.produceAnalysisEngine(descs.getKey());
