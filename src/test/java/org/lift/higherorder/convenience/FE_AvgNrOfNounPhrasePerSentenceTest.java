@@ -42,9 +42,8 @@ public class FE_AvgNrOfNounPhrasePerSentenceTest {
         String baseString = "NC_PER_SENTENCE";
         
         Assertions.assertAll(
-        		() -> assertEquals(2, features.size()),
-                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001),
-                () -> FeatureTestUtil.assertFeatures("STANDARD_DEVIATION_OF_" + baseString, 0.0, features, 0.0001)
+        		() -> assertEquals(1, features.size()),
+                () -> FeatureTestUtil.assertFeatures("FN_" + baseString, 3.0, features, 0.0001)
         		);     
 	}
 	

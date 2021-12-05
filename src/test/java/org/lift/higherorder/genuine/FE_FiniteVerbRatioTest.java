@@ -43,7 +43,7 @@ public class FE_FiniteVerbRatioTest {
 		
 		Assertions.assertAll(
 				() -> assertEquals(1, features.size()),
-				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.5, features, 0.0001)
+				() -> FeatureTestUtil.assertFeatures(FN_FINITE_VERB_RATIO, 0.666666, features, 0.0001)
 				);
 		
 	}

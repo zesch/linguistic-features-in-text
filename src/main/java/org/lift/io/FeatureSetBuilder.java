@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
-import org.lift.features.FEL_AvgAnnotationRatio;
 import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerSentence;
 import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerToken;
 import org.lift.higherorder.genuine.FE_LexicalDensity;
@@ -26,11 +25,7 @@ public class FeatureSetBuilder {
 		Set<Feature> featureSet = new LinkedHashSet<Feature>();
 		featureSet.addAll(getAvgNrOfCharsPerSentence(jcas));
 		featureSet.addAll(getAfgNrOfCharsPerToken(jcas));
-		featureSet.addAll(getAvgNrOfTokenPerSentence(jcas));
 		featureSet.addAll(getNrOfChars(jcas));
-		featureSet.addAll(getNounPhrasesPerSentence(jcas));
-		featureSet.addAll(getVerbPhrasesPerSentence(jcas));
-		featureSet.addAll(getPrepositionalPhrasePerSentence(jcas));
 		featureSet.addAll(getLexicalDensity(jcas));
 		featureSet.addAll(getLexicalVariation(jcas));
 		featureSet.addAll(getTypeTokenRatio(jcas));
@@ -46,30 +41,10 @@ public class FeatureSetBuilder {
 	private static Set<Feature> getAfgNrOfCharsPerToken(JCas jcas) throws LiftFeatureExtrationException {
 		FE_AvgNrOfCharsPerToken extractor = new FE_AvgNrOfCharsPerToken();
 		return extractor.extract(jcas);
-	}
-	
-	private static Set<Feature> getAvgNrOfTokenPerSentence(JCas jcas) throws LiftFeatureExtrationException {
-		FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(Token.class.getName(), Sentence.class.getName());
-		return extractor.extract(jcas);
-	}
+	}	
 	
 	private static Set<Feature> getNrOfChars(JCas jcas) throws LiftFeatureExtrationException {
 		FE_NrOfChars extractor = new FE_NrOfChars();
-		return extractor.extract(jcas);
-	}
-	
-	private static Set<Feature> getNounPhrasesPerSentence(JCas jcas) throws LiftFeatureExtrationException {
-		FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(NC.class.getName(), Sentence.class.getName());
-		return extractor.extract(jcas);
-	}
-	
-	private static Set<Feature> getVerbPhrasesPerSentence(JCas jcas) throws LiftFeatureExtrationException {
-		FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(VC.class.getName(), Sentence.class.getName());
-		return extractor.extract(jcas);
-	}
-	
-	private static Set<Feature> getPrepositionalPhrasePerSentence(JCas jcas) throws LiftFeatureExtrationException {
-		FEL_AvgAnnotationRatio extractor = new FEL_AvgAnnotationRatio(PC.class.getName(), Sentence.class.getName());
 		return extractor.extract(jcas);
 	}
 	

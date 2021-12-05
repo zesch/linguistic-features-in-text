@@ -1,0 +1,9 @@
+package org.lift.features;
+
+public enum RatioCalculationType {
+
+	ANNOTATION_PER_ANNOTATION,
+	ANNOTATION_PER_STRUCTURE,
+	STRUCTURE_PER_ANNOTATION,
+	STRUCTURE_PER_STRUCTURE
+}
