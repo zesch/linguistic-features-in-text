@@ -1,3 +1,6 @@
-IMPORT org.lift.type.Structure FROM desc.type.LiFT
+IMPORT de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN;
+IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma;
+IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;
 
-W{REGEXP("(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$") -> CREATE(Structure, "name"="Nominalization")};
+Token{AND(POS_NOUN, Lemma{FEATURE("value", REGEXP("(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$"))})
+
