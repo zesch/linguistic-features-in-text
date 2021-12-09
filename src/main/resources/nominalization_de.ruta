@@ -1,0 +1,3 @@
+IMPORT org.lift.type.Structure FROM desc.type.LiFT
+
+W{REGEXP("(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$") -> CREATE(Structure, "name"="Nominalization")};
