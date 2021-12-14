@@ -2,5 +2,8 @@ IMPORT de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN;
 IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma;
 IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;
 
-Token{AND(POS_NOUN, Lemma{FEATURE("value", REGEXP("(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$"))})
+//funktioniert, wenn im Ruta Projekt getestet
+//noch nicht eingebaut: zusätzlicher Constraint, dass es sich um ein Nomen handeln muss
+Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")
+
 
