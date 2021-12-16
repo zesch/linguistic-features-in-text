@@ -17,31 +17,18 @@ import org.dkpro.core.languagetool.LanguageToolChecker;
 import org.dkpro.core.matetools.MateLemmatizer;
 import org.dkpro.core.opennlp.OpenNlpChunker;
 import org.dkpro.core.stanfordnlp.StanfordNamedEntityRecognizer;
+import org.lift.api.Configuration.Language;
 
 public class PreprocessingConfiguration {
 
 	private List<AnalysisEngineDescription> components;
-	
-	/**
-	 * Shortcut for supported languages. Maps to 2 letter ISO language codes
-	 */
-	public enum Language {
-	    English("en"),
-	    German("de"),
-	    Unknwon("en");	// we will use default configuration and hope for the best ...
-
-	    public final String code;
-
-	    private Language(String code) {
-	        this.code = code;
-	    }
-	}
+	private Language language;
 	
 	public PreprocessingConfiguration(Language language) 
 			throws ResourceInitializationException
 	{
-
-		components = new ArrayList<>();
+		this.language = language;
+		this.components = new ArrayList<>();
 		
 		AnalysisEngineDescription segmenter = getSegmenter_CoreNLP(language.code);		
 		AnalysisEngineDescription tagger    = getTagger_CoreNLP(language.code);
@@ -94,6 +81,9 @@ public class PreprocessingConfiguration {
 		return createEngineDescription(components.toArray(new AnalysisEngineDescription[0]));
 	}
 	
+	public Language getLanguage() {
+		return language;
+	}
 	
 	private AnalysisEngineDescription getSegmenter_CoreNLP(String languageCode) 
 			throws ResourceInitializationException

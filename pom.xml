@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>org.lift.api</module>
+  	<module>org.lift.features</module>
   	<module>org.lift.preprocessing</module>
   </modules>
 </project>

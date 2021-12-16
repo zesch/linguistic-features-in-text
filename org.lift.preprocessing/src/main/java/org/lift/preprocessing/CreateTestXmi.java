@@ -12,7 +12,7 @@ import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.dkpro.core.io.text.TextReader;
 import org.dkpro.core.io.xmi.XmiWriter;
-import org.lift.preprocessing.PreprocessingConfiguration.Language;
+import org.lift.api.Configuration.Language;
 
 
 

@@ -19,6 +19,7 @@ public class TestUtils {
 		AnalysisEngine engine = createEngine(desc);
 
         JCas jcas = engine.newJCas();
+        jcas.setDocumentLanguage(config.getLanguage().code);
         jcas.setDocumentText(document);
         engine.process(jcas);
         

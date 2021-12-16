@@ -13,8 +13,8 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.dkpro.core.io.xmi.XmiReader;
 import org.junit.jupiter.api.Test;
+import org.lift.api.Configuration.Language;
 import org.lift.preprocessing.PreprocessingConfiguration;
-import org.lift.preprocessing.PreprocessingConfiguration.Language;
 import org.lift.preprocessing.TestUtils;
 import org.lift.type.Structure;
 

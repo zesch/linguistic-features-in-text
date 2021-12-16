@@ -2,9 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.lift.preprocessing</groupId>
 	<artifactId>org.lift.preprocessing</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
   <properties>
     <uima.version>3.1.0</uima.version>
   </properties>
@@ -44,7 +42,12 @@
 	</repositories>
 
 	<dependencies>
-	<dependency>
+			<dependency>
+			<groupId>org.lift</groupId>
+			<artifactId>org.lift.api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
     <groupId>org.apache.uima</groupId>
     <artifactId>uimafit-core</artifactId>
     <version>${uima.version}</version>
@@ -194,4 +197,9 @@
           </plugin>
         </plugins>
       </build>
+      <parent>
+      	<groupId>org.lift</groupId>
+      	<artifactId>org.lift</artifactId>
+      	<version>0.0.1-SNAPSHOT</version>
+      </parent>
 </project>
