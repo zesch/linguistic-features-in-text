@@ -46,6 +46,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.lift.preprocessing</groupId>
+			<artifactId>org.lift.preprocessing</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.uima</groupId>
 			<artifactId>uimafit-core</artifactId>
 			<version>${uima.version}</version>

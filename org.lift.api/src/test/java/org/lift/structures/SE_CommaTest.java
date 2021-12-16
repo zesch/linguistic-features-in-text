@@ -22,8 +22,8 @@ public class SE_CommaTest {
 		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
 
         JCas jcas = engine.newJCas();
-        engine.process(jcas);
         jcas.setDocumentText("test ,");
+        engine.process(jcas);
 
         Token t1 = new Token(jcas, 0, 4);
         t1.addToIndexes();
