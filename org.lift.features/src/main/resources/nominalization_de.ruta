@@ -1,9 +1,35 @@
-//IMPORT de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN;
+IMPORT de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN FROM desc.type.LexicalUnits;
+IMPORT de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS FROM desc.type.LexicalUnits;
 IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma FROM desc.type.LexicalUnits;
 IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;
 
-//funktioniert, wenn im Ruta Projekt getestet
-//noch nicht eingebaut: zusätzlicher Constraint, dass es sich um ein Nomen handeln muss
-Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")
+//works
+//Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")
+//-> CREATE(Structure, \"name\"=\"" + structureName + "\")};
+
+//works
+//(POS{FEATURE("PosValue", "NN")})  {
+
+//does not work (then round brackets are needed)
+//POS{FEATURE("PosValue", "NN")}  {
+
+//works
+//POS{FEATURE("PosValue", "NN")
+
+//works
+//POS_NOUN{
+
+//does not work
+//Token{AND(POS_NOUN, Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")})} {
+
+
+//works (see Section 2.2. Rule elements and their matching order in Ruta documentation)
+(POS_NOUN & Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")}) {
+
+
+
+
+
+
 
 

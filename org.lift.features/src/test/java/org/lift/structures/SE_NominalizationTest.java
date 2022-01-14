@@ -41,6 +41,7 @@ public class SE_NominalizationTest {
 		}
 	}
 	
+	/* commented out because it seems to take very long
 	@Test
 	public void adhoc_document_nominalization() throws Exception {
 
@@ -64,4 +65,5 @@ public class SE_NominalizationTest {
         	System.out.println(entry.getKey().getCoveredText());
         }
 	}
+	*/
 }
