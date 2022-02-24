@@ -1,7 +1,6 @@
 package org.lift.structures;
 
 import static org.dkpro.core.api.featurepath.FeaturePathFactory.select;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map.Entry;
 
@@ -9,13 +8,9 @@ import org.apache.uima.cas.text.AnnotationFS;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.pipeline.JCasIterable;
-import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.dkpro.core.io.xmi.XmiReader;
 import org.junit.jupiter.api.Test;
-import org.lift.api.Configuration.Language;
-import org.lift.preprocessing.PreprocessingConfiguration;
-import org.lift.preprocessing.TestUtils;
 import org.lift.type.Structure;
 
 public class SE_NominalizationTest {
@@ -23,7 +18,7 @@ public class SE_NominalizationTest {
 	@Test
 	public void nominalization_test() throws Exception {
 
-		String rutaPath = "src/main/resources/nominalization_de.ruta";
+		String rutaPath = "src/main/resources/nominalizations/nominalization_de.ruta";
 		String structureName = "Nominalization";
 		String featurePath = Structure.class.getName() + "/" + structureName;
 		SEL_RutaFile se = new SEL_RutaFile(rutaPath, structureName);
