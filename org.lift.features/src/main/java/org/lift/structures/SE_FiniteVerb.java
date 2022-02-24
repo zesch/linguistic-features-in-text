@@ -15,8 +15,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.lift.type.Structure;
 
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma;
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
  * annotates where the connectives specified by the provided list appear in the
@@ -56,7 +54,7 @@ public class SE_FiniteVerb extends ListBasedAnnotator_ImplBase {
 					"finite_verb_postags" + "_" + language + "_" + tagset + ".txt");
 			if (Files.notExists(path)) {
 				throw new ResourceInitializationException(new Throwable(
-						"Cannot load list of finite verb POS tags for language " + language + " and tagset " + tagset));
+						"Cannot load list of finite verb POS tags from path " + path.toString()));
 			}
 			listFilePath = path.toString();
 
