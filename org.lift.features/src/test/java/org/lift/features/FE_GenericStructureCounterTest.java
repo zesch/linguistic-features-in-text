@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
-import org.lift.structures.SEL_RutaFile;
 import org.lift.type.Structure;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;

@@ -23,6 +23,7 @@ public class FEL_GenericStructureCounter
 	
 	private final String structureName;
 
+	// TODO call generic counter instead of duplicating code ...
 	public FEL_GenericStructureCounter(String structureName) {
 		super(structureName + "_counter", FEL_GenericStructureCounter.class.getName() + "_" + structureName);
 		this.structureName = structureName;

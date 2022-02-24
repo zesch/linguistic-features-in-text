@@ -19,7 +19,6 @@ public class SE_ConnectivesTest {
 		
 		AnalysisEngine engine = createEngine(
 				SE_Connectives.class,
-				SE_Connectives.PARAM_LIST_FILE_PATH, "",
 				SE_Connectives.PARAM_LANGUAGE, "en");
 		
         JCas jcas = engine.newJCas();

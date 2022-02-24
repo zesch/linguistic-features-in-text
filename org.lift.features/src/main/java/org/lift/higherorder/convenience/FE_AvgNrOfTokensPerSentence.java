@@ -25,6 +25,7 @@ public class FE_AvgNrOfTokensPerSentence extends FeatureExtractor_ImplBase {
 
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
+		// TODO maybe simplify. Class not needed ...
 		AnnotationExtractionInformation dividendFeaturePath = new AnnotationExtractionInformation(Token.class.getName());
 		AnnotationExtractionInformation divisorFeaturePath = new AnnotationExtractionInformation(Sentence.class.getName());
 		FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(dividendFeaturePath, divisorFeaturePath);

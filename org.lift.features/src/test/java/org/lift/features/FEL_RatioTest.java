@@ -3,7 +3,6 @@ package org.lift.features;
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
