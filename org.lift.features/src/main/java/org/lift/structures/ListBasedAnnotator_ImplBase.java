@@ -17,12 +17,12 @@ public abstract class ListBasedAnnotator_ImplBase
 
 	// we keep that parameter optional, as subclasses might implement loading of default lists
 	public static final String PARAM_LIST_FILE_PATH = "listFilePath";
-    @ConfigurationParameter(name = PARAM_LIST_FILE_PATH, mandatory = false, defaultValue = "")
+    @ConfigurationParameter(name = PARAM_LIST_FILE_PATH, mandatory = false)
     protected String listFilePath;
     
     // TODO shall we have a default here?
 	public static final String PARAM_LANGUAGE = "language";
-    @ConfigurationParameter(name = PARAM_LANGUAGE, mandatory = false, defaultValue = "de")
+    @ConfigurationParameter(name = PARAM_LANGUAGE, mandatory = false)
     protected String language;
     
     protected Set<String> listSet;
