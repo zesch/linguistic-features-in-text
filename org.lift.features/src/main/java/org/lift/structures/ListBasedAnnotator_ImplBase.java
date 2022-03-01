@@ -41,7 +41,7 @@ public abstract class ListBasedAnnotator_ImplBase
 		}
     }
     
-	protected Set<String> readList(String listFilePath) throws IOException {
+	static Set<String> readList(String listFilePath) throws IOException {
 		
 		Set<String> listSet = new HashSet<String>();
 		for (String line : FileUtils.readLines(new File(listFilePath), "UTF-8")) {
