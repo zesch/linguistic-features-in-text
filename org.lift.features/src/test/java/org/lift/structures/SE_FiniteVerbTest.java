@@ -22,6 +22,7 @@ public class SE_FiniteVerbTest {
 	public void finiteVerbTestGerman() throws Exception {
 
 		// TODO SE should be able to provide its name
+		// TODO SE should use internal name (package/class + FE)
 		String structureName = "FiniteVerb";
 		String featurePath = Structure.class.getName() + "/" + structureName;
 		
@@ -36,6 +37,7 @@ public class SE_FiniteVerbTest {
 		for (JCas jcas : new JCasIterable(reader)) {
 			engine.process(jcas);
 		
+			// TODO add real test
             for (Entry<AnnotationFS, String> entry : select(jcas.getCas(), featurePath)) {
             	System.out.println(entry.getKey().getCoveredText());
             }
