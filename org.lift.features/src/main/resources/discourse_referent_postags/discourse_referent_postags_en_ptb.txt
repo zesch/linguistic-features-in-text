@@ -1,0 +1,7 @@
+VBD
+VBP
+VBZ
+NN
+NNS
+NNP
+NNPS
