@@ -23,8 +23,7 @@ public class SE_FiniteVerbTest {
 
 		// TODO SE should be able to provide its name
 		// TODO SE should use internal name (package/class + FE)
-		String structureName = "FiniteVerb";
-		String featurePath = Structure.class.getName() + "/" + structureName;
+		String featurePath = Structure.class.getName() + "/" + new SE_FiniteVerb().getStructureName();
 		
 		AnalysisEngine engine = createEngine(
 				SE_FiniteVerb.class,

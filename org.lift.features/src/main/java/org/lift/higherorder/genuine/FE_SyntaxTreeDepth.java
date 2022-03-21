@@ -26,7 +26,6 @@ public class FE_SyntaxTreeDepth
 	private Language language;
 
 	public FE_SyntaxTreeDepth(Language language) {
-		super("SyntaxTreeDepth", FE_SyntaxTreeDepth.class.getName());
 		this.language = language;
 	}
 
@@ -97,5 +96,10 @@ public class FE_SyntaxTreeDepth
 			}
 		}
 		return max;
+	}
+
+	@Override
+	public String getPublicName() {
+		return "SyntaxTreeDepth";
 	}
 }

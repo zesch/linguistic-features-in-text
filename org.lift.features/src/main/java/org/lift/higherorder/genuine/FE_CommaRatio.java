@@ -21,10 +21,6 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 public class FE_CommaRatio 
 	extends FeatureExtractor_ImplBase
 {
-
-	public FE_CommaRatio() {
-		super("CommaRatio", FE_CommaRatio.class.getName());
-	}
 	
 	@Override
 	public Set<Feature> extract(JCas jcas) 
@@ -42,6 +38,11 @@ public class FE_CommaRatio
 		//Normalization on total count of words
 		double ratio = (double) nrOfCommas / nrOfTokens;
 		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
+	}
+
+	@Override
+	public String getPublicName() {
+		return "CommaRatio";
 	}
 }
 

@@ -2,7 +2,6 @@ package org.lift.features;
 
 import org.lift.api.FeatureExtractor;
 
-
 public abstract class FeatureExtractor_ImplBase 
 	implements FeatureExtractor
 {
@@ -10,20 +9,7 @@ public abstract class FeatureExtractor_ImplBase
 	protected String publicName;
 	protected String internalName;
 	
-	public FeatureExtractor_ImplBase(String publicName, String internalName) {
-		this.publicName = publicName;
-		this.internalName = cleanName(internalName);
-	}
-
-	public String getPublicName() {
-		return publicName;
-	}
-
-	public String getInternalName() {
-		return internalName;
-	}	
-
-	private String cleanName(String name) {
+	protected String cleanName(String name) {
 	    StringBuilder sb = new StringBuilder();
 	    if(!Character.isJavaIdentifierStart(name.charAt(0))) {
 	        sb.append("_");
@@ -36,5 +22,10 @@ public abstract class FeatureExtractor_ImplBase
 	        }
 	    }
 	    return sb.toString();
+	}
+	
+	@Override
+	public String getInternalName() {
+		return cleanName(getClass().getName());
 	}
 }

@@ -19,10 +19,6 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 public class FE_TypeTokenRatio 
 	extends FeatureExtractor_ImplBase
 {
-
-	public FE_TypeTokenRatio() {
-		super("TypeTokenRatio", FE_TypeTokenRatio.class.getName());
-	}
 	
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
@@ -40,5 +36,10 @@ public class FE_TypeTokenRatio
 		features.add(new Feature(getInternalName(), ttr, FeatureType.NUMERIC));
 
 		return features;
+	}
+
+	@Override
+	public String getPublicName() {
+		return "TypeTokenRatio";
 	}
 }

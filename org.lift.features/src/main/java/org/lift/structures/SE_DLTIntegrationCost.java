@@ -23,7 +23,9 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  * 
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.ROOT" })
-public class SE_DLTIntegrationCost extends ListBasedAnnotator_ImplBase {
+public class SE_DLTIntegrationCost 
+	extends ListBasedAnnotator_ImplBase
+{
 
 	public static final String PARAM_LANGUAGE = "lang";
 	@ConfigurationParameter(name = PARAM_LANGUAGE, mandatory = true)
@@ -38,8 +40,6 @@ public class SE_DLTIntegrationCost extends ListBasedAnnotator_ImplBase {
 	private String listFilePathObj;
 	private Set<String> listSetObj;
 	private Set<String> listSetAdv;
-
-	private final String NAME = "DLTIntegrationCost";
 
 	public void initialize(UimaContext context) throws ResourceInitializationException {
 		super.initialize(context);
@@ -112,5 +112,10 @@ public class SE_DLTIntegrationCost extends ListBasedAnnotator_ImplBase {
 //				// TODO stub
 //			}
 		}
+	}
+
+	@Override
+	public String getPublicStructureName() {
+		return "DLTIntegrationCost";
 	}
 }

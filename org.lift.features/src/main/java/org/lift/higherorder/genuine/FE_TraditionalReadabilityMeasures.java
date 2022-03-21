@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -18,12 +17,13 @@ import org.lift.features.FeatureExtractor_ImplBase;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
-public class FE_TraditionalReadabilityMeasures extends FeatureExtractor_ImplBase {
+public class FE_TraditionalReadabilityMeasures 
+	extends FeatureExtractor_ImplBase
+	{
 	
 	private List<ReadabilityConfiguration> readabilityConfigurations;
 
 	public FE_TraditionalReadabilityMeasures(List<ReadabilityConfiguration> readabilityConfigurations) {
-		super("TraditionalReadabilityMeasures", FE_TraditionalReadabilityMeasures.class.getName());
 		this.readabilityConfigurations = readabilityConfigurations;
 	}
 
@@ -57,4 +57,8 @@ public class FE_TraditionalReadabilityMeasures extends FeatureExtractor_ImplBase
 				readability.getReadabilityScore(measure, words, nrOfSentences), FeatureType.NUMERIC);
 	}
 
+	@Override
+	public String getPublicName() {
+		return "TraditionalReadabilityMeasures";
+	}
 }

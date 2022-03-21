@@ -27,7 +27,6 @@ public class FEL_GenericCounter
 	private final Predicate<String> isFeature;
 
 	public FEL_GenericCounter(String featurePath, Predicate<String> isFeature) {
-		super(featurePath + "_counter", FEL_GenericCounter.class.getName() + "__" + featurePath);
 		
 		this.featurePath = featurePath;
 		this.isFeature = isFeature;
@@ -58,6 +57,11 @@ public class FEL_GenericCounter
 		featureSet.add(new Feature("NORMALIZED_" + getInternalName(), ratio, FeatureType.NUMERIC));
 		featureSet.add(new Feature("FN_NR_OF_" + getInternalName(), nrOfFeature, FeatureType.NUMERIC));
 		return featureSet;
+	}
+
+	@Override
+	public String getPublicName() {
+		return featurePath + "_counter";
 	}
 }
 

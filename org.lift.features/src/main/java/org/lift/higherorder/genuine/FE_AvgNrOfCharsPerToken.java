@@ -19,14 +19,12 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 		"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
-public class FE_AvgNrOfCharsPerToken extends FeatureExtractor_ImplBase {
+public class FE_AvgNrOfCharsPerToken 
+	extends FeatureExtractor_ImplBase
+{
 
 	public static final String AVG_NR_OF_CHARS_PER_TOKEN = "avgNumCharsToken";
     public static final String STANDARD_DEVIATION_OF_CHARS_PER_TOKEN = "standardDevCharsPerToken";
-    
-	public FE_AvgNrOfCharsPerToken() {
-		super("AvgNrOfCharsPerToken", FE_AvgNrOfCharsPerToken.class.getName());
-	}
 
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
@@ -67,6 +65,11 @@ public class FE_AvgNrOfCharsPerToken extends FeatureExtractor_ImplBase {
 		featureList.add(new Feature(STANDARD_DEVIATION_OF_CHARS_PER_TOKEN, stndDeviation, FeatureType.NUMERIC));
 		return featureList;
 
+	}
+
+	@Override
+	public String getPublicName() {
+		return "AvgNrOfCharsPerToken";
 	}
 
 }

@@ -1,2 +1,2 @@
 IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;
-Token{REGEXP(",")
+Token{REGEXP(",")-> CREATE(Structure, "name"="Comma")};

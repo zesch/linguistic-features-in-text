@@ -35,8 +35,6 @@ public class SE_FiniteVerb
 	@ConfigurationParameter(name = PARAM_TAGSET, mandatory = false)
 	private String tagset;
 
-	private final String NAME = "FiniteVerb";
-
 	public void initialize(UimaContext context) 
 			throws ResourceInitializationException
 	{
@@ -81,9 +79,14 @@ public class SE_FiniteVerb
 		for (POS pos : JCasUtil.select(jcas, POS.class)) {
 			if (listSet.contains(pos.getPosValue())) {
 				Structure s = new Structure(jcas, pos.getBegin(), pos.getEnd());
-				s.setName(NAME);
+				s.setName(getStructureName());
 				s.addToIndexes();
 			}
 		}
+	}
+
+	@Override
+	public String getPublicStructureName() {
+		return "FiniteVerb";
 	}
 }

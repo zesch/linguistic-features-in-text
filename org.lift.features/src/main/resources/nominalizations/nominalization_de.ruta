@@ -25,11 +25,3 @@ IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.
 
 //works (see Section 2.2. Rule elements and their matching order in Ruta documentation)
 (POS_NOUN & Lemma{REGEXP(Lemma.value, ".+(heit|keit|ment|mus|nis|schaft|tät|tion|tum|ung)$")}) {
-
-
-
-
-
-
-
-

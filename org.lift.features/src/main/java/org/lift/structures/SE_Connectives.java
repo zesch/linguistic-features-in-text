@@ -28,9 +28,7 @@ public class SE_Connectives
 	public static final String PARAM_USE_LEMMAS = "useLemmas";
     @ConfigurationParameter(name = PARAM_USE_LEMMAS, mandatory = true, defaultValue = "false")
     private boolean useLemmas;
-    
-    private final String NAME = "Connectives";
-    
+        
     public void initialize(UimaContext context)
             throws ResourceInitializationException
     {
@@ -62,7 +60,7 @@ public class SE_Connectives
 			for (Lemma lemma : JCasUtil.select(jcas, Lemma.class)) {
 				if (listSet.contains(lemma.getValue())) {
 					Structure s = new Structure(jcas, lemma.getBegin(), lemma.getEnd());
-					s.setName(NAME);
+					s.setName(getStructureName());
 					s.addToIndexes();
 				}
 			}	
@@ -71,10 +69,15 @@ public class SE_Connectives
 			for (Token token : JCasUtil.select(jcas, Token.class)) {
 				if (listSet.contains(token.getCoveredText())) {
 					Structure s = new Structure(jcas, token.getBegin(), token.getEnd());
-					s.setName(NAME);
+					s.setName(getStructureName());
 					s.addToIndexes();
 				}
 			}			
 		}
+	}
+
+	@Override
+	public String getPublicStructureName() {
+		return "Connectives";
 	}
 }

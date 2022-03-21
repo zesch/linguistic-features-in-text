@@ -21,10 +21,6 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 public class FE_LexicalDensity 
 	extends FeatureExtractor_ImplBase
 {
-	
-	public FE_LexicalDensity() {
-		super("LexicalDensity", FE_LexicalDensity.class.getName());
-	}
 
 	@Override
 	public Set<Feature> extract(JCas jcas)
@@ -56,6 +52,11 @@ public class FE_LexicalDensity
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String getPublicName() {
+		return "LexicalDensity";
 	}
 
 }

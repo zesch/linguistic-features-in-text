@@ -1,3 +1,4 @@
+
 package org.lift.higherorder.genuine;
 
 import java.util.Collection;
@@ -19,15 +20,13 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"})
-public class FE_AvgNrOfCharsPerSentence extends FeatureExtractor_ImplBase {
-
+public class FE_AvgNrOfCharsPerSentence 
+	extends FeatureExtractor_ImplBase
+{
 
 	public static final String AVG_NR_OF_CHARS_SENTENCE = "avgNumCharsPerSentence";
     public static final String STANDARD_DEVIATION_OF_CHARS_PER_SENTENCE = "standardDevCharsPerSentence";
     
-    public FE_AvgNrOfCharsPerSentence() {
-		super("AvgNrOfCharsPerSentence", FE_AvgNrOfCharsPerSentence.class.getName());
-	}
     
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
@@ -54,5 +53,11 @@ public class FE_AvgNrOfCharsPerSentence extends FeatureExtractor_ImplBase {
         featureList.add(new Feature(STANDARD_DEVIATION_OF_CHARS_PER_SENTENCE, stndDeviation, FeatureType.NUMERIC));
         
         return featureList;
+	}
+
+
+	@Override
+	public String getPublicName() {
+		return "AvgNrOfCharsPerSentence";
 	}
 }

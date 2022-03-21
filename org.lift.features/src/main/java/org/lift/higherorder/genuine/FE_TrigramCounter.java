@@ -18,12 +18,13 @@ import org.lift.features.util.NGramUtils;
 
 import com.googlecode.jweb1t.JWeb1TSearcher;
 
-public class FE_TrigramCounter extends FeatureExtractor_ImplBase {
+public class FE_TrigramCounter 
+	extends FeatureExtractor_ImplBase
+{
 	
 	String web1tFilePath;
 
 	public FE_TrigramCounter(String web1FilePath) {
-		super("TrigramProbability", FE_TrigramCounter.class.getName());
 		this.web1tFilePath = web1FilePath;
 	}
 
@@ -77,4 +78,8 @@ public class FE_TrigramCounter extends FeatureExtractor_ImplBase {
 		return features;
 	}
 
+	@Override
+	public String getPublicName() {
+		return "TrigramProbability";
+	}
 }

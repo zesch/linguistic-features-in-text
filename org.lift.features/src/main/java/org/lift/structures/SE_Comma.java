@@ -9,15 +9,15 @@ import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.component.JCasAnnotator_ImplBase;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.metadata.TypeSystemDescription;
 import org.apache.uima.util.InvalidXMLException;
+import org.lift.api.StructureExtractor;
 import org.lift.structures.ruta.RutaUtil;
 
 public class SE_Comma 
-	extends JCasAnnotator_ImplBase
+	extends StructureExtractor
 {
 
 	@Override
@@ -37,4 +37,10 @@ public class SE_Comma
 			throw new AnalysisEngineProcessException();
 		}
 	}
+
+	@Override
+	public String getPublicStructureName() {
+		return "Comma";
+	}
+
 }

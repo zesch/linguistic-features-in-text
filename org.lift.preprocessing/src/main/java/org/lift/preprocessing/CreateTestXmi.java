@@ -21,8 +21,9 @@ public class CreateTestXmi {
 	public static void main(String[] args) 
 			throws Exception
 	{
-		runTextExample("src/test/resources/txt/essay_en.txt", Language.English);
-		runTextExample("src/test/resources/txt/news_de.txt", Language.German);
+//		runTextExample("src/test/resources/txt/essay_en.txt", Language.English);
+		runTextExample("src/test/resources/txt/active_passive_en.txt", Language.English);
+//		runTextExample("src/test/resources/txt/news_de.txt", Language.German);
 	}
 		
 	private static void runTextExample(String sourceDir, Language language) throws ResourceInitializationException, UIMAException, IOException {

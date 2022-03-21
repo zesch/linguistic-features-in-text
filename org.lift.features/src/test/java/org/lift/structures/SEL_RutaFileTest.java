@@ -3,7 +3,6 @@ package org.lift.structures;
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngine;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.junit.jupiter.api.Assertions;
@@ -16,11 +15,13 @@ public class SEL_RutaFileTest {
 
 	@Test
 	public void RutaFile_test() throws Exception {
+				
+		AnalysisEngine engine = createEngine(
+				SEL_RutaFile.class,
+				SEL_RutaFile.PARAM_RUTA_FILE, "src/test/resources/ruta/test_rutascript.txt"
+		);
 		
-		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
-
         JCas jcas = engine.newJCas();
-        engine.process(jcas);
         jcas.setDocumentText("test ,");
 
         Token t1 = new Token(jcas, 0, 4);
@@ -28,22 +29,15 @@ public class SEL_RutaFileTest {
         
         Token t2 = new Token(jcas, 5, 6);
         t2.addToIndexes();
-        
-        String filePath = "src/test/resources/txt/test_rutascript.txt";
-        String expectedStructureName = "comma";
-        
-		SEL_RutaFile fe = new SEL_RutaFile(filePath, expectedStructureName);
-		fe.process(jcas);
-		int expectedStructureBegin = 5;
-		int expectedStructureEnd = 6;
+                
+		engine.process(jcas);
 		
 		for (Structure s : JCasUtil.select(jcas, Structure.class)) {
 			Assertions.assertAll("Assert annotated Structure is as expected",
-					() -> Assertions.assertEquals(expectedStructureName, s.getName()),
-					() -> Assertions.assertEquals(expectedStructureBegin, s.getBegin()),
-					() -> Assertions.assertEquals(expectedStructureEnd, s.getEnd())
-					);
+					() -> Assertions.assertEquals("Comma", s.getName()),
+					() -> Assertions.assertEquals(5, s.getBegin()),
+					() -> Assertions.assertEquals(6, s.getEnd())
+			);
 		}
-	}
-	
+	}	
 }

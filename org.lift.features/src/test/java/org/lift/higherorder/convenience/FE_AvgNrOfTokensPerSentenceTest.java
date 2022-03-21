@@ -28,12 +28,11 @@ public class FE_AvgNrOfTokensPerSentenceTest {
         FE_AvgNrOfTokensPerSentence extractor = new FE_AvgNrOfTokensPerSentence();
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
 
-        String baseString = "TOKEN_PER_SENTENCE";
         
         Assertions.assertAll(
         		() -> assertEquals(1, features.size()),
-        		() -> FeatureTestUtil.assertFeatures("FN_" + baseString, 5.0, features, 0.0001)
-        		);
+        		() -> FeatureTestUtil.assertFeature("FN_" + extractor.getInternalName(), 5.0, features.iterator().next(), 0.0001)
+        );
 	}
 	
 }

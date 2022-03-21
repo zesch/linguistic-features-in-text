@@ -1,25 +1,34 @@
 package org.lift.structures;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.component.JCasAnnotator_ImplBase;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 
-public class SEL_Regex extends JCasAnnotator_ImplBase {
+public class SEL_Regex 
+	extends SEL_Ruta
+{
 	
+	public static final String PARAM_REGEXP = "regexp";
+	@ConfigurationParameter(name = PARAM_REGEXP, mandatory = true)
 	private String regexp;
 	
-	public SEL_Regex(String regexp) {
-		this.regexp = regexp;
+	@Override
+	public void process(JCas jcas) throws AnalysisEngineProcessException {
+		
+		String rutaScript = 
+				"IMPORT org.lift.type.Structure FROM desc.type.LiFT;\n" +
+				"IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;\n" +
+				"Token{REGEXP(\"" + regexp + "\")" +
+				"-> CREATE(Structure, \"name\"=\"" + getPublicStructureName() + "\")};";
+		
+		getRutaEngine(rutaScript).process(jcas);			
 	}
 
 	@Override
-	public void process(JCas jcas) throws AnalysisEngineProcessException {
-		String rutaScript = "IMPORT de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token FROM desc.type.LexicalUnits;"
-				+ "Token{REGEXP(\"" + regexp + "\")";
-		String structureName = "REGEXP_" + regexp;
-
-		SEL_RutaScript fe = new SEL_RutaScript(rutaScript, structureName);
-		fe.process(jcas);
+	public String getPublicStructureName() {
+		// TODO using the regexp as part of the name is a very bad idea
+		return "RegExp_" + regexp;
 	}
+
 
 }

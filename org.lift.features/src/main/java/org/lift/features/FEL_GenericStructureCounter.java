@@ -25,7 +25,6 @@ public class FEL_GenericStructureCounter
 
 	// TODO call generic counter instead of duplicating code ...
 	public FEL_GenericStructureCounter(String structureName) {
-		super(structureName + "_counter", FEL_GenericStructureCounter.class.getName() + "_" + structureName);
 		this.structureName = structureName;
 	}
 	
@@ -46,7 +45,12 @@ public class FEL_GenericStructureCounter
 		//Normalization on total count of words
 		double ratio = (double) nrOfFeature / overallCount;
 		
-		return new Feature(getInternalName(), ratio, FeatureType.NUMERIC).asSet();
+		return new Feature("FN_"+ getInternalName(), ratio, FeatureType.NUMERIC).asSet();
+	}
+
+	@Override
+	public String getPublicName() {
+		return structureName + "_counter";
 	}
 }
 

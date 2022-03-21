@@ -17,14 +17,13 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
  * The lexical variation is calculated as the ratio of contentwordtypes per overall contentwords.
  * The JCas hast to be POS tagged.
  */
-public class FE_LexicalVariation extends FeatureExtractor_ImplBase {
+public class FE_LexicalVariation 
+	extends FeatureExtractor_ImplBase
+{
 	
 	public static final String FN_LEXICAL_VARIATION = "LexicalVariation";
 	public static final String FN_VERB_VARIATION = "VerbVariation";
 	
-	public FE_LexicalVariation() {
-		super("LexicalVariation", FE_LexicalVariation.class.getName());			
-	}
 
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
@@ -62,6 +61,11 @@ public class FE_LexicalVariation extends FeatureExtractor_ImplBase {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String getPublicName() {
+		return "LexicalVariation";
 	}
 
 }

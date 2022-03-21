@@ -6,15 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.component.NoOpAnnotator;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
 import org.dkpro.core.tokit.BreakIteratorSegmenter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
-import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.util.FeatureTestUtil;
 import org.lift.structures.SEL_Regex;
 import org.lift.type.Structure;
@@ -25,7 +22,9 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 public class FEL_RatioTest {
 
 	@Test
-	public void structurePerStructureRatio_test() throws ResourceInitializationException, AnalysisEngineProcessException, LiftFeatureExtrationException {
+	public void structurePerStructureRatio_test() 
+			throws Exception
+	{
 		AnalysisEngine engine = createEngine(NoOpAnnotator.class);
 
         JCas jcas = engine.newJCas();
@@ -41,22 +40,27 @@ public class FEL_RatioTest {
         Token t3 = new Token(jcas, 7, 8);
         t3.addToIndexes();
         
-        SEL_Regex fe1 = new SEL_Regex("a");
-        SEL_Regex fe2 = new SEL_Regex("b");
-        fe1.process(jcas);
+		AnalysisEngine fe1 = createEngine(
+				SEL_Regex.class,
+				SEL_Regex.PARAM_REGEXP, "a");      
+		
+		AnalysisEngine fe2 = createEngine(
+				SEL_Regex.class,
+				SEL_Regex.PARAM_REGEXP, "b"); 
+		
+		fe1.process(jcas);
         fe2.process(jcas);
-        String dividendStructureName = "REGEXP_a";
-        String divisorStructureName = "REGEXP_b";
         
-        AnnotationExtractionInformation dividendFeature = new AnnotationExtractionInformation(Structure.class.getName() + "/name", dividendStructureName);
-        AnnotationExtractionInformation divisorFeature = new AnnotationExtractionInformation(Structure.class.getName() + "/name", divisorStructureName);
-		FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(dividendFeature, divisorFeature);
+		FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(
+				Structure.class.getName(), "a",
+				Structure.class.getName(), "b"
+			);
 		Set<Feature> features = extractor.extract(jcas);
 		
 		Assertions.assertAll(
 				() -> assertEquals(1, features.size()),
-				() -> FeatureTestUtil.assertFeatures("FN_" + extractor.buildBaseFeatureString(dividendFeature, divisorFeature), 1, features, 0.0001)
-				);
+				() -> FeatureTestUtil.assertFeature("FN_" + extractor.getInternalName(), 1, features.iterator().next(), 0.0001)
+		);
 	}
 	
 	@Test
@@ -68,15 +72,16 @@ public class FEL_RatioTest {
         jcas.setDocumentText("This is a test. This is a test.");
         engine.process(jcas);
 
-        AnnotationExtractionInformation dividendFeature = new AnnotationExtractionInformation(Token.class.getName());
-        AnnotationExtractionInformation divisorFeature = new AnnotationExtractionInformation(Sentence.class.getName());
-        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(dividendFeature, divisorFeature);
+        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(
+        		Token.class.getName(),
+        		Sentence.class.getName()
+        );
         Set<Feature> features = extractor.extract(jcas);
         
         Assertions.assertAll(
         		() -> assertEquals(1, features.size()),
-        		() -> FeatureTestUtil.assertFeatures("FN_" + extractor.buildBaseFeatureString(dividendFeature, divisorFeature), 5.0, features, 0.0001)
-        		);
+        		() -> FeatureTestUtil.assertFeature("FN_" + extractor.getInternalName(), 5.0, features.iterator().next(), 0.0001)
+        );
 	}
 	
 	@Test
@@ -88,20 +93,21 @@ public class FEL_RatioTest {
         jcas.setDocumentText("This is a test. This is a test.");
         engine.process(jcas);
         
-        SEL_Regex fe1 = new SEL_Regex("a");
-        fe1.process(jcas);
+		AnalysisEngine regexp = createEngine(
+				SEL_Regex.class,
+				SEL_Regex.PARAM_REGEXP, "a"
+		);
+        regexp.process(jcas);
         
-        String divisorStructureName = "REGEXP_a";
-
-        AnnotationExtractionInformation dividendFeature = new AnnotationExtractionInformation(Token.class.getName());
-        AnnotationExtractionInformation divisorFeature = new AnnotationExtractionInformation(Structure.class.getName() + "/name", divisorStructureName);
-        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(dividendFeature, divisorFeature);
+        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(
+        		Token.class.getName(), null,
+        		Structure.class.getName(), "a");
         Set<Feature> features = extractor.extract(jcas);
         
         Assertions.assertAll(
         		() -> assertEquals(1, features.size()),
-        		() -> FeatureTestUtil.assertFeatures("FN_" + extractor.buildBaseFeatureString(dividendFeature, divisorFeature), 5.0, features, 0.0001)
-        		);
+        		() -> FeatureTestUtil.assertFeature("FN_" + extractor.getInternalName(), 5.0, features.iterator().next(), 0.0001)
+        );
 	}
 	
 	@Test
@@ -113,20 +119,21 @@ public class FEL_RatioTest {
         jcas.setDocumentText("This is a test. This is a test.");
         engine.process(jcas);
         
-        SEL_Regex fe1 = new SEL_Regex("a");
-        fe1.process(jcas);
+		AnalysisEngine regexp = createEngine(
+				SEL_Regex.class,
+				SEL_Regex.PARAM_REGEXP, "a");
+        regexp.process(jcas);
         
-        String divisorStructureName = "REGEXP_a";
-
-        AnnotationExtractionInformation divisorFeature = new AnnotationExtractionInformation(Token.class.getName());
-        AnnotationExtractionInformation dividendFeature = new AnnotationExtractionInformation(Structure.class.getName() + "/name", divisorStructureName);
-        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(dividendFeature, divisorFeature);
+        FEL_AnnotationRatio extractor = new FEL_AnnotationRatio(
+        		Structure.class.getName(), "a",
+        		Token.class.getName(), null
+        );
         Set<Feature> features = extractor.extract(jcas);
         
         Assertions.assertAll(
         		() -> assertEquals(1, features.size()),
-        		() -> FeatureTestUtil.assertFeatures("FN_" + extractor.buildBaseFeatureString(dividendFeature, divisorFeature), 0.2, features, 0.0001)
-        		);
+        		() -> FeatureTestUtil.assertFeature("FN_" + extractor.getInternalName(), 0.2, features.iterator().next(), 0.0001)
+        );
 	}
 	
 }

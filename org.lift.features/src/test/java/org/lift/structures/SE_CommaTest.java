@@ -33,14 +33,12 @@ public class SE_CommaTest {
         
 		SE_Comma fe = new SE_Comma();
 		fe.process(jcas);
-		int expectedStructureBegin = 5;
-		int expectedStructureEnd = 6;
 		
 		for (Structure s : JCasUtil.select(jcas, Structure.class)) {
 			Assertions.assertAll("Assert annotated Structure is as expected",
-					() -> Assertions.assertEquals(expectedStructureBegin, s.getBegin()),
-					() -> Assertions.assertEquals(expectedStructureEnd, s.getEnd())
-					);
+					() -> Assertions.assertEquals(5, s.getBegin()),
+					() -> Assertions.assertEquals(6, s.getEnd())
+			);
 		}
 	}
 }

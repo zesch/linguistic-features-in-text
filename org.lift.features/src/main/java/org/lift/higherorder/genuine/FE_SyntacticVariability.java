@@ -18,7 +18,9 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.PennTree;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent;
 
-public class FE_SyntacticVariability extends FeatureExtractor_ImplBase {
+public class FE_SyntacticVariability 
+	extends FeatureExtractor_ImplBase
+{
 
 	public static final String SYNTAX_TYPE_RATIO_POSLEVEL = "SyntaxTypeRatioPosLevel";
 	public static final String SYNTAX_TYPE_RATIO_PHRASELEVEL = "SyntaxTypeRatioPhraseLevel";
@@ -26,10 +28,6 @@ public class FE_SyntacticVariability extends FeatureExtractor_ImplBase {
 	public static final String PAIRWISE_SYNTACTIC_SIMILARITY_PHRASELEVEL = "pairwiseSyntacticSimilarityPhraseLevel";
 	public static final String PAIRWISE_SYNTACTIC_SIMILARITY_POSLEVEL = "pairwiseSyntacticSimilarityPosLevel";
 	public static final String PAIRWISE_SYNTACTIC_SIMILARITY_SENTENCELEVEL = "pairwiseSyntacticSimilaritySentenceLevel";
-
-	public FE_SyntacticVariability() {
-		super("SyntacticVariability", FE_SyntacticVariability.class.getName());
-	}
 	
 	public enum Level {
 		pos,
@@ -118,6 +116,11 @@ public class FE_SyntacticVariability extends FeatureExtractor_ImplBase {
 			}
 		}
 		return StringUtils.join(representation, " ");
+	}
+
+	@Override
+	public String getPublicName() {
+		return "SyntacticVariability";
 	}
 
 }

@@ -13,13 +13,11 @@ import org.lift.features.FeatureExtractor_ImplBase;
  * Extracts the total number of characters.
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"})
-public class FE_NrOfChars extends FeatureExtractor_ImplBase{
+public class FE_NrOfChars 
+	extends FeatureExtractor_ImplBase
+{
 
 	public static String NR_OF_CHARS = "NrOfChars";
-	
-	public FE_NrOfChars() {
-		super("NrOfChars", FE_NrOfChars.class.getName());
-	}
 
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
@@ -28,6 +26,11 @@ public class FE_NrOfChars extends FeatureExtractor_ImplBase{
 		double nrOfChars = text.length();
 		
 		return new Feature(NR_OF_CHARS, nrOfChars, FeatureType.NUMERIC).asSet();
+	}
+
+	@Override
+	public String getPublicName() {
+		return "NrOfChars";
 	}
 	
 }

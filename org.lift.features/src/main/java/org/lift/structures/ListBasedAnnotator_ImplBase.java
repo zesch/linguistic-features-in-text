@@ -7,12 +7,12 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.uima.UimaContext;
-import org.apache.uima.fit.component.JCasAnnotator_ImplBase;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.lift.api.StructureExtractor;
 
 public abstract class ListBasedAnnotator_ImplBase 
-	extends JCasAnnotator_ImplBase
+	extends StructureExtractor
 {
 
 	// we keep that parameter optional, as subclasses might implement loading of default lists

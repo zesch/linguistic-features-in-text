@@ -27,9 +27,9 @@ public class FE_SyntaxTreeDepthTest {
 
         Assertions.assertAll(
         		() -> assertEquals(2, features.size()),
-        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.AVG_SYNTAX_TREE_DEPTH, 3.5, features, 0.0001),
-        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.TOTAL_SYNTAX_TREE_DEPTH, 7.0, features, 0.0001)
-        		);
+        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.AVG_SYNTAX_TREE_DEPTH, 3.0, features, 0.0001),
+        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.TOTAL_SYNTAX_TREE_DEPTH, 6.0, features, 0.0001)
+        );
     }
 	
 	@Test
@@ -44,8 +44,8 @@ public class FE_SyntaxTreeDepthTest {
 
         Assertions.assertAll(
         		() -> assertEquals(2, features.size()),
-        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.AVG_SYNTAX_TREE_DEPTH, 6.0, features, 0.0001),
-        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.TOTAL_SYNTAX_TREE_DEPTH, 12.0, features, 0.0001)
+        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.AVG_SYNTAX_TREE_DEPTH, 5.5, features, 0.0001),
+        		() -> FeatureTestUtil.assertFeatures(FE_SyntaxTreeDepth.TOTAL_SYNTAX_TREE_DEPTH, 11.0, features, 0.0001)
         );
     }
 }

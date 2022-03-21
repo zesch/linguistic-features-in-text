@@ -12,12 +12,14 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.dkpro.core.tokit.BreakIteratorSegmenter;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
 
 public class FE_TrigramCounterTest {
 	
+	@Disabled
 	@Test
 	public void testTrigramProbabilty() throws ResourceInitializationException, AnalysisEngineProcessException, LiftFeatureExtrationException {
 		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
@@ -29,6 +31,7 @@ public class FE_TrigramCounterTest {
 		jcas.setDocumentText("This is a test and this is an example.");
 		engine.process(jcas);
 		
+		// TODO we need to load this from test resources (if we want to use web1t at all)
 		String filePath = "/web1t/en/data";
 		
 		FE_TrigramCounter extractor = new FE_TrigramCounter(filePath);

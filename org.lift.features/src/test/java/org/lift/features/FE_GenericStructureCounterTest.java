@@ -43,12 +43,11 @@ public class FE_GenericStructureCounterTest {
 		FEL_GenericStructureCounter fe = new FEL_GenericStructureCounter(structureName);
 		
 		Set<Feature> features = fe.extract(jcas);
+        System.out.println(features);
 		
 		Assertions.assertAll(
 		        () -> assertEquals(1, features.size()),
-		        () -> FeatureTestUtil.assertFeatures(fe.getInternalName(), 0.5, features, 0.00001)
-				);
-
-        System.out.println(features);
+		        () -> FeatureTestUtil.assertFeature("FN_" + fe.getInternalName(), 0.5, features.iterator().next(), 0.00001)
+		);
 	}
 }

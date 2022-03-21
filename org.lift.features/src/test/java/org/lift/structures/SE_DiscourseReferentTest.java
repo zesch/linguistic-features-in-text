@@ -23,8 +23,7 @@ public class SE_DiscourseReferentTest {
 
 		// TODO SE should be able to provide its name
 		// TODO SE should use internal name (package/class + FE)
-		String structureName = "DiscourseReferent";
-		String featurePath = Structure.class.getName() + "/" + structureName;
+		String featurePath = Structure.class.getName() + "/" + new SE_DiscourseReferent().getStructureName();
 		
 		AnalysisEngine engine = createEngine(
 				SE_DiscourseReferent.class,

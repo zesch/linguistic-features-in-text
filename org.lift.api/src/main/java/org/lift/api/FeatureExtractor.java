@@ -50,7 +50,9 @@ public interface FeatureExtractor
      * @throws TextClassificationException
      *             if feature extraction failed
      */
-    Set<Feature> extract(JCas jcas)
+    public Set<Feature> extract(JCas jcas)
         throws LiftFeatureExtrationException;
-   
+
+    public String getPublicName();
+    public String getInternalName();
 }
