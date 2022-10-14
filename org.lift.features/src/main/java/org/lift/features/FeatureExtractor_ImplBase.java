@@ -1,9 +1,10 @@
 package org.lift.features;
 
 import org.lift.api.FeatureExtractor;
+import org.lift.api.FeatureExtractorAndAnnotator;
 
 public abstract class FeatureExtractor_ImplBase 
-	implements FeatureExtractor
+	extends FeatureExtractorAndAnnotator
 {
 
 	protected String publicName;
