@@ -1,31 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
-            
+              
+  
   
   
   
   <name>lift-types</name>
-            
+              
+  
   
   
   
   <description/>
-            
+              
+  
   
   
   
   <version>1.0</version>
-            
+              
+  
   
   
   
   <vendor/>
-          
+            
+  
   
   
   
   <types>
-                    
+                        
+    
+    
+    
+    
+    <typeDescription>
+                                    
+      
+      
+      
+      
+      <name>org.lift.type.Structure</name>
+                                    
+      
+      
+      
+      
+      <description/>
+                                    
+      
+      
+      
+      
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+                              
+      
+      
+      
+      <features>
+                                        
+        
+        
+        
+        <featureDescription>
+                                                  
+          
+          
+          
+          <name>name</name>
+                                                  
+          
+          
+          
+          <description/>
+                                                  
+          
+          
+          
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+                                                
+        
+        
+        
+        </featureDescription>
+                                      
+      
+      
+      
+      </features>
+                              
+    
+    
+    
+    
+    </typeDescription>
+                  
     
     
     
@@ -34,7 +104,7 @@
       
       
       
-      <name>org.lift.type.Structure</name>
+      <name>org.lift.type.Passive</name>
                               
       
       
@@ -42,6 +112,27 @@
       <description/>
                               
       
+      
+      
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+                            
+    
+    
+    
+    </typeDescription>
+              
+    
+    
+    <typeDescription>
+                        
+      
+      
+      <name>org.lift.type.Frequency</name>
+                        
+      
+      
+      <description/>
+                        
       
       
       <supertypeName>uima.tcas.Annotation</supertypeName>
@@ -56,7 +147,7 @@
                                         
           
           
-          <name>name</name>
+          <name>value</name>
                                         
           
           
@@ -64,7 +155,7 @@
                                         
           
           
-          <rangeTypeName>uima.cas.String</rangeTypeName>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
                                       
         
         
@@ -72,28 +163,16 @@
                               
       
       
+        <featureDescription>
+                    
+          <name>frequencyBand</name>
+                    
+          <description/>
+                    
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+                  
+        </featureDescription>
       </features>
-                        
-    
-    
-    
-    </typeDescription>
-              
-    
-    
-    <typeDescription>
-                        
-      
-      
-      <name>org.lift.type.Passive</name>
-                        
-      
-      
-      <description/>
-                        
-      
-      
-      <supertypeName>uima.tcas.Annotation</supertypeName>
                       
     
     
@@ -103,13 +182,49 @@
     <typeDescription>
                   
       
-      <name>org.lift.type.Frequency</name>
+      <name>org.lift.type.FeatureAnnotation</name>
                   
       
       <description/>
                   
       
       <supertypeName>uima.tcas.Annotation</supertypeName>
+                  
+      
+      <features>
+                        
+        
+        <featureDescription>
+                              
+          
+          <name>name</name>
+                              
+          
+          <description/>
+                              
+          
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+                            
+        
+        </featureDescription>
+                      
+      
+      </features>
+                
+    
+    </typeDescription>
+            
+    
+    <typeDescription>
+                  
+      
+      <name>org.lift.type.FeatureAnnotationNumeric</name>
+                  
+      
+      <description/>
+                  
+      
+      <supertypeName>org.lift.type.FeatureAnnotation</supertypeName>
                   
       
       <features>
@@ -135,55 +250,9 @@
     
     </typeDescription>
       
-    <typeDescription>
-            
-      <name>org.lift.type.FeatureAnnotation</name>
-            
-      <description/>
-            
-      <supertypeName>uima.tcas.Annotation</supertypeName>
-            
-      <features>
-                
-        <featureDescription>
-                    
-          <name>name</name>
-                    
-          <description/>
-                    
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-                  
-        </featureDescription>
-              
-      </features>
-          
-    </typeDescription>
-        
-    <typeDescription>
-            
-      <name>org.lift.type.FeatureAnnotationNumeric</name>
-            
-      <description/>
-            
-      <supertypeName>org.lift.type.FeatureAnnotation</supertypeName>
-            
-      <features>
-                
-        <featureDescription>
-                    
-          <name>value</name>
-                    
-          <description/>
-                    
-          <rangeTypeName>uima.cas.Double</rangeTypeName>
-                  
-        </featureDescription>
-              
-      </features>
-          
-    </typeDescription>
   </types>
-        
+          
+
 
 
 

@@ -40,6 +40,8 @@ extends JCasAnnotator_ImplBase
 	public static final String PARAM_USE_LEMMAS = "useLemmas";
 	@ConfigurationParameter(name = PARAM_USE_LEMMAS, mandatory = true, defaultValue = "false")
 	private boolean useLemmas;
+	
+	//TODO: Variable, ob alles gelowercased werden muss
 
 	private final String NAME = "Frequencies";
 
@@ -86,18 +88,20 @@ extends JCasAnnotator_ImplBase
 
 		if (useLemmas) {
 			for (Lemma lemma : JCasUtil.select(jcas, Lemma.class)) {
-				if (dict.containsKey(lemma.getValue())) {
+				if (dict.containsKey(lemma.getValue().toLowerCase())) {
 					Frequency f = new Frequency(jcas, lemma.getBegin(), lemma.getEnd());
-					f.setValue(dict.get(lemma.getValue()));
+					f.setValue(dict.get(lemma.getValue().toLowerCase()));
+					f.setFrequencyBand("dummy");
 					f.addToIndexes();
 				}
 			}	
 		}
 		else {
 			for (Token token : JCasUtil.select(jcas, Token.class)) {
-				if (dict.containsKey(token.getCoveredText())) {
+				if (dict.containsKey(token.getCoveredText().toLowerCase())) {
 					Frequency f = new Frequency(jcas, token.getBegin(), token.getEnd());
-					f.setValue(dict.get(token.getCoveredText()));
+					f.setValue(dict.get(token.getCoveredText().toLowerCase()));
+					f.setFrequencyBand("dummy");
 					f.addToIndexes();
 				}
 			}			
