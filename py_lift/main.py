@@ -4,10 +4,10 @@ import AvgTokenPerSentence
 import AvgNounPhrasesPerSentence
 
 
-file = '1023_0001416.xmi'
+file = 'data/1023_0001416.xmi'
 pathFeature = "de.tudarmstadt.ukp.dkpro.core.api.metadata.type.MetaDataStringField"
 
-with open('TypeSystem.xml', 'rb') as f:
+with open('data/TypeSystem.xml', 'rb') as f:
     typesys = load_typesystem(f)
 
 with open(file, 'rb') as f:
