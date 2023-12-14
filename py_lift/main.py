@@ -19,7 +19,8 @@ path2 = 'de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS/PosValue'
 ent2 = 'ADV'
 entity = 'PosValue'
 
-print(AnnotationRatio.getAnnotationRatio(path1, path2, ent1, ent2, cas))
-print(AvgTokenPerSentence.getAvgTokenPerSentence(cas))
-print(AvgNounPhrasesPerSentence.getAvgNounPhrasesPerSentence(cas))
+print(AnnotationRatio.AnnotationRatio(path1, path2, ent1, ent2, cas).extract())
+print(AvgTokenPerSentence.AvgTokenPerSentence(cas).extract())
+print(AvgNounPhrasesPerSentence.AvgNounPhrasesPerSentence(cas).extract())
+#print(AvgTokenPerSentence.Test(2,5).multi())
 
