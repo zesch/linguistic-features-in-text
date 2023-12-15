@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.util.FeatureTestUtil;
-import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerSentence;
+import org.lift.higherorder.genuine.FE_CharsPerSentence;
 
-public class FE_AvgNrOfCharsPerSentenceTest {
+public class FE_CharsPerSentenceTest {
 
 	@Test
 	public void avgNrOfCharsPerSentenceFeatureExtractorTest() throws ResourceInitializationException, AnalysisEngineProcessException, LiftFeatureExtrationException {
@@ -30,13 +30,13 @@ public class FE_AvgNrOfCharsPerSentenceTest {
         engine.process(jcas);
         
 
-        FE_AvgNrOfCharsPerSentence extractor = new FE_AvgNrOfCharsPerSentence();
+        FE_CharsPerSentence extractor = new FE_CharsPerSentence();
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
 
         Assertions.assertAll(
         		() -> assertEquals(2, features.size()),
-                () -> FeatureTestUtil.assertFeatures(FE_AvgNrOfCharsPerSentence.AVG_NR_OF_CHARS_SENTENCE, 15.0, features, 0.00001),
-                () -> FeatureTestUtil.assertFeatures(FE_AvgNrOfCharsPerSentence.STANDARD_DEVIATION_OF_CHARS_PER_SENTENCE, 0, features, 0.00001)		
+                () -> FeatureTestUtil.assertFeatures(FE_CharsPerSentence.AVG_NR_OF_CHARS_SENTENCE, 15.0, features, 0.00001),
+                () -> FeatureTestUtil.assertFeatures(FE_CharsPerSentence.STANDARD_DEVIATION_OF_CHARS_PER_SENTENCE, 0, features, 0.00001)		
         		);
 	}
 	

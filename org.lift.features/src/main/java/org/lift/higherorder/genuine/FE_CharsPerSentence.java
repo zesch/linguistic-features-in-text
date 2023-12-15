@@ -20,7 +20,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"})
-public class FE_AvgNrOfCharsPerSentence 
+public class FE_CharsPerSentence 
 	extends FeatureExtractor_ImplBase
 {
 

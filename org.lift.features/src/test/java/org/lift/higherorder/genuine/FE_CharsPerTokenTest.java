@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
-import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerToken;
+import org.lift.higherorder.genuine.FE_CharsPerToken;
 
-public class FE_AvgNrOfCharsPerTokenTest {
+public class FE_CharsPerTokenTest {
 
 	@Test
 	public void tokenLengthFeatureExtractorTest()
@@ -32,13 +32,13 @@ public class FE_AvgNrOfCharsPerTokenTest {
 		jcas.setDocumentText("Sie ist gut.");
 		engine.process(jcas);
 
-		FE_AvgNrOfCharsPerToken extractor = new FE_AvgNrOfCharsPerToken();
+		FE_CharsPerToken extractor = new FE_CharsPerToken();
 		Set<Feature> features = extractor.extract(jcas);
 
 		Assertions.assertAll(
 				() -> assertEquals(2, features.size()),
-				() -> FeatureTestUtil.assertFeatures(FE_AvgNrOfCharsPerToken.STANDARD_DEVIATION_OF_CHARS_PER_TOKEN, 0.0, features, 0.00001),
-				() -> FeatureTestUtil.assertFeatures(FE_AvgNrOfCharsPerToken.AVG_NR_OF_CHARS_PER_TOKEN, 3.0, features, 0.00001)
+				() -> FeatureTestUtil.assertFeatures(FE_CharsPerToken.STANDARD_DEVIATION_OF_CHARS_PER_TOKEN, 0.0, features, 0.00001),
+				() -> FeatureTestUtil.assertFeatures(FE_CharsPerToken.AVG_NR_OF_CHARS_PER_TOKEN, 3.0, features, 0.00001)
 				);
 	}
 	

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
-public class FE_AvgNrOfTokensPerSentenceTest {
+public class FE_TokensPerSentenceTest {
 
 	@Test
 	public void avgNrOfTokenPerSentenceTest() throws Exception {
@@ -25,7 +25,7 @@ public class FE_AvgNrOfTokensPerSentenceTest {
         jcas.setDocumentText("This is a test. This is a test.");
         engine.process(jcas);
 
-        FE_AvgNrOfTokensPerSentence extractor = new FE_AvgNrOfTokensPerSentence();
+        FE_TokensPerSentence extractor = new FE_TokensPerSentence();
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
 
         

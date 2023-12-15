@@ -13,15 +13,15 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
  * Calculates the average number of Token per Sentence.
- * Uses {@link FEL_AvgAnnotationRatio}.
+ * Uses {@link FEL_AnnotationRatio}.
  */
-public class FE_AvgNrOfTokensPerSentence 
+public class FE_TokensPerSentence 
 	extends FeatureExtractor_ImplBase
 {
 
 	private FEL_AnnotationRatio ratioExtractor;
 	
-	public FE_AvgNrOfTokensPerSentence() {
+	public FE_TokensPerSentence() {
 		ratioExtractor = new FEL_AnnotationRatio(
 				Token.class.getName(),
 				Sentence.class.getName()

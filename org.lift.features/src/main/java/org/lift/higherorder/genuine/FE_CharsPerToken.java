@@ -19,7 +19,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 @TypeCapability(inputs = { "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
 		"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
-public class FE_AvgNrOfCharsPerToken 
+public class FE_CharsPerToken 
 	extends FeatureExtractor_ImplBase
 {
 

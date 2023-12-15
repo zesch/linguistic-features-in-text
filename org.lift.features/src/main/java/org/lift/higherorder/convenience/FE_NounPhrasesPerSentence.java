@@ -11,13 +11,13 @@ import org.lift.features.FeatureExtractor_ImplBase;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.NC;
 
-public class FE_AvgNrOfNounPhrasesPerSentence 
+public class FE_NounPhrasesPerSentence 
 	extends FeatureExtractor_ImplBase
 {
 
 	private FEL_AnnotationRatio ratioExtractor;
 	
-	public FE_AvgNrOfNounPhrasesPerSentence() 
+	public FE_NounPhrasesPerSentence() 
 	{
 		ratioExtractor = new FEL_AnnotationRatio(
 			NC.class.getName(),

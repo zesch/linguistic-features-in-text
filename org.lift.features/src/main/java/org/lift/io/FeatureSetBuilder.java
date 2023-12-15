@@ -6,8 +6,8 @@ import java.util.Set;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
 import org.lift.api.LiftFeatureExtrationException;
-import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerSentence;
-import org.lift.higherorder.genuine.FE_AvgNrOfCharsPerToken;
+import org.lift.higherorder.genuine.FE_CharsPerSentence;
+import org.lift.higherorder.genuine.FE_CharsPerToken;
 import org.lift.higherorder.genuine.FE_LexicalDensity;
 import org.lift.higherorder.genuine.FE_LexicalVariation;
 import org.lift.higherorder.genuine.FE_NrOfChars;
@@ -34,12 +34,12 @@ public class FeatureSetBuilder {
 	}
 	
 	private static Set<Feature> getAvgNrOfCharsPerSentence(JCas jcas) throws LiftFeatureExtrationException {
-		FE_AvgNrOfCharsPerSentence extractor = new FE_AvgNrOfCharsPerSentence();
+		FE_CharsPerSentence extractor = new FE_CharsPerSentence();
 		return extractor.extract(jcas);
 	}
 	
 	private static Set<Feature> getAfgNrOfCharsPerToken(JCas jcas) throws LiftFeatureExtrationException {
-		FE_AvgNrOfCharsPerToken extractor = new FE_AvgNrOfCharsPerToken();
+		FE_CharsPerToken extractor = new FE_CharsPerToken();
 		return extractor.extract(jcas);
 	}	
 	

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
 
-public class FE_AvgNrOfNounPhrasePerSentenceTest {
+public class FE_NounPhrasePerSentenceTest {
 
 	@Test
 	public void avgNrOfNounPhrasePerSentenceTest() throws Exception {
@@ -26,7 +26,7 @@ public class FE_AvgNrOfNounPhrasePerSentenceTest {
 		);
 		JCas jcas = new JCasIterable(reader).iterator().next();
 		
-        FE_AvgNrOfNounPhrasesPerSentence extractor = new FE_AvgNrOfNounPhrasesPerSentence();
+        FE_NounPhrasesPerSentence extractor = new FE_NounPhrasesPerSentence();
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         Assertions.assertAll(
