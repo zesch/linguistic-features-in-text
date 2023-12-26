@@ -1177,6 +1177,280 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
         </typeDescription>
         <!-- -->
 
+            <typeDescription>
+                                                  
+              
+              
+              
+              
+              
+              <name>org.lift.type.Structure</name>
+                                                  
+              
+              
+              
+              
+              
+              <description/>
+                                                  
+              
+              
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                            
+              
+              
+              
+              
+              <features>
+                                                        
+                
+                
+                
+                
+                <featureDescription>
+                                                                    
+                  
+                  
+                  
+                  
+                  <name>name</name>
+                                                                    
+                  
+                  
+                  
+                  
+                  <description/>
+                                                                    
+                  
+                  
+                  
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                                                  
+                
+                
+                
+                
+                </featureDescription>
+                                                      
+              
+              
+              
+              
+              </features>
+                                            
+            
+            
+            
+            
+            
+            </typeDescription>
+                              
+            
+            
+            
+            
+            <typeDescription>
+                                            
+              
+              
+              
+              
+              <name>org.lift.type.Passive</name>
+                                            
+              
+              
+              
+              
+              <description/>
+                                            
+              
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                          
+            
+            
+            
+            
+            </typeDescription>
+                          
+            
+            
+            
+            <typeDescription>
+                                      
+              
+              
+              
+              <name>org.lift.type.Frequency</name>
+                                      
+              
+              
+              
+              <description/>
+                                      
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                      
+              
+              
+              
+              <features>
+                                                
+                
+                
+                
+                <featureDescription>
+                                                          
+                  
+                  
+                  
+                  <name>value</name>
+                                                          
+                  
+                  
+                  
+                  <description/>
+                                                          
+                  
+                  
+                  
+                  <rangeTypeName>uima.cas.Double</rangeTypeName>
+                                                        
+                
+                
+                
+                </featureDescription>
+                                              
+              
+              
+                
+                <featureDescription>
+                                      
+                  
+                  <name>frequencyBand</name>
+                                      
+                  
+                  <description/>
+                                      
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                    
+                
+                </featureDescription>
+                      
+              </features>
+                                    
+            
+            
+            
+            </typeDescription>
+                      
+            
+            
+            <typeDescription>
+                                
+              
+              
+              <name>org.lift.type.FeatureAnnotation</name>
+                                
+              
+              
+              <description/>
+                                
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                
+              
+              
+              <features>
+                                        
+                
+                
+                <featureDescription>
+                                                
+                  
+                  
+                  <name>name</name>
+                                                
+                  
+                  
+                  <description/>
+                                                
+                  
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                              
+                
+                
+                </featureDescription>
+                                      
+              
+              
+              </features>
+                              
+            
+            
+            </typeDescription>
+                        
+            
+            
+            <typeDescription>
+                                
+              
+              
+              <name>org.lift.type.FeatureAnnotationNumeric</name>
+                                
+              
+              
+              <description/>
+                                
+              
+              
+              <supertypeName>org.lift.type.FeatureAnnotation</supertypeName>
+                                
+              
+              
+              <features>
+                                        
+                
+                
+                <featureDescription>
+                                                
+                  
+                  
+                  <name>value</name>
+                                                
+                  
+                  
+                  <description/>
+                                                
+                  
+                  
+                  <rangeTypeName>uima.cas.Double</rangeTypeName>
+                                              
+                
+                
+                </featureDescription>
+                                      
+              
+              
+              </features>
+                              
+            
+            
+            </typeDescription>
+                  
+          
+
         <typeDescription>
 
             <name>de.tudarmstadt.ukp.clarin.webanno.api.type.FeatureDefinition</name>

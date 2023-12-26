@@ -8,8 +8,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.11"
 dkpro-cassis = "^0.8.0"
+pytest = "^7.4.3"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
