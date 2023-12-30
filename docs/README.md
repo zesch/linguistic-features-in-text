@@ -2,7 +2,12 @@
 
 LiFT is a library for extracting linguistic features from textual data.
 
-We rely on a UIMA repesentation model based on the [DKPro Core](https://dkpro.github.io/dkpro-core/) type system and preprocessing components.
+LiFT is currently maintained by:
+* [ICALL Research Group](http://icall-research.de), University of Tübingen
+* [Procoli](https://www.fernuni-hagen.de/computerlinguistik/), FernUniversität in Hagen
+* Digitale Geisteswissenschaft, Universität Hildesheim
+  
+We rely on a UIMA CAS repesentation model based on the [DKPro Core](https://dkpro.github.io/dkpro-core/) type system and preprocessing components.
 This makes LiFT multi-lingual, supporting all the [languages](https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/model-reference.html) included in DKPro Core.
 However, not all structures might be supported in each language.
 
@@ -29,7 +34,4 @@ We also support various meta-features of linguistic complexity:
 * readability measures
 * type-token ratio (TTR)
 
-LiFT is currently maintained by:
-* [ICALL Research Group](http://icall-research.de), University of Tübingen
-* [Language Technology Lab](https://www.ltl.uni-due.de), University of Duisburg-Essen
-* EduNLP Group, University of Hagen
+
