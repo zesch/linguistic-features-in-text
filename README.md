@@ -1,4 +1,4 @@
-# LiFT (Linguistic Features in Text)
+# Linguistic Features in Text (LiFT)
 
 LiFT is a library for extracting linguistic features from textual data.
 
