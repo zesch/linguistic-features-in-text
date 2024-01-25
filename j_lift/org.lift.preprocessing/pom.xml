@@ -10,7 +10,7 @@
 	<repositories>
 		<repository>
 			<id>mvnrepo</id>
-			<url>https://repo1.maven.org/maven2/</url>
+			<url>https://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-releases</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
