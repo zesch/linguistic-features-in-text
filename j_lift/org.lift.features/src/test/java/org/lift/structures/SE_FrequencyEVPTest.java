@@ -10,15 +10,15 @@ import org.apache.uima.jcas.JCas;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.type.CEFR;
-import org.lift.features.util.TestBase_2;
-import org.lift.features.util.TestBase_2.ParserType;
+import org.lift.features.util.TestBase;
+import org.lift.features.util.TestBase.ParserType;
 
 public class SE_FrequencyEVPTest {
 	
 	@Test
-	public void SE_FrequencyEVPTest() throws Exception {
+	public void test_SE_FrequencyEVP() throws Exception {
 		
-		AnalysisEngine engine = TestBase_2.getPreprocessingEngine("en",ParserType.noParser);
+		AnalysisEngine engine = TestBase.getPreprocessingEngine("en",ParserType.noParser);
 		JCas jcas = engine.newJCas();		
 		jcas.setDocumentLanguage("en");
 		jcas.setDocumentText("The test is ongoing");
