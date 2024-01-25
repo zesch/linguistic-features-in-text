@@ -18,32 +18,32 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.lift.type.CEFR;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
-
-
-
-public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
-
+public class SE_FrequencyEVP 
+	extends JCasAnnotator_ImplBase
+{
 	
-	Map<Vocabulary, Integer> vocab;
+	private Map<Vocabulary, Integer> vocab;
 	
-	 @Override
-	  public void initialize(final UimaContext context) throws ResourceInitializationException {
-	    
-		String listFilePath1 = "resources/evp/EVP.csv";
-		String listFilePath2 = "resources/evp/EVP_extension.csv";
+	@Override
+	public void initialize(final UimaContext context) 
+		throws ResourceInitializationException 
+	{			
 		try {
-			vocab = readMapping(listFilePath1,listFilePath2);
+			vocab = readMapping(
+				"src/main/resources/evp/EVP.csv", 
+				"src/main/resources/evp/EVP_extension.csv"
+			);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ResourceInitializationException(e);
 		}
-		
-	
 	}
-	 protected Map<Vocabulary, Integer> readMapping(String listFilePath1, String listFilePath2) throws IOException {
-		
-		 Charset inputCharset = Charset.forName("UTF-8");
+
+	protected Map<Vocabulary, Integer> readMapping(String listFilePath1, String listFilePath2) 
+		throws IOException 
+	{
+		// TODO the list also contains phrases, how to handle?
 		 Map<Vocabulary, Integer> map = new HashMap<Vocabulary, Integer>();
-		 for (String line : FileUtils.readLines(new File(listFilePath1), inputCharset)) {
+		 for (String line : FileUtils.readLines(new File(listFilePath1), "UTF-8")) {
 				String[] parts = line.split(",");
 				String wordName = parts[0].toLowerCase();
 				String wordType = parts[1].toLowerCase();
@@ -51,18 +51,19 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 				int level = 1;
 				try {
 					level = Integer.parseInt(parts[2]);
-				}catch(NumberFormatException e) {
-					System.err.println("NaN");
 				}
-//				System.out.println(wordName+" "+wordType+" "+level);
+				catch(NumberFormatException e) {
+					throw new IOException(e);
+				}
 				
 				Vocabulary vo = new Vocabulary(wordName, wordType);
 				if (!map.containsKey(vo)) {
 					map.put(new Vocabulary(wordName, wordType), level);
 				}
-				
 		 }
-		 for (String line : FileUtils.readLines(new File(listFilePath2), inputCharset)) {
+
+		 // TODO code duplication, consider wrapping in method
+		 for (String line : FileUtils.readLines(new File(listFilePath2), "UTF-8")) {
 				String[] parts = line.split(",");
 				String wordName = parts[0].toLowerCase();
 				String wordType = parts[1].toLowerCase();
@@ -75,21 +76,23 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		
+		// TODO do we need this?
 		//This data needs to be written (Object[])
         Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		
-		Collection<Token> tokens = JCasUtil.select(aJCas, Token.class);
 		int i=1;
-		for (Token t : tokens){
+		for (Token t : JCasUtil.select(aJCas, Token.class)){
 			String lemma = t.getLemma().getValue().toLowerCase();
 //			String pOS =   t.getPos().getPosValue();
 			String wordType = "";
 
+			// TODO consider switch statement for readability
 			//change Tagset to compaire with types of words in the EVP-Wordlist
-			if(t.getPos().getCoarseValue()!= null) {
-				if(t.getPos().getCoarseValue().equals("NOUN")){
+			if (t.getPos().getCoarseValue() != null) {
+				if (t.getPos().getCoarseValue().equals("NOUN")){
 					wordType = "noun";
-				}else if(t.getPos().getCoarseValue().equals("VERB")) {
+				}
+				else if(t.getPos().getCoarseValue().equals("VERB")) {
 					wordType = "verb";
 				}else if(t.getPos().getCoarseValue().equals("ADJ")) {
 					wordType = "adjective";
@@ -108,20 +111,22 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 				}
 			}
 			Vocabulary vocabulary = new Vocabulary(lemma,wordType);
-				
 			
-			  if (vocab.containsKey(vocabulary)){ 
-				  CEFR f = new CEFR(aJCas); 
-				  f.setBegin(t.getBegin());
-				  f.setEnd(t.getEnd()); 
-				  f.setLevel(computeFrequencyBand(vocab.get(vocabulary)));
-				  f.addToIndexes(); 
-			  }
+			if (vocab.containsKey(vocabulary)){ 
+				CEFR f = new CEFR(aJCas); 
+				f.setBegin(t.getBegin());
+				f.setEnd(t.getEnd()); 
+				f.setLevel(computeFrequencyBand(vocab.get(vocabulary)));
+				f.addToIndexes(); 
+			}
 		}		
 		
 	}
+	
 	private String computeFrequencyBand(double frequencyValue) {
 		String level="";
+		
+		// TODO consider switch for readability
 		if (frequencyValue == 1.0) {
 			level = "A1";
 		}
@@ -142,6 +147,7 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 		}
 		return level;
 	}
+
 	class Vocabulary{
 		private String wordName;
 		private String wordType ;
@@ -159,8 +165,8 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 		public String getWordType() {
 			return wordType;
 		}
-		public void setWordType(String pOS) {
-			this.wordType = pOS;
+		public void setWordType(String pos) {
+			this.wordType = pos;
 		}
 		@Override
 		public int hashCode() {
@@ -184,5 +190,4 @@ public class SE_FrequencyEVP extends JCasAnnotator_ImplBase{
 	               wordType.equals(vocabulary.wordType);
 	    }
 	}
-
 }
