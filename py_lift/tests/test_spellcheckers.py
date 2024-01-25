@@ -3,7 +3,7 @@
 import pytest
 from util import load_typesystem as lt
 from cassis import *
-from extractors import SE_SpellErrorAnnotator
+from annotators import SE_SpellErrorAnnotator
 
 T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
 T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
