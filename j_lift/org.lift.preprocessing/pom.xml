@@ -7,6 +7,7 @@
     <uima.version>3.1.0</uima.version>
   </properties>
 
+	<!--
 	<repositories>
 		<repository>
 			<id>ltl-model</id>
@@ -40,7 +41,8 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+	-->
+	
 	<dependencies>
 			<dependency>
 			<groupId>org.lift</groupId>
