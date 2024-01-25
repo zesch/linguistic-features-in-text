@@ -1,0 +1,5818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<typeSystemDescription xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://uima.apache.org/resourceSpecifier">-->
+ <typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+        
+
+    <!-- without xmlns for the element typeSystemDescription we can validate -->
+    <types>
+
+
+<!-- Adding xmlns for spellchecker and validator -->
+
+<typeDescription>
+      <name>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.GrammarAnomaly</name>
+      <description/>
+      <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.Anomaly</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.Anomaly</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>description</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>suggestions</name>
+          <description>An array of the suggested actions to be taken for this anomaly.</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction</elementType>
+        </featureDescription>
+        <featureDescription>
+          <name>category</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly</name>
+      <description/>
+      <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.Anomaly</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>replacement</name>
+          <description>The text covered by the Anomaly annotation should be replaced with the contents of this feature.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>certainty</name>
+          <description>A score representing how certain is this suggested action.
+Usually in [0,1].</description>
+          <rangeTypeName>uima.cas.Float</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+
+
+
+
+
+
+
+
+        <typeDescription>
+
+            <name>org.dakoda.learnerannotation</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+                <!-- jr : should we add this ?? -->
+                <!--featureDescription>
+                    
+                    <name>type</name>
+                    
+                    <description/>
+                    
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                    
+                </featureDescription-->
+
+
+                <featureDescription>
+
+                    <name>frag</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
+<!--V_semdenot_word_fs_v_semdenot_word_fs_type
+        
+        		<feat xlink:href="#V_semdenot_word_fs_2" value="0"/>
+		<feat xlink:href="#V_semdenot_word_fs_3" value="1"/>
+				<feat xlink:href="#V_semdenot_word_fs_2" value="0"/>
+		severity of the semantic error
+        -->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_semdenot_word_fs_v_semdenot_word_fs_type</name>
+            
+            <description>severity of error on semantically wrong word or FS</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+<!--
+            Semantic errors' are instances in which a word/formulaic sequence is used semantically wrong so that
+the comprehensibility of the proposition is affected.
+V_semdenot_word_fs_v_semdenot_word_fs_range
+        <feat xlink:href="#V_semdenot_word_fs_2" value="word"/>
+        -->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_semdenot_word_fs_v_semdenot_word_fs_range</name>
+            
+            <description>semantically wrong word or FS: which of the two</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+<!--cat ./1091_0000224/Mmax2_SLayer.1091_0000224.mark_Mmax2.V_FS_form_v_fs_form_type.xml
+              <feat xlink:href="#V_FS_form_1" value="o"/>
+                <feat xlink:href="#V_FS_form_1" value="ch"/>
+-->        
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_FS_form_v_fs_form_type</name>
+            
+            <description>choice, omission, addition if a formulaic sequence is formally incorrect</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+
+
+
+        
+        <!--cat ./1091_0000047/Mmax2_SLayer.1091_0000047.mark_Mmax2.V_FS_v_fs_type.xml
+        <feat xlink:href="#V_FS_1" value="commphras"/> communicative phraseologism
+        <feat xlink:href="#V_FS_1" value="colloc"/> collocation 
+        ...
+        tag is only used if an FS is incorrect with regard to its formal elements.
+        -->
+        
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_FS_v_fs_type</name>
+            
+            <description>FS is incorrect with regard to its formal elements</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+        
+
+
+<!--cat ./1071_0024871/Mmax2_SLayer.1071_0024871.mark_Mmax2.V_Wordform_v_wordform_type.xml
+        <feat xlink:href="#V_Wordform_1" value="comp"/>
+        
+
+-->
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_Wordform_v_wordform_type</name>
+            
+            <description>word formation problem: derivation or composition/compounding (no inflectional errors!)</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+        
+
+
+<!--cat ./1071_0024817/Mmax2_SLayer.1071_0024817.mark_Mmax2.V_semconn_at_word_fs_v_semconn_at_word_fs_range.xml      
+                <feat xlink:href="#V_semconn_at_word_fs_1" value="word"/>
+        aword/FS does not have an appropriate (connotative) meaning with regard to the speaker's/writer's attitude in the given context
+-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_semconn_at_word_fs_v_semconn_at_word_fs_range</name>
+            
+            <description>odd connotation</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+<!--        V_semimprec_v_semimprec_range-->
+<!--        <feat xlink:href="#V_semimprec_1" value="fs"/>-->
+<!--        <feat xlink:href="#V_semimprec_2" value="word"/>-->
+        
+<!--        This tag has to be used for different cases that do not constitute real incorrect forms. Rather, they refer
+        to lexical choices that lead to propositions that are in a way semantically imprecise, unusual, not native-
+        like.-->
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_semimprec_v_semimprec_range</name>
+            
+            <description>imprecision, oddness of lexical choice: word or formulaic sequence</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+<!--correctness of particular use-->
+<!--cat ./1031_0002010/Mmax2_SLayer.1031_0002010.mark_Mmax2.S_Var_s_var_partik_type.xml
+               
+                <feat xlink:href="#S_Var_1" value="0"/>
+                 
+                 S_Var_part_0 = if the use of the particle is inappropriate or wrong or just unusual (e.g. Was willst du DOCH
+eigentlich? Was willst du ÜBERHAUPT eigentlich?).
+S_Var_partik_1 = if the use is appropriate/acceptable or perfectly fine.
+                 
+
+-->
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.S_Var_s_var_partik_type</name>
+            
+            <description>correctness of particle use</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+<!--S_Var_s_var_type-->
+        <!--Variation within a  language-->
+<!--        clit, duppron, synstr, che; woweil = weil-v2; partik = Abtönungspartikeln -->
+        <!--<feat xlink:href="#S_Var_1" value="partik"/>
+        <feat xlink:href="#S_Var_1" value="wowell"/>
+        -->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.S_Var_s_var_type</name>
+            
+            <description>language specific variation (for DE  e.g. particles and verb order with weil)</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+<!-- TEXT TYPE specific elements: grfw = greetings and farewells; opcl = openings and closings -->
+<!--        S_Txt_s_txt_type-->
+<!--        <feat xlink:href="#S_Txt_2" value="grfw"/> 
+        <feat xlink:href="#S_Txt_3" value="opcl"/-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.S_Txt_s_txt_type</name>
+            
+            <description>TEXT TYPE specific elements: grfw = greetings and farewells; opcl = openings and closings</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription> 
+
+
+
+<!--  cat ./1061_0120357/Mmax2_SLayer.1061_0120357.mark_Mmax2.S_Form_s_form_type.xml-->
+<!--        <feat xlink:href="#S_Form_1" value="addr"/>-->
+<!--        <feat xlink:href="#S_Form_2" value="gen"/>-->
+        <!--sociolinguistics FORMALITY-->        
+<!--        If a learner does not adhere to the language-specific rules in completing MERLIN tasks, S_Form_addr is used-->        
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.S_Form_s_form_type</name>
+            
+            <description>sociolinguistics formality: form of address; generally inadequate formality</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+
+
+<!--V_form_word_fs_nonexist_v_form_word_fs_nonexist_range-->
+<!--        cat ./1023_0109401/Mmax2_SLayer.1023_0109401.mark_Mmax2.V_form_word_fs_nonexist_v_form_word_fs_nonexist_range.xml-->
+<!--        <feat xlink:href="#V_form_word_fs_nonexist_1" value="word"/>-->
+<!--        annotate non existing words or FS.-->
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.V_form_word_fs_nonexist_v_form_word_fs_nonexist_range</name>
+            
+            <description>Annotation of nonexisting verbs or formulaic sequences</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+        
+
+
+
+
+<!--cat ./1091_0000195/Mmax2_SLayer.1091_0000195.mark_Mmax2.P_Request_p_request_type.xml
+                <feat xlink:href="#P_Request_1" value="direct"/>
+                <feat xlink:href="#P_Request_2" value="indirect"/>
+-->        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.P_Request_p_request_type</name>
+            
+            <description>Annotation of requests and their types</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+<!--cat ./1023_0101691/Mmax2_SLayer.1023_0101691.mark_Mmax2.O_Graph_o_graph_graphgen_act_type.xml
+                   errors with diacritically marked graphemes: additional, omission, wrong choice
+                <feat xlink:href="#O_Graph_1" value="o"/>
+                <feat xlink:href="#O_Graph_2" value="ch"/
+-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.O_Graph_o_graph_graphgen_act_type</name>
+            
+            <description>Ortho error: type of grapheme error : omission, wrong choice , addition</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+<!--cat ./1061_1029116/Mmax2_SLayer.1061_1029116.mark_Mmax2.O_Graph_o_graph_type.xml
+        <feat xlink:href="#O_Graph_1" value="graphgen"/>
+        <feat xlink:href="#O_Graph_2" value="trans"/>
+        <feat xlink:href="#O_Graph_3" value="graphgen"/>
+-->        
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.O_Graph_o_graph_type</name>
+            
+            <description>Ortho error: transposition or general grapeheme error; error cateegory does not apply to inflectional
+                suffixes.</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription> 
+
+
+
+<!--
+O_Wordbd_o_wordbd_type
+Word boundary error-->
+        <!--<feat xlink:href="#O_Wordbd_1" value="merge"/>
+        -->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.O_Wordbd_o_wordbd_type</name>
+            
+            <description>Ortho error: word boundaries</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription> 
+
+
+        <!--Orthographic error - Punctuation-->
+        <!--omission, extra, position, wrong type-->
+        <!--<feat xlink:href="#O_Punct_1" value="ch"/>
+        <feat xlink:href="#O_Punct_2" value="ad"/>
+        <feat xlink:href="#O_Punct_3" value="ch"/>
+        -->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.O_Punct_o_punct_type</name>
+            
+            <description>Ortho error: Punctuation ( omission , extra, wrong type)</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>  
+
+
+<!--Orthographic error - Apostrophe-->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.O_Apostr_o_apostr_type</name>
+            
+            <description>Ortho error: Apostrophe</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+        
+
+
+<!--
+cat ./1023_0108934/Mmax2_SLayer.1023_0108934.mark_Mmax2.H_Intelltxt_intelltxt_type.xml 
+        <feat xlink:href="#H_Intelltxt_1" value="1"/>
+        TEXT comprehensibility
+        value 0 : incomprehensible, value 1 partially understandable, or understandable with difficulties 
+        -->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.H_Intelltxt_intelltxt_type</name>
+            
+            <description>intelligibility of text</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+        
+
+
+
+<!--cat ./1023_0108934/Mmax2_SLayer.1023_0108934.mark_Mmax2.H_Intellts_intellts_type.xml
+        <feat xlink:href="#H_Intellts_1" value="0"/>
+        SENTENCE comprehensibility
+        value 0 : incomprehensible, value 1 partially understandable, or understandable with difficulties 
+        -->        
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.H_Intellts_intellts_type</name>
+            
+            <description>intelligibility of sentences</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>   
+
+        
+        
+<!--        G_Verb_main_g_verb_main_type-->
+        <!--./1091_0000047/Mmax2_SLayer.1091_0000047.mark_Mmax2.G_Verb_main_g_verb_main_type.xml-->
+        <!--<feat xlink:href="#G_Verb_main_1" value="o"/>
+        <feat xlink:href="#G_Verb_main_2" value="o"/>
+        -->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Verb_main_g_verb_main_type</name>
+            
+            <description>missing or redundant main verb</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>     
+        
+        
+ 
+<!-- ERRORs to do with VERBS TMA -->
+<!-- MOOD       <feat xlink:href="#G_Verb_1" value="md"/>-->
+<!-- TENSE       <feat xlink:href="#G_Verb_1" value="tns"/>-->
+<!--        ASP = aspect, VC = voice-->
+        
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Verb_g_verb_type</name>
+            
+            <description>verb feature error</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>    
+        
+        
+ <!--
+complex VERB error: we distinguish errors in the formation of complex predicates (i.e. analytical verb forms,
+predicates with modals and copulative predicates)
+        <feat xlink:href="#G_Verb_compl_1" value="pos"/>-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Verb_compl_g_verb_compl_type</name>
+            
+            <description>complex verb form / verbal  complex error</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+<!--VALENCY ERROR: omission or addition of complements-->
+
+<!--        <feat xlink:href="#G_Valency_1" value="complnumb_o"/>
+        <feat xlink:href="#G_Valency_2" value="complnumb_ad"/>-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Valency_g_valency_type</name>
+            
+            <description>valency error</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+        
+
+
+<!--REFLEXIVE pronoun errors-->
+<!--        Errors in the use of reflexive pronouns in MERLIN are tagged in case of:
+        a) missing pronoun (G_Refl_pronrefl_O)
+        b) wrongly added reflexive pronoun (G_Refl_pronrefl_Ad)
+        c) wrong choice of reflexive pronoun (also in the object position) or using personal pronoun instead pronoun or
+        of the reflexive one (G_Refl_pronrefl_Ch)
+        d) wrong position of the reflexive pronoun (G_Refl_pronrefl_Pos)
+-->
+
+
+        <!--<feat xlink:href="#G_Refl_1" value="pronrefl"/>
+        -->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Refl_g_refl_type</name>
+            
+            <description>marker of reflexive pronoun error</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+                
+        
+        
+        <!--        <feat xlink:href="#G_Refl_1" value="ch"/>-->
+        
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Refl_g_refl_pronrefl_type</name>
+            
+            <description>type of reflexive pronoun error</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+        
+
+
+        <!--connector error / accuracy-->
+        <!--        Mo 15 Mai 2023 [ KW20 ]-->
+        <!--<feat xlink:href="#C_Con_accur_1" value="o"/>
+        <feat xlink:href="#C_Con_accur_1" value="pos"/>
+        -->
+        <!--This tag involves an error definition : position, omission, addition, wrong choice-->
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.C_Con_accur_c_con_accur_type</name>
+            
+            <description>type of incorrect connector use</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+ <!--connector error / accuracy-->
+<!--        Mo 15 Mai 2023 [ KW20 ]-->
+<!--./1061_0120320/Mmax2_SLayer.1061_0120320.mark_Mmax2.C_Con_accur_c_con_accur_correct_type.xml
+        <feat xlink:href="#C_Con_accur_1" value="0"/>-->        
+<!--        the value indicates severity??? (0 or 1)-->
+
+
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.C_Con_accur_c_con_accur_correct_type</name>
+            
+            <description>severity: 0 or 1</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+<!-- general negation error, 4 subtypes
+a) wrong position of negation expressions (G_Neg_neggen_Pos)
+b) missing part of negation (G_Neg_neggen_O)
+c) wrong use of negation words (e.g., GER: nicht, nein, kein; ITA: no, non; CZE: ne, žádný
+(G_Neg_neggen_Ch)
+d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
+
+<!--Mmax2.G_Neg_g_neg_type.xml <!-\-feat xlink:href="#G_Neg_1" value="neggen"/-\->
+ Mmax2.G_Neg_g_neg_neggen_type.xml   <!-\-feat xlink:href="#G_Neg_1" value="ad"/-\->-->
+
+
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Neg_g_neg_type</name>
+            
+            <description>type of negation (usu general = neggen, but in theory there could be a double negation error)</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Neg_g_neg_neggen_type</name>
+            
+            <description>type of general negation  error: addition, omission, wrong pos, wrong use</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+        
+
+
+
+        <!--Mo 15 Mai 2023 [ KW20 ]-->
+        <!--        Mmax2_SLayer.1023_0101688.mark_Mmax2.G_Inflect_Inexist_g_inflect_inexist_type-->
+        <!--   <feat xlink:href="#G_Inflect_Inexist_1" value="verb"/>-->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Inflect_Inexist_g_inflect_inexist_type</name>
+            
+            <description>inflectional form that is not existent in paradigm; value records the POS of the token</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+        <!--Mo 15 Mai 2023 [ KW20 ]-->
+        <!--        Mmax2_SLayer.1023_0101688.mark_Mmax2.G_Morphol_Wrong_g_morphol_wrong_type.xml-->
+        <!--        <feat xlink:href="#G_Morphol_Wrong_1" value="numb"/>-->
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Morphol_Wrong_g_morphol_wrong_type</name>
+            
+            <description>annotation of non-standard morphology (case, number, gender)</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+        <!-- Do 11 Mai 2023   -->
+        <!--        /Mmax2_SLayer.1071_0024694.mark_Mmax2.G_Art_g_art_type.xml-->
+        <!--        <feat xlink:href="#G_Art_1" value="ch"/>-->
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Art_g_art_type</name>
+
+            <description>annotation of non-standard (non)use of articles</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+        <!-- Do 11 Mai 2023   -->
+        <!--       Mmax2_SLayer.1061_0120320.mark_Mmax2.G_Conj_g_conj_type.xml-->
+        <!--        <feat xlink:href="#G_Conj_1" value="ch"/>-->
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Conj_g_conj_type</name>
+
+            <description>annotation of non-standard use of conjunctions</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+        <!-- Do 11 Mai 2023   -->
+        <!--       Mmax2_SLayer.1091_0000220.mark_Mmax2.G_Prep_g_prep_type.xml-->
+        <!--       <feat xlink:href="#G_Prep_1" value="ad"/>-->
+
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Prep_g_prep_type</name>
+
+            <description>annotation of non-standard (non)use of prepositions</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+        <!-- Do 11 Mai 2023   -->
+        <!--       ./1071_0242041/Mmax2_SLayer.1071_0242041.mark_Mmax2.G_Wo_g_wo_type.xml -->
+        <!--       <feat xlink:href="#G_Wo_2" value="womaincl"/>-->
+        
+        <typeDescription>
+            <name>org.dakoda.merlin.Mmax2.G_Wo_g_wo_type</name>
+            
+            <description>annotation of non-standard (non)use of word order</description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <!--id = href in merlin-->
+                    <name>id</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+
+
+        <typeDescription>
+
+            <name>uima.tcas.DocumentAnnotation</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>language</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <!-- added -->
+        <typeDescription>
+            <name>org.dakoda.DocumentAnnotation</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.DocumentAnnotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>key</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+            </features>
+        </typeDescription>
+        <!-- -->
+
+            <typeDescription>
+                                                  
+              
+              
+              
+              
+              
+              <name>org.lift.type.Structure</name>
+                                                  
+              
+              
+              
+              
+              
+              <description/>
+                                                  
+              
+              
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                            
+              
+              
+              
+              
+              <features>
+                                                        
+                
+                
+                
+                
+                <featureDescription>
+                                                                    
+                  
+                  
+                  
+                  
+                  <name>name</name>
+                                                                    
+                  
+                  
+                  
+                  
+                  <description/>
+                                                                    
+                  
+                  
+                  
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                                                  
+                
+                
+                
+                
+                </featureDescription>
+                                                      
+              
+              
+              
+              
+              </features>
+                                            
+            
+            
+            
+            
+            
+            </typeDescription>
+                              
+            
+            
+            
+            
+            <typeDescription>
+                                            
+              
+              
+              
+              
+              <name>org.lift.type.Passive</name>
+                                            
+              
+              
+              
+              
+              <description/>
+                                            
+              
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                          
+            
+            
+            
+            
+            </typeDescription>
+                          
+            
+            
+            
+            <typeDescription>
+                                      
+              
+              
+              
+              <name>org.lift.type.Frequency</name>
+                                      
+              
+              
+              
+              <description/>
+                                      
+              
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                      
+              
+              
+              
+              <features>
+                                                
+                
+                
+                
+                <featureDescription>
+                                                          
+                  
+                  
+                  
+                  <name>value</name>
+                                                          
+                  
+                  
+                  
+                  <description/>
+                                                          
+                  
+                  
+                  
+                  <rangeTypeName>uima.cas.Double</rangeTypeName>
+                                                        
+                
+                
+                
+                </featureDescription>
+                                              
+              
+              
+                
+                <featureDescription>
+                                      
+                  
+                  <name>frequencyBand</name>
+                                      
+                  
+                  <description/>
+                                      
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                    
+                
+                </featureDescription>
+                      
+              </features>
+                                    
+            
+            
+            
+            </typeDescription>
+                      
+            
+            
+            <typeDescription>
+                                
+              
+              
+              <name>org.lift.type.FeatureAnnotation</name>
+                                
+              
+              
+              <description/>
+                                
+              
+              
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+                                
+              
+              
+              <features>
+                                        
+                
+                
+                <featureDescription>
+                                                
+                  
+                  
+                  <name>name</name>
+                                                
+                  
+                  
+                  <description/>
+                                                
+                  
+                  
+                  <rangeTypeName>uima.cas.String</rangeTypeName>
+                                              
+                
+                
+                </featureDescription>
+                                      
+              
+              
+              </features>
+                              
+            
+            
+            </typeDescription>
+                        
+            
+            
+            <typeDescription>
+                                
+              
+              
+              <name>org.lift.type.FeatureAnnotationNumeric</name>
+                                
+              
+              
+              <description/>
+                                
+              
+              
+              <supertypeName>org.lift.type.FeatureAnnotation</supertypeName>
+                                
+              
+              
+              <features>
+                                        
+                
+                
+                <featureDescription>
+                                                
+                  
+                  
+                  <name>value</name>
+                                                
+                  
+                  
+                  <description/>
+                                                
+                  
+                  
+                  <rangeTypeName>uima.cas.Double</rangeTypeName>
+                                              
+                
+                
+                </featureDescription>
+                                      
+              
+              
+              </features>
+                              
+            
+            
+            </typeDescription>
+                  
+          
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.clarin.webanno.api.type.FeatureDefinition</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.TOP</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>layer</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.clarin.webanno.api.type.LayerDefinition</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>uiName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.clarin.webanno.api.type.LayerDefinition</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.TOP</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>uiName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.coref.type.CoreferenceChain</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.AnnotationBase</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>first</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.coref.type.CoreferenceLink</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.coref.type.CoreferenceLink</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>next</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.coref.type.CoreferenceLink</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>referenceType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>referenceRelation</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.Morpheme</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>morphTag</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>gender</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>number</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>case</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>degree</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>verbForm</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>tense</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>mood</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>voice</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>definiteness</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>person</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>aspect</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>animacy</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>negative</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>numType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>possessive</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>pronType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>reflex</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>transitivity</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
+        <!-- custom.bohnet.morph -->
+
+
+
+
+
+        <typeDescription>
+
+            <name>org.dakoda.anonymized</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+
+        <typeDescription>
+
+            <name>org.dakoda.learnerseg</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.closing</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+
+
+
+        <typeDescription>
+
+            <name>org.dakoda.editop</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+
+            </features>
+
+        </typeDescription>
+
+
+        <typeDescription>
+
+            <name>org.dakoda.greeting</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.deletion</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.error</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.repetition</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+            </features>
+
+        </typeDescription>
+
+
+
+        <!--  Do 06 Apr 2023 [ KW14 ] -->
+
+        <typeDescription>
+
+            <name>org.dakoda.merlin.spans.learnerfeat</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
+
+
+
+
+        <!-- -->
+
+        <typeDescription>
+
+            <name>org.dakoda.merlin.spans.tunit</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
+<!-- inserted for syntaxdot topo fields Di 11 Jul 2023 [ KW28 ] -->
+
+
+
+<typeDescription>
+
+            <name>custom.syntaxdot.topofield</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>FieldValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+        
+
+
+
+<!-- inserted for UD pos types Di 11 Jul 2023 [ KW28 ] -->
+
+<typeDescription>
+
+            <name>custom.UniversalDependencies.POS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+        
+
+
+        <!-- inserted for Stanford POS on Mo 03 Apr 2023 [ KW14 ]  -->
+
+
+        <typeDescription>
+
+            <name>custom.Stanford.POS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
+        <typeDescription>
+
+            <name>custom.Stanford.POS.PPER</name>
+
+            <description/>
+
+            <supertypeName>custom.Stanford.POS</supertypeName>
+
+        </typeDescription>
+
+
+        <!-- end -->
+
+
+
+        <!-- inserted for Bohnet POS on Mo 03 Apr 2023 [ KW14 ]  -->
+
+
+        <typeDescription>
+
+            <name>custom.bohnet.POS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>custom.bohnet.POS.ADJA</name>
+
+            <description/>
+
+            <supertypeName>custom.bohnet.POS</supertypeName>
+
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.ADJD</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.ADV</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.APPR</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.APPRART</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.APPO</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.APZR</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.ART</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.CARD</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.FM</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.ITJ</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.KOUI</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.KOUS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.KON</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.KOKOM</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.NN</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.NE</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.PDAT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.PDS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PIAT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PIS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PPER</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PPOSAT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PPOSS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PRELS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PRELAT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PRF</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PWS</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PWAT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PWAV</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PROAV</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PTKZU</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PTKNEG</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PTKVZ</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PTKANT</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.PTKA</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.TRUNC</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.VVFIN</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.VAFIN</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VMFIN</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVINF</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VAINF</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+        <typeDescription>
+            <name>custom.bohnet.POS.VMINF</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVIMP</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VAIMP</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVPP</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVAP</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVMP</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.VVIZU</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <typeDescription>
+            <name>custom.bohnet.POS.COMMA</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.LRB</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+        <typeDescription>
+            <name>custom.bohnet.POS.PERIOD</name>
+            <description/>
+            <supertypeName>custom.bohnet.POS</supertypeName>
+        </typeDescription>
+
+
+        <!-- end -->
+
+
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>coarseValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_ADJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_ADP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_ADV</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_AUX</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_CONJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_DET</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_INTJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NUM</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_PART</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_PRON</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_PROPN</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_PUNCT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_SCONJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_SYM</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_VERB</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_AT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_DM</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_EMO</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_HASH</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_INT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_NNV</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_NPV</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.tweet.POS_URL</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_X</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.DocumentAnnotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>documentTitle</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>documentId</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>documentUri</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>collectionId</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>documentBaseUri</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>isLastSegment</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.metadata.type.MetaDataStringField</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>key</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.metadata.type.TagDescription</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.TOP</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.metadata.type.TagsetDescription</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>layer</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>tags</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>de.tudarmstadt.ukp.dkpro.core.api.metadata.type.TagDescription</elementType>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>componentName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>modelLocation</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>modelVariant</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>modelLanguage</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>modelVersion</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>input</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>identifier</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Nationality</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Norp</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Ordinal</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.OrgDesc</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Organization</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.PerDesc</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Percent</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Person</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Plant</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Product</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.ProductDesc</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Quantity</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Substance</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Time</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.WorkOfArt</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Compound</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>splits</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Split</elementType>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Div</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>divType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Document</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Div</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Heading</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Div</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.LexicalPhrase</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>text</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.NGram</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>text</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Paragraph</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Div</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Split</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>splits</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Split</elementType>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Stem</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.StopWord</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.SurfaceForm</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+        <!-- -->
+
+
+
+        <typeDescription>
+
+            <name>custom.bohnet.Lemma</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+                <featureDescription>
+                    <name>value</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+
+        <!-- -->
+
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>parent</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.tcas.Annotation</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>lemma</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>stem</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Stem</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>pos</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>morph</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>id</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>form</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.TokenForm</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>syntacticFunction</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>order</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Integer</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.TokenForm</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemArg</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemArgLink</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.TOP</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>role</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>target</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemArg</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemPred</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>arguments</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemArgLink</elementType>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>category</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticArgument</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>role</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticField</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticPredicate</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>category</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>arguments</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.SemanticArgument</elementType>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.semantics.type.WordSense</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.structure.type.Field</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.PennTree</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PennTree</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>TransformationNames</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>chunkValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.INTJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.LST</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.NC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.O</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.PC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.PRT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.VC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>constituentType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>parent</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.tcas.Annotation</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>children</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>uima.tcas.Annotation</elementType>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>syntacticFunction</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.FRAG</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.INTJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.LST</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.NAC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.NP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.NX</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.PARN</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.PP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.PRP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.PRT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.QP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.ROOT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.RRC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.S</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.SBAR</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.SBARQ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.SINV</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.SQ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.UCP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.VP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.WHADJP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.WHADVP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.WHNP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.WHPP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.X</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Governor</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>Dependent</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>DependencyType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>flavor</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.EXPL</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.INFMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.IOBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.MARK</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.MEASURE</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.MWE</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NEG</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NN</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NPADVMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NSUBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NSUBJPASS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NUM</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.NUMBER</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PARATAXIS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PARTMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PCOMP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.POBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.POSS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.POSSESSIVE</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PRECONJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PRED</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PREDET</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PREP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PREPC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PRT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PUNCT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.PURPCL</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.QUANTMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.RCMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.REF</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.REL</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ROOT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.TMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.XCOMP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.XSUBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.transform.type.SofaChangeAnnotation</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>operation</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>reason</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.pdf.type.PdfChunk</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>d</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>x</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>y</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>w</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>h</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>c</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.IntegerArray</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>g</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FloatArray</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.pdf.type.PdfPage</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>width</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>height</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>pageNumber</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Integer</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.xml.type.XmlAttribute</name>
+
+            <description/>
+
+            <supertypeName>uima.cas.TOP</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>uri</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>localName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>value</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>qName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>valueType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.xml.type.XmlDocument</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>root</name>
+
+                    <description/>
+
+                    <rangeTypeName>org.dkpro.core.api.xml.type.XmlElement</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>captureRoots</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>org.dkpro.core.api.xml.type.XmlNode</elementType>
+
+                    <multipleReferencesAllowed>true</multipleReferencesAllowed>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.xml.type.XmlNode</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>parent</name>
+
+                    <description/>
+
+                    <rangeTypeName>org.dkpro.core.api.xml.type.XmlElement</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.xml.type.XmlTextNode</name>
+
+            <description/>
+
+            <supertypeName>org.dkpro.core.api.xml.type.XmlNode</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>text</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>captured</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>webanno.custom.Alt_Dependency</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Dependent</name>
+
+                    <description/>
+
+                    <rangeTypeName>webanno.custom.SynArg</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>Governor</name>
+
+                    <description/>
+
+                    <rangeTypeName>webanno.custom.SynArg</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>Depreltype</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>webanno.custom.Dgdid</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>dgdids</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>webanno.custom.Language</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Langval</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>webanno.custom.Speaker</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>spstring</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>webanno.custom.SynArg</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Argtype</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Animal</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Cardinal</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.ContactInfo</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Date</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Disease</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Event</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Fac</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.FacDesc</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Game</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Gpe</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.GpeDesc</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Language</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Law</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Location</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.ner.type.Money</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.CompoundPart</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Split</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.LinkingMorpheme</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Split</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.ADJC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.ADVC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.CONCJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.ADJP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.ADVP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.CONJP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ABBREV</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ACOMP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ADVCL</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ADVMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.AGENT</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.AMOD</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.APPOS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ATTR</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.AUX0</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.AUXPASS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CC</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CCOMP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.COMPLM</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CONJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CONJP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CONJ_YET</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.COP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CSUBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.CSUBJPASS</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.DEP</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.DET</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.DOBJ</name>
+
+            <description/>
+
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency</supertypeName>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dkpro.core.api.xml.type.XmlElement</name>
+
+            <description/>
+
+            <supertypeName>org.dkpro.core.api.xml.type.XmlNode</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>uri</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>localName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>attributes</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>org.dkpro.core.api.xml.type.XmlAttribute</elementType>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>children</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+
+                    <elementType>org.dkpro.core.api.xml.type.XmlNode</elementType>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>qName</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+    </types>
+
+</typeSystemDescription>
