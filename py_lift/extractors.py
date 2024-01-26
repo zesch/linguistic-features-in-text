@@ -1,10 +1,12 @@
 from cassis import Cas
-from util import load_typesystem
+
+from util import load_typesystem as lt
+
 
 class FEL_AnnotationRatio:
 
     def __init__(self, type_dividend, type_divisor):
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = lt('data/TypeSystem.xml')
         self.dividend_type = type_dividend
         self.divisor_type = type_divisor
 
@@ -41,3 +43,6 @@ class FE_TokensPerSentence(FEL_AnnotationRatio):
     def __init__(self):
         super().__init__('de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token',
                          'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence')
+
+
+
