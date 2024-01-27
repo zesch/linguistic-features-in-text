@@ -2,25 +2,27 @@ from cassis import Cas
 
 from util import load_typesystem as lt
 from spellchecker import SpellChecker
+from cassis.typesystem import TYPE_NAME_FS_ARRAY
 
-T_ANNOTATION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
-S_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
+T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
+T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
+T_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
 
 class SE_SpellErrorAnnotator:
 
     def __init__(self):
         self.ts = lt('data/TypeSystem.xml')
         self.spell = SpellChecker()
-        self.A = self.ts.get_type(T_ANNOTATION)
-        self.S = self.ts.get_type(S_SUGGESTION)
+        self.A = self.ts.get_type(T_ANOMALY)
+        self.S = self.ts.get_type(T_SUGGESTION)
+        self.FSArray = self.ts.get_type(TYPE_NAME_FS_ARRAY)
 
     def process(self, cas: Cas) -> bool: 
-        #for sentence in cas.select('de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'):
-        for token in cas.select('de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'):
-            if token.get_covered_text() in self.spell.unknown([token.get_covered_text()]):
-                annotation = self.A(begin=token.begin, end=token.end) 
-                suggested_action = self.S(replacement=self.spell.correction(token.get_covered_text()), begin=token.begin, end=token.end)
-                cas.add(annotation)
-                cas.add(suggested_action)
+        for token in cas.select(T_TOKEN):
+            t_str = token.get_covered_text()
+            if t_str in self.spell.unknown([t_str]):
+                suggested_action = self.S(replacement=self.spell.correction(t_str), begin=token.begin, end=token.end)
+                anomaly = self.A(begin=token.begin, end=token.end, suggestions=self.FSArray(elements=[suggested_action])) 
+                cas.add(anomaly)
 
         return True

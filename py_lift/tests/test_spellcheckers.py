@@ -1,17 +1,16 @@
-
-
 import pytest
-from util import load_typesystem as lt
-from cassis import *
+from util import load_typesystem
+from cassis import Cas
+from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from annotators import SE_SpellErrorAnnotator
 
 T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
 T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
-T_ANNOTATION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
+T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
 S_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
 
 def test_extractors():
-    ts = lt('data/TypeSystem.xml')
+    ts = load_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a tast. A smoll one."
 
@@ -31,11 +30,16 @@ def test_extractors():
     s2 = S(begin=16, end=27)
     cas.add_all([s1, s2])
 
+    FSArray = ts.get_type(TYPE_NAME_FS_ARRAY)
+
     SE_SpellErrorAnnotator().process(cas)
-    for tok in cas.select(T_ANNOTATION):
-        assert tok.get_covered_text() in ["tast", "smoll"]
-    for tok in cas.select(S_SUGGESTION):
-        assert tok.replacement in ["last", "small"]                
-
-
-
+    for anomaly in cas.select(T_ANOMALY):
+        t_str = anomaly.get_covered_text()
+        assert t_str in ["tast", "smoll"]
+        suggestions = anomaly.get('suggestions')
+        for element in suggestions.get('elements'):
+            replacement = element.get('replacement')
+            if t_str == 'tast':
+                assert replacement == 'last'
+            elif t_str == 'smoll':
+                assert replacement == 'small'
