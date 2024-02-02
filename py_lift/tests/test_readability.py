@@ -10,7 +10,7 @@ def test_readability():
     FE_FleschIndex().extract(cas)
 
     i = 0
-    for feature in cas.select(T_FEATURE):
+    for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
         assert feature.name == 'Readability_Score_Flesch_Kincaid_Lang_de'
         assert feature.value == 74.9
         i += 1
