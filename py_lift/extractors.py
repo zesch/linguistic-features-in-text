@@ -1,6 +1,7 @@
 from cassis import Cas
 from util import load_typesystem
 
+
 class FEL_AnnotationRatio:
 
     def __init__(self, type_dividend, type_divisor):
@@ -31,6 +32,9 @@ class FEL_AnnotationRatio:
         cas.add(feature)
 
         return True
+
+
+
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
     def __init__(self):
