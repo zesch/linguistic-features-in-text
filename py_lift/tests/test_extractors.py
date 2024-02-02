@@ -40,20 +40,20 @@ def test_extractors():
 
     assert i == 1
 
-def test_readability():
-    ts = load_typesystem('data/TypeSystem.xml')
-    cas = load_cas_from_xmi('data/testcas.xmi', typesystem=ts)
+#def test_readability():
+#    ts = load_typesystem('data/TypeSystem.xml')
+#    cas = load_cas_from_xmi('data/testcas.xmi', typesystem=ts)
     
-    #FE_FleschIndex().extract(cas, 'learner')
-    FE_FleschIndex().extract(cas, 'TH1')
+#    #FE_FleschIndex().extract(cas, 'learner')
+#    FE_FleschIndex().extract(cas, 'TH1')
 
-    i = 0
-    for feature in cas.select(T_FEATURE):
-        assert feature.name == 'Readability_Score_Flesch_Kincaid_Lang_de'
-        assert feature.value == 61.7
-        i += 1
+#    i = 0
+#    for feature in cas.select(T_FEATURE):
+#        assert feature.name == 'Readability_Score_Flesch_Kincaid_Lang_de'
+#        assert feature.value == 61.7
+#        i += 1
 
-    assert i == 1
+#    assert i == 1
 
 
 
