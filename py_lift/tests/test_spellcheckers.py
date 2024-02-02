@@ -1,39 +1,12 @@
 import pytest
-from util import load_typesystem
-from cassis import Cas
-from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from annotators import SE_SpellErrorAnnotator
+from lift_fixtures import *
 
-T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
-T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
 T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
-S_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
 
-def test_extractors():
-    ts = load_typesystem('data/TypeSystem.xml')
-    cas = Cas(typesystem=ts)
-    cas.sofa_string = "This is a tast. A smoll one."
-
-    # TODO can we take more convenient way to test CASes from Cassis?
-    T = ts.get_type(T_TOKEN)
-    t1 = T(begin=0, end=4)
-    t2 = T(begin=5, end=7)
-    t3 = T(begin=8, end=9)
-    t4 = T(begin=10, end=14)
-    t5 = T(begin=16, end=17)
-    t6 = T(begin=18, end=23)
-    t7 = T(begin=24, end=27)
-    cas.add_all([t1, t2, t3, t4, t5, t6, t7])
-
-    S = ts.get_type(T_SENTENCE)
-    s1 = S(begin=0, end=15)
-    s2 = S(begin=16, end=27)
-    cas.add_all([s1, s2])
-
-    FSArray = ts.get_type(TYPE_NAME_FS_ARRAY)
-
-    SE_SpellErrorAnnotator().process(cas)
-    for anomaly in cas.select(T_ANOMALY):
+def test_extractors(cas_simple):
+    SE_SpellErrorAnnotator("en").process(cas_simple)
+    for anomaly in cas_simple.select(T_ANOMALY):
         t_str = anomaly.get_covered_text()
         assert t_str in ["tast", "smoll"]
         suggestions = anomaly.get('suggestions')
@@ -43,3 +16,7 @@ def test_extractors():
                 assert replacement == 'last'
             elif t_str == 'smoll':
                 assert replacement == 'small'
+
+def test_unknown_language(cas_simple):
+    with pytest.raises(ValueError) as e_info:
+        SE_SpellErrorAnnotator("xy").process(cas_simple)
