@@ -50,6 +50,17 @@ def cas_no_annotations(typesystem_xml):
 def cas_simple(typesystem_xml, tokens, sentences):
     ts = load_typesystem(typesystem_xml)
     cas = Cas(ts)
+    cas.sofa_string = "This is a test. A small one."
+
+    cas.add_all(tokens)
+    cas.add_all(sentences)
+
+    return cas
+
+@pytest.fixture
+def cas_simple_with_errors(typesystem_xml, tokens, sentences):
+    ts = load_typesystem(typesystem_xml)
+    cas = Cas(ts)
     cas.sofa_string = "This is a tast. A smoll one."
 
     cas.add_all(tokens)

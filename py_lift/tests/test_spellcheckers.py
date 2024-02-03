@@ -4,9 +4,9 @@ from lift_fixtures import *
 
 T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
 
-def test_extractors(cas_simple):
-    SE_SpellErrorAnnotator("en").process(cas_simple)
-    for anomaly in cas_simple.select(T_ANOMALY):
+def test_extractors(cas_simple_with_errors):
+    SE_SpellErrorAnnotator("en").process(cas_simple_with_errors)
+    for anomaly in cas_simple_with_errors.select(T_ANOMALY):
         t_str = anomaly.get_covered_text()
         assert t_str in ["tast", "smoll"]
         suggestions = anomaly.get('suggestions')
