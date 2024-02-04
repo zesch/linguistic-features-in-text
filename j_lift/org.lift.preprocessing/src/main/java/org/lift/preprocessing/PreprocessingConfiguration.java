@@ -15,6 +15,7 @@ import org.dkpro.core.corenlp.CoreNlpPosTagger;
 import org.dkpro.core.corenlp.CoreNlpSegmenter;
 import org.dkpro.core.languagetool.LanguageToolChecker;
 import org.dkpro.core.matetools.MateLemmatizer;
+import org.dkpro.core.matetools.MateMorphTagger;
 import org.dkpro.core.opennlp.OpenNlpChunker;
 import org.dkpro.core.stanfordnlp.StanfordNamedEntityRecognizer;
 import org.lift.api.Configuration.Language;
@@ -36,6 +37,7 @@ public class PreprocessingConfiguration {
 		AnalysisEngineDescription ner       = getNER_Stanford(language.code);
 		
 		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription morphTagger    = createEngineDescription(NoOpAnnotator.class);
 		AnalysisEngineDescription chunker    = createEngineDescription(NoOpAnnotator.class);
 		
 		AnalysisEngineDescription constituentParser = getParser_CoreNLP(language.code);
@@ -61,6 +63,9 @@ public class PreprocessingConfiguration {
 			lemmatizer = createEngineDescription(
 					MateLemmatizer.class,
 					MateLemmatizer.PARAM_LANGUAGE, Language.German.code);
+			morphTagger = createEngineDescription(
+					MateMorphTagger.class,
+					MateMorphTagger.PARAM_LANGUAGE, Language.German.code);
 
 		} 
 		
@@ -69,6 +74,7 @@ public class PreprocessingConfiguration {
 		components.add(tagger);
 		components.add(checker);
 		components.add(lemmatizer);
+		components.add(morphTagger);
 		components.add(chunker);
 		components.add(ner);
 		components.add(constituentParser);

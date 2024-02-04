@@ -15,6 +15,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.PennTree;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.Chunk;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.constituent.Constituent;
 import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency;
+import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures;
 
 public class Analyzer extends JCasAnnotator_ImplBase {
 
@@ -30,6 +31,7 @@ public class Analyzer extends JCasAnnotator_ImplBase {
 				+ JCasUtil.select(aJCas, Sentence.class).size()+ " sentences, "
 				+ JCasUtil.select(aJCas, Token.class).size()+ " tokens, "
 				+ JCasUtil.select(aJCas, Lemma.class).size()+ " lemmata, "
+				+ JCasUtil.select(aJCas, MorphologicalFeatures.class).size()+ " morphological features, "
 				+ JCasUtil.select(aJCas, GrammarAnomaly.class).size()+ " grammar anomalies, "
 				+ JCasUtil.select(aJCas, Chunk.class).size()+ " chunks, "
 				+ JCasUtil.select(aJCas, NamedEntity.class).size()+ " NEs, "
