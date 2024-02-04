@@ -4,16 +4,16 @@ from cassis import Cas
 from frequency import SE_WordFrequency
 from lift_fixtures import *
 
-def test_frequency(cas_simple):
-    SE_WordFrequency("de").process(cas_simple)
+def test_frequency(cas_en_simple):
+    SE_WordFrequency("en").process(cas_en_simple)
 
-    values = [4.51, 5.25, 5.78, 4.74, 5.78, 3.67, 4.65]
+    values = [6.82, 7.07, 7.36, 5.19, 7.36, 5.51, 6.47]
 
     T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
 
     i = 0
-    for token in cas_simple.select(T_TOKEN):
-        for feature in cas_simple.select_covered("org.lift.type.Frequency", token):
+    for token in cas_en_simple.select(T_TOKEN):
+        for feature in cas_en_simple.select_covered("org.lift.type.Frequency", token):
             assert feature.value == values[i]
             i += 1
 

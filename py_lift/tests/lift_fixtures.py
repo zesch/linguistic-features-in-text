@@ -10,7 +10,7 @@ def typesystem_xml():
         return f.read()
 
 @pytest.fixture
-def tokens(typesystem_xml):
+def tokens_en(typesystem_xml):
     ts = load_typesystem(typesystem_xml)
     T = ts.get_type(T_TOKEN)
     tokens = [
@@ -27,7 +27,7 @@ def tokens(typesystem_xml):
     return tokens
 
 @pytest.fixture
-def sentences(typesystem_xml):
+def sentences_en(typesystem_xml):
     ts = load_typesystem(typesystem_xml)
     S = ts.get_type(T_SENTENCE)
     
@@ -47,23 +47,23 @@ def cas_no_annotations(typesystem_xml):
     return cas
 
 @pytest.fixture
-def cas_simple(typesystem_xml, tokens, sentences):
+def cas_en_simple(typesystem_xml, tokens_en, sentences_en):
     ts = load_typesystem(typesystem_xml)
     cas = Cas(ts)
     cas.sofa_string = "This is a test. A small one."
 
-    cas.add_all(tokens)
-    cas.add_all(sentences)
+    cas.add_all(tokens_en)
+    cas.add_all(sentences_en)
 
     return cas
 
 @pytest.fixture
-def cas_simple_with_errors(typesystem_xml, tokens, sentences):
+def cas_en_simple_with_errors(typesystem_xml, tokens_en, sentences_en):
     ts = load_typesystem(typesystem_xml)
     cas = Cas(ts)
     cas.sofa_string = "This is a tast. A smoll one."
 
-    cas.add_all(tokens)
-    cas.add_all(sentences)
+    cas.add_all(tokens_en)
+    cas.add_all(sentences_en)
 
     return cas
