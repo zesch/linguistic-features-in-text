@@ -12,6 +12,9 @@ def typesystem_xml():
 @pytest.fixture
 def tokens_en(typesystem_xml):
     ts = load_typesystem(typesystem_xml)
+    cas = Cas(ts)
+    cas.sofa_string = "This is a test. A small one."
+
     T = ts.get_type(T_TOKEN)
     tokens = [
         T(begin=0, end=4),
@@ -22,13 +25,19 @@ def tokens_en(typesystem_xml):
         T(begin=18, end=23),
         T(begin=24, end=27)
     ]
-    # cas.add_all(tokens)
+    
+    # add tokens to cas so that sofa property is set 
+    # and get_covered_text can be used
+    cas.add_all(tokens)
 
     return tokens
 
 @pytest.fixture
 def sentences_en(typesystem_xml):
     ts = load_typesystem(typesystem_xml)
+    cas = Cas(ts)
+    cas.sofa_string = "This is a test. A small one."
+    
     S = ts.get_type(T_SENTENCE)
     
     sentences = [
@@ -36,13 +45,17 @@ def sentences_en(typesystem_xml):
         S(begin=16, end=27, id="1")
     ]
 
+    # add tokens to cas so that sofa property is set 
+    # and get_covered_text can be used
+    cas.add_all(sentences)
+
     return sentences
 
 @pytest.fixture
 def cas_no_annotations(typesystem_xml):
     ts = load_typesystem(typesystem_xml)
     cas = Cas(ts)
-    cas.sofa_string = "This is a tast. A smoll one."
+    cas.sofa_string = "This is a test. A small one."
 
     return cas
 
