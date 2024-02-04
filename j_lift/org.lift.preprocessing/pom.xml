@@ -9,29 +9,8 @@
 
 	<repositories>
 		<repository>
-			<id>ltl-model</id>
-			<url>http://basa.ltl.uni-due.de:34001/artifactory/models</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
-		<repository>
-			<id>ltl-snapshots</id>
-			<url>http://basa.ltl.uni-due.de:34001/artifactory/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>ltl-releases</id>
-			<url>http://basa.ltl.uni-due.de:34001/artifactory/releases</url>
+			<id>mvnrepo</id>
+			<url>https://zoidberg.ukp.informatik.tu-darmstadt.de/artifactory/public-releases</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -40,7 +19,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+	
 	<dependencies>
 			<dependency>
 			<groupId>org.lift</groupId>

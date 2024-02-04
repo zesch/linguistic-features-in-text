@@ -8,6 +8,7 @@
 		<dkpro.version>2.2.0</dkpro.version>
 	</properties>
 
+	<!--
 	<repositories>
 		<repository>
 			<id>ltl-model</id>
@@ -41,7 +42,8 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+	-->
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.lift</groupId>
