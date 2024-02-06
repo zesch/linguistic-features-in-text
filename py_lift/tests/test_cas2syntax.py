@@ -46,7 +46,7 @@ T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
 ts = load_typesystem('data/TypeSystem.xml')
 
 
-infile = sys.argv[1]
+infile = "data/1023_0001416.xmi"
 # infile = "data/1091_0000266.xmi"
 # infile = "data/1023_0001416.xmi"
 myview = "_InitialView" # learner layer
@@ -54,4 +54,4 @@ with open(infile, 'rb') as f:
     cas = load_cas_from_xmi(f, typesystem=ts)
     fe2cas= FE_CasToTree(cas,myview,ts)
     fe2cas.extract()
-    cas.to_xmi(infile+"_modded.xmi",pretty_print=True)
+    cas.to_xmi(infile+"_modded.xmi", pretty_print=True)

@@ -6,13 +6,15 @@ authors = []
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8, <3.12"
+python = ">=3.9, <3.12"
 dkpro-cassis = "^0.8.0"
 pytest = "^7.4.3"
 pyspellchecker = "^0.8.1"
 textstat = "^0.7.3"
 pytest-cov = "^4.1.0"
 wordfreq = "^3.1.1"
+pandas = "^2.2.0"
+udapi = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core"]

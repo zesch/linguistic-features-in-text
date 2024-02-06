@@ -7,7 +7,6 @@ import pprint as pp
 from udapi.core.document import Document
 import pandas as pd
 import re
-import sys
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 
@@ -31,47 +30,48 @@ UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 """
 
 
+# TODO should be in resource file
 FINITE_VERBS_STTS = ["VVFIN", "VMFIN", "VAFIN"]
 FINITE_VERB_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
-
 class FE_CasToTree:
-	def __init__(self, cas, layer, ts):
-		self.ts = ts  # load_typesystem('data/TypeSystem.xml')
-		self.cas = cas
+	def __init__(self, layer, ts):
+		self.ts = ts
 		self.layer = layer
 
-	def add_feat_to_cas(self, name, featpath, value, cas):
-		# name = 'Readability_Score_Flesch_Kincaid_Lang_' + self.language
-		# T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
-		F = self.ts.get_type(featpath)
-		feature = F(name=name, value=value)
-		cas.add(feature)
-
-	def extract(self):
-		vu = self.cas.get_view(self.layer)
-		token_path = self.ts.get_type(
+		self.token_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
 		)
-		lemma_path = self.ts.get_type(
+		self.lemma_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"
 		)
-		pos_path = self.ts.get_type(
+		self.pos_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
 		)
-		sent_path = self.ts.get_type(
+		self.sent_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"
 		)
-		morph_path = self.ts.get_type(
+		self.morph_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.Morpheme"
 		)
-		deps_path = self.ts.get_type(
+		self.deps_path = self.ts.get_type(
 			"de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
 		)
 
-		deps_list = vu.select(deps_path)
+	def add_feat_to_cas(self, cas, name, featpath, value):
+		F = self.ts.get_type(featpath)
+		feature = F(name=name, value=value)
+		self.cas.add(feature)
+
+	def extract(self, cas):
+		
+		# TODO why "vu"?
+		vu = self.cas.get_view(self.layer)
+
+
+		deps_list = vu.select(self.deps_path)
 		# TODO: get rid of the magic number below; only used for debugging
 		MAXSENT = 2000
 		sct = 0
@@ -84,14 +84,13 @@ class FE_CasToTree:
 		subj_before_vfin = []  # list of bool
 		lex_np_sizes = []  # list of int
 
-		for sent in vu.select(sent_path):
+		for sent in vu.select(self.sent_path):
 			sct += 1
 			if sct > MAXSENT:
 				break
 
-			stext = sent.get_covered_text()
 			# NB: we need to filter out empty tokens that have no annotations
-			unfiltered_token_list = vu.select_covered(token_path, sent)
+			unfiltered_token_list = vu.select_covered(self.token_path, sent)
 			token_list = [
 				x
 				for x in unfiltered_token_list
@@ -105,11 +104,14 @@ class FE_CasToTree:
 			id_map = dict(zip(orig_id_list, id_list))
 
 			lemma_list = [
-				vu.get_covered_text(x) for x in vu.select_covered(lemma_path, sent)
+				vu.get_covered_text(x) for x in vu.select_covered(self.lemma_path, sent)
 			]
-			pos_list = [x.PosValue for x in vu.select_covered(pos_path, sent)]
-			morph_list = [x.morphTag for x in vu.select_covered(morph_path, sent)]
+			pos_list = [x.PosValue for x in vu.select_covered(self.pos_path, sent)]
+			morph_list = [x.morphTag for x in vu.select_covered(self.morph_path, sent)]
+			
+			# TODO why like this?
 			udpos_list = ["FM"] * len(token_list)
+
 			rel_list = []
 			head_list = []
 			enhanced_deps_list = ["_"] * len(token_list)
@@ -137,14 +139,14 @@ class FE_CasToTree:
 						else:
 							pass
 				if len(dep_matches) == 0:
-					sys.stderr.write(
+					raise RuntimeError(
 						"No dependency matches for token %s !\n" % token.get_covered
 					)
-					sys.exit(-2)
 
 			assert len(udpos_list) == len(token_list)
 			assert len(head_list) == len(token_list)
 			assert len(head_list) == len(rel_list)
+			
 			list_of_cols = [
 				id_list,
 				form_list,
@@ -172,7 +174,7 @@ class FE_CasToTree:
 			df = pd.DataFrame(list_of_cols, colnames).T
 
 			sent_id_line = "# sent_id = 1"
-			s_text_line = "# text = " + re.sub("\n", " ", stext)
+			s_text_line = "# text = " + re.sub("\n", " ", sent.get_covered_text())
 			df_str = df.to_csv(index=False, header=False, sep="\t")
 			conllu_string = sent_id_line + "\n" + s_text_line + "\n" + df_str
 			conllu_string = re.sub("\n{2,}", "\n", conllu_string).strip()
@@ -224,27 +226,27 @@ class FE_CasToTree:
 
 		print("average dependency length leftward %s" % avg_left_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_Left", NUM_FEATURE, avg_left_dep_len, self.cas
+			"Average_Dependeny_Length_Left", NUM_FEATURE, avg_left_dep_len
 		)
 		print("average dependency length rightward %s" % avg_right_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_Right", NUM_FEATURE, avg_right_dep_len, self.cas
+			"Average_Dependeny_Length_Right", NUM_FEATURE, avg_right_dep_len
 		)
 		print("average dependency length all %s" % avg_all_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_All", NUM_FEATURE, avg_all_dep_len, self.cas
+			"Average_Dependeny_Length_All", NUM_FEATURE, avg_all_dep_len
 		)
 
 		print("sent lengths %s" % sent_lengths)
 		avg_sent_len = round(float(sum(sent_lengths)) / len(sent_lengths), 2)
 		self.add_feat_to_cas(
-			"Average_Sentence_Length", NUM_FEATURE, avg_sent_len, self.cas
+			"Average_Sentence_Length", NUM_FEATURE, avg_sent_len
 		)
 
 		print("tree_depths %s" % tree_depths)
 		avg_tree_depth = round(float(sum(tree_depths)) / len(tree_depths), 2)
 		self.add_feat_to_cas(
-			"Average_Tree_Depth", NUM_FEATURE, avg_tree_depth, self.cas
+			"Average_Tree_Depth", NUM_FEATURE, avg_tree_depth
 		)
 
 		print("finite_verb_counts %s" % finite_verb_counts)
@@ -255,7 +257,7 @@ class FE_CasToTree:
 		except:
 			avg_finite_verbs = 0
 		self.add_feat_to_cas(
-			"Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs, self.cas
+			"Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
 		)
 
 		print("total_verb_counts %s" % total_verb_counts)
@@ -266,7 +268,7 @@ class FE_CasToTree:
 		except:
 			avg_verb_count = 0
 		self.add_feat_to_cas(
-			"Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count, self.cas
+			"Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
 		)
 
 		print("subj_before_vfin %s" % subj_before_vfin)
@@ -280,7 +282,6 @@ class FE_CasToTree:
 			"Proportion_of_Subj_Vfin_Inversions",
 			NUM_FEATURE,
 			share_of_s_vfin_inversions,
-			self.cas,
 		)
 
 		print("lex_np_sizes %s" % lex_np_sizes)
@@ -289,7 +290,7 @@ class FE_CasToTree:
 		except:
 			avg_lex_np_size = 0
 		self.add_feat_to_cas(
-			"Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size, self.cas
+			"Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
 		)
 		return True
 
