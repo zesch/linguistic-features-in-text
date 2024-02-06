@@ -1,7 +1,4 @@
 from cassis import *
-from util import (
-	load_typesystem,
-)
 from udapi.core.node import Node
 import pprint as pp
 from udapi.core.document import Document
@@ -9,6 +6,7 @@ import pandas as pd
 import re
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
+from dkpro import *
 
 UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 # text = Solltest Du dann auf einmal kalte Füße bekommen, dann gnade Dir Gott.
@@ -36,265 +34,303 @@ FINITE_VERB_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
+class StuffRegistry:
+	def __init__(self):
+		self.dependency_length_distribution_per_rel_type = {}
+		self.sent_lengths = []  # list of int
+		self.tree_depths = []  # list of int
+		self.finite_verb_counts = []  # list of int
+		self.total_verb_counts = []  # list of int
+		self.subj_before_vfin = []  # list of bool
+		self.lex_np_sizes = []  # list of int
+
+class ConlluData:
+	def __init__(self, cas, sent):
+		self.cas = cas
+		self.sent = sent
+		
+		self.id_list = []
+		self.form_list = []
+		self.lemma_list = []
+		self.udpos_list = []
+		self.pos_list = []
+		self.morph_list = []
+		self.head_list = []
+		self.rel_list = []
+		self.enhanced_deps_list = []
+		self.misc_list = []
+
+	def _data_list(self):
+		return [
+			self.id_list,
+			self.form_list,
+			self.lemma_list,
+			self.udpos_list,
+			self.pos_list,
+			self.morph_list,
+			self.head_list,
+			self.rel_list,
+			self.enhanced_deps_list,
+			self.misc_list
+		]
+	
+	def to_str(self):
+		deps_list = self.cas.select(T_DEP)
+
+		# NB: we need to filter out empty tokens that have no annotations
+		unfiltered_token_list = self.cas.select_covered(T_TOKEN, self.sent)
+		token_list = [
+			x
+			for x in unfiltered_token_list
+			if not re.match("^\s*$", x.get_covered_text())
+		]
+
+		self.form_list = [x.get_covered_text for x in token_list]
+		self.orig_id_list = [x.xmiID for x in token_list]
+		self.id_list = list(range(1, len(token_list) + 1))
+
+		id_map = dict(zip(self.orig_id_list, self.id_list))
+
+		self.lemma_list = [
+			x.get_covered_text for x in self.cas.select_covered(T_LEMMA, self.sent)
+		]
+		self.pos_list = [x.PosValue for x in self.cas.select_covered(T_POS, self.sent)]
+		self.morph_list = [x.morphTag for x in self.cas.select_covered(T_MORPH, self.sent)]
+		
+		# TODO why like this?
+		self.udpos_list = ["FM"] * len(token_list)
+
+		self.rel_list = []
+		self.head_list = []
+		self.enhanced_deps_list = ["_"] * len(token_list)
+		self.misc_list = ["_"] * len(token_list)
+
+		for token in token_list:
+			token_id = token.xmiID
+			dep_matches = []
+			for dep in deps_list:
+				if (
+					dep.Governor.xmiID not in id_map
+					and dep.Dependent.xmiID not in id_map
+				):
+					pass
+				else:
+					if dep.Dependent.xmiID == token_id:
+						dep_matches.append(dep)
+						# root node (in Merlin) has its own id as head!
+						if dep.Governor.xmiID == token_id:
+							self.head_list.append(0)
+							self.rel_list.append("root")
+						else:
+							self.head_list.append(id_map[dep.Governor.xmiID])
+							self.rel_list.append(dep.DependencyType)
+					else:
+						pass
+			if len(dep_matches) == 0:
+				raise RuntimeError(
+					"No dependency matches for token %s !\n" % token.get_covered_text
+				)
+
+		assert len(self.udpos_list) == len(token_list)
+		assert len(self.head_list) == len(token_list)
+		assert len(self.head_list) == len(self.rel_list)
+		
+		colnames = [
+			"id",
+			"token",
+			"lemma",
+			"udpos",
+			"pos",
+			"morph",
+			"head",
+			"rel",
+			"enhanced_deps",
+			"misc",
+		]
+		df = pd.DataFrame(self._data_list(), colnames).T
+
+		sent_id_line = "# sent_id = 1"
+		s_text_line = "# text = " + re.sub("\n", " ", self.sent.get_covered_text())
+		df_str = df.to_csv(index=False, header=False, sep="\t")
+		conllu_string = sent_id_line + "\n" + s_text_line + "\n" + df_str
+		conllu_string = re.sub("\n{2,}", "\n", conllu_string).strip()
+
+		return conllu_string
+
 class FE_CasToTree:
 	def __init__(self, layer, ts):
 		self.ts = ts
 		self.layer = layer
-
-		self.token_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
-		)
-		self.lemma_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"
-		)
-		self.pos_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
-		)
-		self.sent_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"
-		)
-		self.morph_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.Morpheme"
-		)
-		self.deps_path = self.ts.get_type(
-			"de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
-		)
-
-	def add_feat_to_cas(self, cas, name, featpath, value):
-		F = self.ts.get_type(featpath)
-		feature = F(name=name, value=value)
-		cas.add(feature)
 
 	def extract(self, cas):
 		
 		# TODO why "vu"?
 		vu = cas.get_view(self.layer)
 
+		registry = StuffRegistry()
 
-		deps_list = vu.select(self.deps_path)
 		# TODO: get rid of the magic number below; only used for debugging
 		MAXSENT = 2000
 		sct = 0
-		dep_matches = []
-		dependency_length_distribution_per_rel_type = {}
-		sent_lengths = []  # list of int
-		tree_depths = []  # list of int
-		finite_verb_counts = []  # list of int
-		total_verb_counts = []  # list of int
-		subj_before_vfin = []  # list of bool
-		lex_np_sizes = []  # list of int
+		for sent in vu.select(T_SENT):
+			
+			self._register_stuff(vu, registry, sent)
 
-		for sent in vu.select(self.sent_path):
 			sct += 1
 			if sct > MAXSENT:
 				break
 
-			# NB: we need to filter out empty tokens that have no annotations
-			unfiltered_token_list = vu.select_covered(self.token_path, sent)
-			token_list = [
-				x
-				for x in unfiltered_token_list
-				if not re.match("^\s*$", x.get_covered_text())
-			]
-
-			form_list = [x.get_covered_text for x in token_list]
-			orig_id_list = [x.xmiID for x in token_list]
-			id_list = list(range(1, len(token_list) + 1))
-
-			id_map = dict(zip(orig_id_list, id_list))
-
-			lemma_list = [
-				x.get_covered_text for x in vu.select_covered(self.lemma_path, sent)
-			]
-			pos_list = [x.PosValue for x in vu.select_covered(self.pos_path, sent)]
-			morph_list = [x.morphTag for x in vu.select_covered(self.morph_path, sent)]
-			
-			# TODO why like this?
-			udpos_list = ["FM"] * len(token_list)
-
-			rel_list = []
-			head_list = []
-			enhanced_deps_list = ["_"] * len(token_list)
-			misc_list = ["_"] * len(token_list)
-
-			for token in token_list:
-				token_id = token.xmiID
-				del dep_matches[:]
-				for dep in deps_list:
-					if (
-						dep.Governor.xmiID not in id_map
-						and dep.Dependent.xmiID not in id_map
-					):
-						pass
-					else:
-						if dep.Dependent.xmiID == token_id:
-							dep_matches.append(dep)
-							# root node (in Merlin) has its own id as head!
-							if dep.Governor.xmiID == token_id:
-								head_list.append(0)
-								rel_list.append("root")
-							else:
-								head_list.append(id_map[dep.Governor.xmiID])
-								rel_list.append(dep.DependencyType)
-						else:
-							pass
-				if len(dep_matches) == 0:
-					raise RuntimeError(
-						"No dependency matches for token %s !\n" % token.get_covered_text
-					)
-
-			assert len(udpos_list) == len(token_list)
-			assert len(head_list) == len(token_list)
-			assert len(head_list) == len(rel_list)
-			
-			list_of_cols = [
-				id_list,
-				form_list,
-				lemma_list,
-				udpos_list,
-				pos_list,
-				morph_list,
-				head_list,
-				rel_list,
-				enhanced_deps_list,
-				misc_list,
-			]
-			colnames = [
-				"id",
-				"token",
-				"lemma",
-				"udpos",
-				"pos",
-				"morph",
-				"head",
-				"rel",
-				"enhanced_deps",
-				"misc",
-			]
-			df = pd.DataFrame(list_of_cols, colnames).T
-
-			sent_id_line = "# sent_id = 1"
-			s_text_line = "# text = " + re.sub("\n", " ", sent.get_covered_text())
-			df_str = df.to_csv(index=False, header=False, sep="\t")
-			conllu_string = sent_id_line + "\n" + s_text_line + "\n" + df_str
-			conllu_string = re.sub("\n{2,}", "\n", conllu_string).strip()
-
-			udapi_doc = Document()
-			udapi_doc.from_conllu_string(conllu_string)
-
-			# udapi_doc.from_conllu_string(TEST_STRING)
-			for bundle in udapi_doc.bundles:
-				tree = bundle.get_tree()
-				print(tree.compute_text())
-				# finite verbs are identifed by their xpos-tag; we're not looking at any info in the morphological feats
-				finite_verb_counts.append(
-					self.count_nodes_with_specified_values_for_feat(
-						tree, "xpos", [".*FIN"]
-					)
-				)
-				# all verbal forms have a pos-Tag beginning with "V"
-				total_verb_counts.append(
-					self.count_nodes_with_specified_values_for_feat(
-						tree, "xpos", ["V.*"]
-					)
-				)
-				subj_before_vfin.extend(self.check_s_before_vfin(tree))
-
-				tree_depths.append(self.get_max_subtree_depth(tree))
-				sent_lengths.append(len(tree.descendants))
-				lex_np_sizes.extend(self.get_lex_np_sizes(tree))
-
-				# Not used for now
-				# print(list(self.get_triples(tree, feats=["xpos","deprel"])))
-
-				dependency_length_distribution_per_rel_type = self.update_dep_dist(
-					tree, dependency_length_distribution_per_rel_type
-				)
-
 		NUM_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 		print(
 			"Dependency length distribution per relation type\n"
-			+ pp.pformat(dependency_length_distribution_per_rel_type)
+			+ pp.pformat(registry.dependency_length_distribution_per_rel_type)
 		)
 		(
 			avg_left_dep_len,
 			avg_right_dep_len,
 			avg_all_dep_len,
-		) = self.get_dependency_lengths_across_all_rels_in_doc(
-			dependency_length_distribution_per_rel_type
+		) = self._get_dependency_lengths_across_all_rels_in_doc(
+			registry.dependency_length_distribution_per_rel_type
 		)
 
 		print("average dependency length leftward %s" % avg_left_dep_len)
-		self.add_feat_to_cas(
-			cas, "Average_Dependeny_Length_Left", NUM_FEATURE, avg_left_dep_len
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Dependeny_Length_Left", 
+			NUM_FEATURE, 
+			avg_left_dep_len
 		)
+
 		print("average dependency length rightward %s" % avg_right_dep_len)
-		self.add_feat_to_cas(
-			cas, "Average_Dependeny_Length_Right", NUM_FEATURE, avg_right_dep_len
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Dependeny_Length_Right", 
+			NUM_FEATURE, 
+			avg_right_dep_len
 		)
+
 		print("average dependency length all %s" % avg_all_dep_len)
-		self.add_feat_to_cas(
-			cas, "Average_Dependeny_Length_All", NUM_FEATURE, avg_all_dep_len
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Dependeny_Length_All", 
+			NUM_FEATURE, 
+			avg_all_dep_len
 		)
 
-		print("sent lengths %s" % sent_lengths)
-		avg_sent_len = round(float(sum(sent_lengths)) / len(sent_lengths), 2)
-		self.add_feat_to_cas(
-			cas, "Average_Sentence_Length", NUM_FEATURE, avg_sent_len
+		print("sent lengths %s" % registry.sent_lengths)
+		avg_sent_len = round(float(sum(registry.sent_lengths)) / len(registry.sent_lengths), 2)
+		self._add_feat_to_cas(
+			cas,
+			"Average_Sentence_Length", 
+			NUM_FEATURE, 
+			avg_sent_len
 		)
 
-		print("tree_depths %s" % tree_depths)
-		avg_tree_depth = round(float(sum(tree_depths)) / len(tree_depths), 2)
-		self.add_feat_to_cas(
-			cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth
+		print("tree_depths %s" % registry.tree_depths)
+		avg_tree_depth = round(float(sum(registry.tree_depths)) / len(registry.tree_depths), 2)
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Tree_Depth",
+			NUM_FEATURE, 
+			avg_tree_depth
 		)
 
-		print("finite_verb_counts %s" % finite_verb_counts)
+		print("finite_verb_counts %s" % registry.finite_verb_counts)
 		try:
 			avg_finite_verbs = round(
-				float(sum(finite_verb_counts)) / len(finite_verb_counts), 2
+				float(sum(registry.finite_verb_counts)) / len(registry.finite_verb_counts), 2
 			)
 		except:
 			avg_finite_verbs = 0
-		self.add_feat_to_cas(
-			cas, "Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Number_Of_Finite_Verbs", 
+			NUM_FEATURE, 
+			avg_finite_verbs
 		)
 
-		print("total_verb_counts %s" % total_verb_counts)
+		print("total_verb_counts %s" % registry.total_verb_counts)
 		try:
 			avg_verb_count = round(
-				float(sum(total_verb_counts)) / len(total_verb_counts), 2
+				float(sum(registry.total_verb_counts)) / len(registry.total_verb_counts), 2
 			)
 		except:
 			avg_verb_count = 0
-		self.add_feat_to_cas(
-			cas, "Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Number_Of_Verbs", 
+			NUM_FEATURE, 
+			avg_verb_count
 		)
 
-		print("subj_before_vfin %s" % subj_before_vfin)
-		invc = Counter(subj_before_vfin)
+		print("subj_before_vfin %s" % registry.subj_before_vfin)
+		invc = Counter(registry.subj_before_vfin)
 		try:
 			share_of_s_vfin_inversions = invc[True] / invc[False]
 		except:
 			share_of_s_vfin_inversions = 0
 
-		self.add_feat_to_cas(
+		self._add_feat_to_cas(
 			cas, "Proportion_of_Subj_Vfin_Inversions",
 			NUM_FEATURE,
 			share_of_s_vfin_inversions,
 		)
 
-		print("lex_np_sizes %s" % lex_np_sizes)
+		print("lex_np_sizes %s" % registry.lex_np_sizes)
 		try:
-			avg_lex_np_size = round(float(sum(lex_np_sizes)) / len(lex_np_sizes), 2)
+			avg_lex_np_size = round(float(sum(registry.lex_np_sizes)) / len(registry.lex_np_sizes), 2)
 		except:
 			avg_lex_np_size = 0
-		self.add_feat_to_cas(
-			cas, "Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
+		self._add_feat_to_cas(
+			cas, 
+			"Average_Size_Of_Lexical_NP", 
+			NUM_FEATURE, 
+			avg_lex_np_size
 		)
 		return True
 
-	def get_average_from_counter(self, mycounter):
+	def _add_feat_to_cas(self, cas, name, featpath, value):
+		F = self.ts.get_type(featpath)
+		feature = F(name=name, value=value)
+		cas.add(feature)
+
+	def _register_stuff(self, cas, registry: StuffRegistry, sent):
+
+		conllu = ConlluData(cas, sent)
+
+		udapi_doc = Document()
+		udapi_doc.from_conllu_string(conllu.to_str())
+
+		# udapi_doc.from_conllu_string(TEST_STRING)
+		for bundle in udapi_doc.bundles:
+			tree = bundle.get_tree()
+			print(tree.compute_text())
+			# finite verbs are identifed by their xpos-tag; we're not looking at any info in the morphological feats
+			registry.finite_verb_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", [".*FIN"]
+				)
+			)
+			# all verbal forms have a pos-Tag beginning with "V"
+			registry.total_verb_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["V.*"]
+				)
+			)
+			registry.subj_before_vfin.extend(self._check_s_before_vfin(tree))
+
+			registry.tree_depths.append(self._get_max_subtree_depth(tree))
+			registry.sent_lengths.append(len(tree.descendants))
+			registry.lex_np_sizes.extend(self._get_lex_np_sizes(tree))
+
+			# Not used for now
+			# print(list(self.get_triples(tree, feats=["xpos","deprel"])))
+
+			registry.dependency_length_distribution_per_rel_type = self._update_dep_dist(
+				tree, registry.dependency_length_distribution_per_rel_type
+			)
+
+	def _get_average_from_counter(self, mycounter):
 		""" get average value from counter """
 		insts = 0
 		totlen = 0
@@ -309,7 +345,7 @@ class FE_CasToTree:
 		return avg_dep_len
 
 	# def get_dependency_lengths_across_all_rels_in_doc(counts_per_rel):
-	def get_dependency_lengths_across_all_rels_in_doc(
+	def _get_dependency_lengths_across_all_rels_in_doc(
 		self, counts_per_rel: Dict
 	) -> Tuple:
 		"""
@@ -329,18 +365,18 @@ class FE_CasToTree:
 		anydir = Counter()
 		anydir.update(leftward)
 		anydir.update(rightward)
-		avg_all = self.get_average_from_counter(anydir)
-		avg_left = self.get_average_from_counter(leftward)
-		avg_right = self.get_average_from_counter(rightward)
+		avg_all = self._get_average_from_counter(anydir)
+		avg_left = self._get_average_from_counter(leftward)
+		avg_right = self._get_average_from_counter(rightward)
 
 		return (avg_left, avg_right, avg_all)
 
 
-	def get_max_subtree_depth(self, node: Node) -> int:
+	def _get_max_subtree_depth(self, node: Node) -> int:
 		""" determine depth of the subtree rooted at the given node """
 		return max([child._get_attr("depth") for child in node.descendants])
 
-	def count_nodes_with_specified_values_for_feat(
+	def _count_nodes_with_specified_values_for_feat(
 		self, node, featname, wanted_values
 	) -> int:
 		"""count nodes with specified values for a given feature; values are regex"""
@@ -355,7 +391,7 @@ class FE_CasToTree:
 			)
 		)
 
-	def update_dep_dist(self, node, dep_dist) -> Dict:
+	def _update_dep_dist(self, node, dep_dist) -> Dict:
 		"""Update the document-level distribution of dependency lenghts per dependency type by processing the nodes in the tree.
 		Dep length is the difference between the indices of the head and the dependent. Deps adjacent to their heads have a dep length of |1| , etc.
 		The values can be pos and neg: they're positive if the dependent is to the right of the head, and negative if it's the other way around.
@@ -371,7 +407,7 @@ class FE_CasToTree:
 			dep_dist[rel][diff] += 1
 		return dep_dist
 
-	def get_triples(self, node: Node, feats=["form", "upos"]) -> Generator:
+	def _get_triples(self, node: Node, feats=["form", "upos"]) -> Generator:
 		"""Yields triples of the form: (head, dependency_rel, dep) where head and dep are tuples
 		containing the attributes specified in the feats parameter.
 		Default feats are "form" and "upos".
@@ -380,9 +416,9 @@ class FE_CasToTree:
 		for i in node.children:
 			dep = tuple(i.get_attrs(feats, stringify=False))
 			yield (head, i.deprel, dep)
-			yield from self.get_triples(i, feats=feats)
+			yield from self._get_triples(i, feats=feats)
 
-	def get_lex_np_sizes(
+	def _get_lex_np_sizes(
 		self, tree: Node, lex_noun_pos_tags=TIGER_LEX_NOUN_POS
 	) -> List[int]:
 		"""get the number of tokens that make up the lexical noun phrases in the sentence/tree"""
@@ -393,7 +429,7 @@ class FE_CasToTree:
 				size_list.append(n_size)
 		return size_list
 
-	def check_s_before_vfin(
+	def _check_s_before_vfin(
 		self, node: Node, finiteverbtags=FINITE_VERBS_STTS, subjlabels=TIGER_SUBJ_LABELS
 	) -> List[bool]:
 		"""
