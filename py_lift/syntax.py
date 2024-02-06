@@ -63,12 +63,12 @@ class FE_CasToTree:
 	def add_feat_to_cas(self, cas, name, featpath, value):
 		F = self.ts.get_type(featpath)
 		feature = F(name=name, value=value)
-		self.cas.add(feature)
+		cas.add(feature)
 
 	def extract(self, cas):
 		
 		# TODO why "vu"?
-		vu = self.cas.get_view(self.layer)
+		vu = cas.get_view(self.layer)
 
 
 		deps_list = vu.select(self.deps_path)
@@ -97,14 +97,14 @@ class FE_CasToTree:
 				if not re.match("^\s*$", x.get_covered_text())
 			]
 
-			form_list = [vu.get_covered_text(x) for x in token_list]
+			form_list = [x.get_covered_text for x in token_list]
 			orig_id_list = [x.xmiID for x in token_list]
 			id_list = list(range(1, len(token_list) + 1))
 
 			id_map = dict(zip(orig_id_list, id_list))
 
 			lemma_list = [
-				vu.get_covered_text(x) for x in vu.select_covered(self.lemma_path, sent)
+				x.get_covered_text for x in vu.select_covered(self.lemma_path, sent)
 			]
 			pos_list = [x.PosValue for x in vu.select_covered(self.pos_path, sent)]
 			morph_list = [x.morphTag for x in vu.select_covered(self.morph_path, sent)]
@@ -140,7 +140,7 @@ class FE_CasToTree:
 							pass
 				if len(dep_matches) == 0:
 					raise RuntimeError(
-						"No dependency matches for token %s !\n" % token.get_covered
+						"No dependency matches for token %s !\n" % token.get_covered_text
 					)
 
 			assert len(udpos_list) == len(token_list)
@@ -226,27 +226,27 @@ class FE_CasToTree:
 
 		print("average dependency length leftward %s" % avg_left_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_Left", NUM_FEATURE, avg_left_dep_len
+			cas, "Average_Dependeny_Length_Left", NUM_FEATURE, avg_left_dep_len
 		)
 		print("average dependency length rightward %s" % avg_right_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_Right", NUM_FEATURE, avg_right_dep_len
+			cas, "Average_Dependeny_Length_Right", NUM_FEATURE, avg_right_dep_len
 		)
 		print("average dependency length all %s" % avg_all_dep_len)
 		self.add_feat_to_cas(
-			"Average_Dependeny_Length_All", NUM_FEATURE, avg_all_dep_len
+			cas, "Average_Dependeny_Length_All", NUM_FEATURE, avg_all_dep_len
 		)
 
 		print("sent lengths %s" % sent_lengths)
 		avg_sent_len = round(float(sum(sent_lengths)) / len(sent_lengths), 2)
 		self.add_feat_to_cas(
-			"Average_Sentence_Length", NUM_FEATURE, avg_sent_len
+			cas, "Average_Sentence_Length", NUM_FEATURE, avg_sent_len
 		)
 
 		print("tree_depths %s" % tree_depths)
 		avg_tree_depth = round(float(sum(tree_depths)) / len(tree_depths), 2)
 		self.add_feat_to_cas(
-			"Average_Tree_Depth", NUM_FEATURE, avg_tree_depth
+			cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth
 		)
 
 		print("finite_verb_counts %s" % finite_verb_counts)
@@ -257,7 +257,7 @@ class FE_CasToTree:
 		except:
 			avg_finite_verbs = 0
 		self.add_feat_to_cas(
-			"Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
+			cas, "Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
 		)
 
 		print("total_verb_counts %s" % total_verb_counts)
@@ -268,7 +268,7 @@ class FE_CasToTree:
 		except:
 			avg_verb_count = 0
 		self.add_feat_to_cas(
-			"Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
+			cas, "Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
 		)
 
 		print("subj_before_vfin %s" % subj_before_vfin)
@@ -279,7 +279,7 @@ class FE_CasToTree:
 			share_of_s_vfin_inversions = 0
 
 		self.add_feat_to_cas(
-			"Proportion_of_Subj_Vfin_Inversions",
+			cas, "Proportion_of_Subj_Vfin_Inversions",
 			NUM_FEATURE,
 			share_of_s_vfin_inversions,
 		)
@@ -290,7 +290,7 @@ class FE_CasToTree:
 		except:
 			avg_lex_np_size = 0
 		self.add_feat_to_cas(
-			"Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
+			cas, "Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
 		)
 		return True
 
