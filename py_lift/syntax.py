@@ -2,8 +2,8 @@ from cassis import *
 from udapi.core.node import Node
 import pprint as pp
 from udapi.core.document import Document
-import pandas as pd
 import re
+from utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 from dkpro import *
@@ -43,119 +43,6 @@ class StuffRegistry:
 		self.total_verb_counts = []  # list of int
 		self.subj_before_vfin = []  # list of bool
 		self.lex_np_sizes = []  # list of int
-
-class ConlluData:
-	def __init__(self, cas, sent):
-		self.cas = cas
-		self.sent = sent
-		
-		self.id_list = []
-		self.form_list = []
-		self.lemma_list = []
-		self.udpos_list = []
-		self.pos_list = []
-		self.morph_list = []
-		self.head_list = []
-		self.rel_list = []
-		self.enhanced_deps_list = []
-		self.misc_list = []
-
-	def _data_list(self):
-		return [
-			self.id_list,
-			self.form_list,
-			self.lemma_list,
-			self.udpos_list,
-			self.pos_list,
-			self.morph_list,
-			self.head_list,
-			self.rel_list,
-			self.enhanced_deps_list,
-			self.misc_list
-		]
-	
-	def to_str(self):
-		deps_list = self.cas.select(T_DEP)
-
-		# NB: we need to filter out empty tokens that have no annotations
-		unfiltered_token_list = self.cas.select_covered(T_TOKEN, self.sent)
-		token_list = [
-			x
-			for x in unfiltered_token_list
-			if not re.match("^\s*$", x.get_covered_text())
-		]
-
-		self.form_list = [x.get_covered_text for x in token_list]
-		self.orig_id_list = [x.xmiID for x in token_list]
-		self.id_list = list(range(1, len(token_list) + 1))
-
-		id_map = dict(zip(self.orig_id_list, self.id_list))
-
-		self.lemma_list = [
-			x.get_covered_text for x in self.cas.select_covered(T_LEMMA, self.sent)
-		]
-		self.pos_list = [x.PosValue for x in self.cas.select_covered(T_POS, self.sent)]
-		self.morph_list = [x.morphTag for x in self.cas.select_covered(T_MORPH, self.sent)]
-		
-		# TODO why like this?
-		self.udpos_list = ["FM"] * len(token_list)
-
-		self.rel_list = []
-		self.head_list = []
-		self.enhanced_deps_list = ["_"] * len(token_list)
-		self.misc_list = ["_"] * len(token_list)
-
-		for token in token_list:
-			token_id = token.xmiID
-			dep_matches = []
-			for dep in deps_list:
-				if (
-					dep.Governor.xmiID not in id_map
-					and dep.Dependent.xmiID not in id_map
-				):
-					pass
-				else:
-					if dep.Dependent.xmiID == token_id:
-						dep_matches.append(dep)
-						# root node (in Merlin) has its own id as head!
-						if dep.Governor.xmiID == token_id:
-							self.head_list.append(0)
-							self.rel_list.append("root")
-						else:
-							self.head_list.append(id_map[dep.Governor.xmiID])
-							self.rel_list.append(dep.DependencyType)
-					else:
-						pass
-			if len(dep_matches) == 0:
-				raise RuntimeError(
-					"No dependency matches for token %s !\n" % token.get_covered_text
-				)
-
-		assert len(self.udpos_list) == len(token_list)
-		assert len(self.head_list) == len(token_list)
-		assert len(self.head_list) == len(self.rel_list)
-		
-		colnames = [
-			"id",
-			"token",
-			"lemma",
-			"udpos",
-			"pos",
-			"morph",
-			"head",
-			"rel",
-			"enhanced_deps",
-			"misc",
-		]
-		df = pd.DataFrame(self._data_list(), colnames).T
-
-		sent_id_line = "# sent_id = 1"
-		s_text_line = "# text = " + re.sub("\n", " ", self.sent.get_covered_text())
-		df_str = df.to_csv(index=False, header=False, sep="\t")
-		conllu_string = sent_id_line + "\n" + s_text_line + "\n" + df_str
-		conllu_string = re.sub("\n{2,}", "\n", conllu_string).strip()
-
-		return conllu_string
 
 class FE_CasToTree:
 	def __init__(self, layer, ts):
@@ -296,10 +183,8 @@ class FE_CasToTree:
 
 	def _register_stuff(self, cas, registry: StuffRegistry, sent):
 
-		conllu = ConlluData(cas, sent)
-
 		udapi_doc = Document()
-		udapi_doc.from_conllu_string(conllu.to_str())
+		udapi_doc.from_conllu_string(cas_to_str(cas, sent))
 
 		# udapi_doc.from_conllu_string(TEST_STRING)
 		for bundle in udapi_doc.bundles:
