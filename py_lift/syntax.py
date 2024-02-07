@@ -241,12 +241,12 @@ class FE_CasToTree:
 			for kee in ctr.keys():
 				if kee < 0:
 					if not abs(kee) in leftward:
-    						leftward[abs(kee)] = 0
+						leftward[abs(kee)] = 0
 					leftward[abs(kee)]+=ctr[kee]
 				elif kee>0:
 					#rightward.update({kee: ctr[kee]})
 					if not kee in rightward:
-    						rightward[kee] = 0
+						rightward[kee] = 0
 					rightward[kee]+=ctr[kee]
 				else:
 					continue
