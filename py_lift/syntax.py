@@ -30,9 +30,10 @@ UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 
 # TODO should be in resource file
 FINITE_VERBS_STTS = ["VVFIN", "VMFIN", "VAFIN"]
-FINITE_VERB_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
+FINITE_VERBS_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
+
 
 class StuffRegistry:
 	def __init__(self):
@@ -44,13 +45,13 @@ class StuffRegistry:
 		self.subj_before_vfin = []  # list of bool
 		self.lex_np_sizes = []  # list of int
 
+
 class FE_CasToTree:
 	def __init__(self, layer, ts):
 		self.ts = ts
 		self.layer = layer
 
 	def extract(self, cas):
-		
 		# TODO why "vu"?
 		vu = cas.get_view(self.layer)
 
@@ -60,7 +61,6 @@ class FE_CasToTree:
 		MAXSENT = 2000
 		sct = 0
 		for sent in vu.select(T_SENT):
-			
 			self._register_stuff(vu, registry, sent)
 
 			sct += 1
@@ -82,97 +82,81 @@ class FE_CasToTree:
 
 		print("average dependency length leftward %s" % avg_left_dep_len)
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Dependeny_Length_Left", 
-			NUM_FEATURE, 
-			avg_left_dep_len
+			cas, "Average_Dependency_Length_Left", NUM_FEATURE, avg_left_dep_len
 		)
 
 		print("average dependency length rightward %s" % avg_right_dep_len)
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Dependeny_Length_Right", 
-			NUM_FEATURE, 
-			avg_right_dep_len
+			cas, "Average_Dependency_Length_Right", NUM_FEATURE, avg_right_dep_len
 		)
 
 		print("average dependency length all %s" % avg_all_dep_len)
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Dependeny_Length_All", 
-			NUM_FEATURE, 
-			avg_all_dep_len
+			cas, "Average_Dependency_Length_All", NUM_FEATURE, avg_all_dep_len
 		)
 
 		print("sent lengths %s" % registry.sent_lengths)
-		avg_sent_len = round(float(sum(registry.sent_lengths)) / len(registry.sent_lengths), 2)
-		self._add_feat_to_cas(
-			cas,
-			"Average_Sentence_Length", 
-			NUM_FEATURE, 
-			avg_sent_len
+		avg_sent_len = round(
+			float(sum(registry.sent_lengths)) / len(registry.sent_lengths), 2
 		)
+		self._add_feat_to_cas(cas, "Average_Sentence_Length", NUM_FEATURE, avg_sent_len)
 
 		print("tree_depths %s" % registry.tree_depths)
-		avg_tree_depth = round(float(sum(registry.tree_depths)) / len(registry.tree_depths), 2)
-		self._add_feat_to_cas(
-			cas, 
-			"Average_Tree_Depth",
-			NUM_FEATURE, 
-			avg_tree_depth
+		avg_tree_depth = round(
+			float(sum(registry.tree_depths)) / len(registry.tree_depths), 2
 		)
+		self._add_feat_to_cas(cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth)
 
 		print("finite_verb_counts %s" % registry.finite_verb_counts)
 		try:
 			avg_finite_verbs = round(
-				float(sum(registry.finite_verb_counts)) / len(registry.finite_verb_counts), 2
+				float(sum(registry.finite_verb_counts))
+				/ len(registry.finite_verb_counts),
+				2,
 			)
 		except:
 			avg_finite_verbs = 0
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Number_Of_Finite_Verbs", 
-			NUM_FEATURE, 
-			avg_finite_verbs
+			cas, "Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
 		)
 
 		print("total_verb_counts %s" % registry.total_verb_counts)
 		try:
 			avg_verb_count = round(
-				float(sum(registry.total_verb_counts)) / len(registry.total_verb_counts), 2
+				float(sum(registry.total_verb_counts))
+				/ len(registry.total_verb_counts),
+				2,
 			)
 		except:
 			avg_verb_count = 0
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Number_Of_Verbs", 
-			NUM_FEATURE, 
-			avg_verb_count
+			cas, "Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
 		)
 
-		print("subj_before_vfin %s" % registry.subj_before_vfin)
-		invc = Counter(registry.subj_before_vfin)
+		#print("subj_before_vfin %s" % registry.subj_before_vfin)
+		sb4v_ctr = Counter(registry.subj_before_vfin)
+		#print("Inversion counter global %s" % invc)
 		try:
-			share_of_s_vfin_inversions = invc[True] / invc[False]
+			share_of_s_vfin_inversions = round(float(sb4v_ctr[False] /( sb4v_ctr[False] + sb4v_ctr[True] )), 2)
 		except:
-			share_of_s_vfin_inversions = 0
+			share_of_s_vfin_inversions = 0.0
 
 		self._add_feat_to_cas(
-			cas, "Proportion_of_Subj_Vfin_Inversions",
+			cas,
+			"Proportion_of_Subj_Vfin_Inversions",
 			NUM_FEATURE,
 			share_of_s_vfin_inversions,
 		)
 
 		print("lex_np_sizes %s" % registry.lex_np_sizes)
 		try:
-			avg_lex_np_size = round(float(sum(registry.lex_np_sizes)) / len(registry.lex_np_sizes), 2)
+			avg_lex_np_size = round(
+				float(sum(registry.lex_np_sizes)) / len(registry.lex_np_sizes), 2
+			)
 		except:
 			avg_lex_np_size = 0
 		self._add_feat_to_cas(
-			cas, 
-			"Average_Size_Of_Lexical_NP", 
-			NUM_FEATURE, 
-			avg_lex_np_size
+			cas, "Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
 		)
 		return True
 
@@ -182,14 +166,14 @@ class FE_CasToTree:
 		cas.add(feature)
 
 	def _register_stuff(self, cas, registry: StuffRegistry, sent):
-
 		udapi_doc = Document()
-		udapi_doc.from_conllu_string(cas_to_str(cas, sent))
-
+		cas_in_str_form = cas_to_str(cas, sent)
+		udapi_doc.from_conllu_string(cas_in_str_form)
+		sct=1
 		# udapi_doc.from_conllu_string(TEST_STRING)
 		for bundle in udapi_doc.bundles:
 			tree = bundle.get_tree()
-			print(tree.compute_text())
+
 			# finite verbs are identifed by their xpos-tag; we're not looking at any info in the morphological feats
 			registry.finite_verb_counts.append(
 				self._count_nodes_with_specified_values_for_feat(
@@ -198,9 +182,7 @@ class FE_CasToTree:
 			)
 			# all verbal forms have a pos-Tag beginning with "V"
 			registry.total_verb_counts.append(
-				self._count_nodes_with_specified_values_for_feat(
-					tree, "xpos", ["V.*"]
-				)
+				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["V.*"])
 			)
 			registry.subj_before_vfin.extend(self._check_s_before_vfin(tree))
 
@@ -211,12 +193,26 @@ class FE_CasToTree:
 			# Not used for now
 			# print(list(self.get_triples(tree, feats=["xpos","deprel"])))
 
-			registry.dependency_length_distribution_per_rel_type = self._update_dep_dist(
-				tree, registry.dependency_length_distribution_per_rel_type
-			)
+			(sent_wise_dep_len_dist, dir_lens) = self._get_dep_dist(tree)
+			print("directed lengths for sentence %s: %s, %s left and %s right " %( sct,dir_lens, len(dir_lens["l"]) , len(dir_lens["r"]) ))
+
+			# registry.dependency_length_distribution_per_rel_type.update(
+			# 	sent_wise_dep_len_dist
+			# )
+			registry.dependency_length_distribution_per_rel_type = self._merge_sentwise_counts_into_global_counts(sent_wise_dep_len_dist,registry.dependency_length_distribution_per_rel_type)
+			# registry.dependency_length_distribution_per_rel_type = self._get_dep_dist(
+			# 	tree, registry.dependency_length_distribution_per_rel_type
+			# )
+
+	def _merge_sentwise_counts_into_global_counts(self, sentwise_dist,global_dist):
+		for rel in sentwise_dist.keys():
+			if rel not in global_dist:
+				global_dist[rel] = Counter()
+			global_dist[rel].update(sentwise_dist[rel])
+		return global_dist
 
 	def _get_average_from_counter(self, mycounter):
-		""" get average value from counter """
+		"""get average value from counter"""
 		insts = 0
 		totlen = 0
 		for lng in mycounter:
@@ -244,21 +240,30 @@ class FE_CasToTree:
 			ctr = counts_per_rel[rel]
 			for kee in ctr.keys():
 				if kee < 0:
-					leftward.update({abs(kee): ctr[kee]})
+					if not abs(kee) in leftward:
+    						leftward[abs(kee)] = 0
+					leftward[abs(kee)]+=ctr[kee]
+				elif kee>0:
+					#rightward.update({kee: ctr[kee]})
+					if not kee in rightward:
+    						rightward[kee] = 0
+					rightward[kee]+=ctr[kee]
 				else:
-					rightward.update({kee: ctr[kee]})
-		anydir = Counter()
-		anydir.update(leftward)
-		anydir.update(rightward)
-		avg_all = self._get_average_from_counter(anydir)
+					continue
+
+		print("Leftward rels %s" % leftward)
+		print("Rightward rels %s" % rightward)
+		anydir = leftward + rightward
+		#anydir.update(leftward)
+		#anydir.update(rightward)
+		#anydir = leftward + rightward
 		avg_left = self._get_average_from_counter(leftward)
 		avg_right = self._get_average_from_counter(rightward)
-
+		avg_all = self._get_average_from_counter(anydir)
 		return (avg_left, avg_right, avg_all)
 
-
 	def _get_max_subtree_depth(self, node: Node) -> int:
-		""" determine depth of the subtree rooted at the given node """
+		"""determine depth of the subtree rooted at the given node"""
 		return max([child._get_attr("depth") for child in node.descendants])
 
 	def _count_nodes_with_specified_values_for_feat(
@@ -276,21 +281,32 @@ class FE_CasToTree:
 			)
 		)
 
-	def _update_dep_dist(self, node, dep_dist) -> Dict:
+	def _get_dep_dist(self, node, excluded_rels=["root"]) -> Dict:
 		"""Update the document-level distribution of dependency lenghts per dependency type by processing the nodes in the tree.
 		Dep length is the difference between the indices of the head and the dependent. Deps adjacent to their heads have a dep length of |1| , etc.
 		The values can be pos and neg: they're positive if the dependent is to the right of the head, and negative if it's the other way around.
 		We're not merging the two cases by using absolute values!
 		"""
+		dep_dist = {}
+		all_lens = {"l": [], "r": []}
 		for d in node.descendants:
 			rel = d.deprel
+			if rel.lower() in excluded_rels:
+				continue
 			cix = d.ord
 			pix = d.parent.ord
 			diff = cix - pix
+			if diff < 0:
+				all_lens["l"].append(abs(diff))
+			elif diff > 0:
+				all_lens["r"].append(diff)
+			else:
+				continue
 			if not rel in dep_dist:
 				dep_dist[rel] = Counter()
+				# dep_dist[rel][diff]=0
 			dep_dist[rel][diff] += 1
-		return dep_dist
+		return (dep_dist, all_lens)
 
 	def _get_triples(self, node: Node, feats=["form", "upos"]) -> Generator:
 		"""Yields triples of the form: (head, dependency_rel, dep) where head and dep are tuples
@@ -315,21 +331,21 @@ class FE_CasToTree:
 		return size_list
 
 	def _check_s_before_vfin(
-		self, node: Node, finiteverbtags=FINITE_VERBS_STTS, subjlabels=TIGER_SUBJ_LABELS
+		self, node: Node, finiteverbtags=FINITE_VERBS_STTS_BROAD, subjlabels=TIGER_SUBJ_LABELS
 	) -> List[bool]:
 		"""
 		True or false depending on whether a subject precedes its finite verb .
 		If a verb lacks a subject, it's disregarded.
 		The lists of pos tags for finite verbs and of subj relation labels may need to be adjusted per tagger/parser used!
 		"""
-		s_inv_list = []
+		s_before_vfin = []
 		for d in node.descendants:
 			if d.xpos in finiteverbtags:
-				print(d.form, d.upos, d.xpos)
 				for kid in d.children:
-					if kid.deprel in subjlabels:
+					if kid.deprel.upper() in subjlabels:
 						if kid.ord > d.ord:
-							s_inv_list.append(True)
+							s_before_vfin.append(False)
 						else:
-							s_inv_list.append(False)
-		return s_inv_list
+							s_before_vfin.append(True)
+
+		return s_before_vfin
