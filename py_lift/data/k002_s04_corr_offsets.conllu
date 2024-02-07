@@ -1,0 +1,110 @@
+# newdoc
+# newpar
+# sent_id = 1
+# text = Ein alter Mann wohnte in einer 140 Jahre alten Hütte .
+# text_{"tree-depth" = 6, "lex-np-size":[3, 5,2]}
+# doc id = k002_s04
+# gold = {'avg_dep_len':0.0, 'tree_depth':6, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:1 , False:0}, 'lex_np_sizes':[3,5,2], 'deps_left':[2,1,1,4,1,1,1] ,'deps_right':[1,5,7] ,}
+1	Ein	ein	DET	ART	Case=Nom|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	3	nk	_	t_end=3|t_start=0
+2	alter	alt	ADJ	ADJA	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	3	nk	_	t_end=9|t_start=4
+3	Mann	Mann	NOUN	NN	Case=Nom|Gender=Masc|Number=Sing	4	sb	_	t_end=14|t_start=10
+4	wohnte	wohnen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=21|t_start=15
+5	in	in	ADP	APPR	_	4	mo	_	t_end=24|t_start=22
+6	einer	ein	DET	ART	Case=Dat|Definite=Ind|Gender=Fem|Number=Sing|PronType=Art	10	nk	_	t_end=30|t_start=25
+7	140	140	NUM	CARD	_	8	nk	_	t_end=34|t_start=31
+8	Jahre	Jahr	NOUN	NN	Case=Acc|Gender=Neut|Number=Plur	9	ams	_	t_end=40|t_start=35
+9	alten	alt	ADJ	ADJA	Case=Dat|Degree=Pos|Gender=Fem|Number=Sing	10	nk	_	t_end=46|t_start=41
+10	Hütte	Hütte	NOUN	NN	Case=Dat|Gender=Fem|Number=Sing	5	nk	_	t_end=52|t_start=47
+11	.	--	PUNCT	$.	_	4	punct	_	SpaceAfter=No|t_end=54|t_start=53
+
+# sent_id = 2
+# text = Eines Tages kam ein Hund an seinem Hüttenfenster vorbei .
+# gold = {'avg_dep_len':0.0, 'tree_depth':4, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:0 , False:1}, 'lex_np_sizes':[2,2,2], 'deps_left':[1,1,1,1], 'deps_right':[7,6,2,3,2]}
+1	Eines	ein	DET	ART	Case=Gen|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	2	nk	_	t_end=60|t_start=55
+2	Tages	Tag	NOUN	NN	Case=Gen|Gender=Masc|Number=Sing	3	mo	_	t_end=66|t_start=61
+3	kam	kommen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=70|t_start=67
+4	ein	ein	DET	ART	Case=Nom|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	5	nk	_	t_end=74|t_start=71
+5	Hund	Hund	NOUN	NN	Case=Nom|Gender=Masc|Number=Sing	3	sb	_	t_end=79|t_start=75
+6	an	an	ADP	APPR	_	3	mo	_	t_end=82|t_start=80
+7	seinem	sein	DET	PPOSAT	Case=Dat|Gender=Neut|Number=Sing|Poss=Yes|PronType=Prs	8	nk	_	t_end=89|t_start=83
+8	Hüttenfenster	Hüttenfenster	NOUN	NN	Case=Dat|Gender=Neut|Number=Sing	6	nk	_	t_end=103|t_start=90
+9	vorbei	vorbei	ADV	PTKVZ	_	3	svp	_	t_end=110|t_start=104
+10	.	--	PUNCT	$.	_	3	punct	_	SpaceAfter=No|t_end=112|t_start=111
+
+# sent_id = 3
+# text = Als der man sah , dass der Hund zu Fußmatte ging dachte er , dass er rein möchte und machte die Tür auf und da sah nur den Abdruck von der Fußmatte und war sauer auf den Hund .
+# gold = {'avg_dep_len':0.0, 'tree_depth':11, 'vfin_ct':7, 'vtotal':7, 's_before_vfin':{True:4 , False:1}, 'lex_np_sizes':[2,2,5,2,2], 'deps_left':[3,2,1,8,5,1,3,2,3,2,1,1,1,1,1,1], 'deps_right':[1,1,7,1,2,6,7,1,2,3,4,2,1,3,1,2,7,1,1,1,2,27]}
+1	Als	als	SCONJ	KOUS	_	4	cp	_	t_end=116|t_start=113
+2	der	der	PRON	PDS	Case=Nom|Gender=Masc|Number=Sing|PronType=Dem	4	sb	_	t_end=120|t_start=117
+3	man	man	PRON	PIS	Case=Nom|Number=Sing|PronType=Ind	4	sb	_	t_end=124|t_start=121
+4	sah	sehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	12	mo	_	t_end=128|t_start=125
+5	,	--	PUNCT	$,	_	4	punct	_	t_end=130|t_start=129
+6	dass	dass	SCONJ	KOUS	_	11	cp	_	t_end=135|t_start=131
+7	der	der	DET	ART	Case=Nom|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	8	nk	_	t_end=139|t_start=136
+8	Hund	Hund	NOUN	NN	Case=Nom|Gender=Masc|Number=Sing	11	sb	_	t_end=144|t_start=140
+9	zu	zu	ADP	APPR	_	11	mo	_	t_end=147|t_start=145
+10	Fußmatte	Fußmatte	NOUN	NN	Case=Dat|Gender=Fem|Number=Sing	9	nk	_	t_end=156|t_start=148
+11	ging	gehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	4	oc	_	t_end=161|t_start=157
+12	dachte	denken	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=168|t_start=162
+13	er	er	PRON	PPER	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	12	sb	_	t_end=171|t_start=169
+14	,	--	PUNCT	$,	_	12	punct	_	t_end=173|t_start=172
+15	dass	dass	SCONJ	KOUS	_	18	cp	_	t_end=178|t_start=174
+16	er	er	PRON	PPER	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	18	sb	_	t_end=181|t_start=179
+17	rein	rein	ADV	ADV	_	18	oc	_	t_end=186|t_start=182
+18	möchte	möchten	AUX	VMFIN	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	12	oc	_	t_end=193|t_start=187
+19	und	und	CCONJ	KON	_	12	cd	_	t_end=197|t_start=194
+20	machte	machen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	19	cj	_	t_end=204|t_start=198
+21	die	der	DET	ART	Case=Acc|Definite=Def|Gender=Fem|Number=Sing|PronType=Art	22	nk	_	t_end=208|t_start=205
+22	Tür	Tür	NOUN	NN	Case=Acc|Gender=Fem|Number=Sing	20	oa	_	t_end=212|t_start=209
+23	auf	auf	ADP	PTKVZ	_	20	svp	_	t_end=216|t_start=213
+24	und	und	CCONJ	KON	_	20	cd	_	t_end=220|t_start=217
+25	da	da	ADV	ADV	_	26	mo	_	t_end=223|t_start=221
+26	sah	sehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	24	cj	_	t_end=227|t_start=224
+27	nur	nur	ADV	ADV	_	26	mo	_	t_end=231|t_start=228
+28	den	der	DET	ART	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	29	nk	_	t_end=235|t_start=232
+29	Abdruck	Abdruck	NOUN	NN	Case=Acc|Gender=Masc|Number=Sing	26	oa	_	t_end=243|t_start=236
+30	von	von	ADP	APPR	_	29	pg	_	t_end=247|t_start=244
+31	der	der	DET	ART	Case=Dat|Definite=Def|Gender=Fem|Number=Sing|PronType=Art	32	nk	_	t_end=251|t_start=248
+32	Fußmatte	Fußmatte	NOUN	NN	Case=Dat|Gender=Fem|Number=Sing	30	nk	_	t_end=260|t_start=252
+33	und	und	CCONJ	KON	_	26	cd	_	t_end=264|t_start=261
+34	war	sein	AUX	VAFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	33	cj	_	t_end=268|t_start=265
+35	sauer	sauer	ADV	ADJD	Degree=Pos	34	pd	_	t_end=274|t_start=269
+36	auf	auf	ADP	APPR	_	35	mo	_	t_end=278|t_start=275
+37	den	der	DET	ART	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	38	nk	_	t_end=282|t_start=279
+38	Hund	Hund	NOUN	NN	Case=Acc|Gender=Masc|Number=Sing	36	nk	_	t_end=287|t_start=283
+39	.	--	PUNCT	$.	_	12	punct	_	SpaceAfter=No|t_end=289|t_start=288
+
+# sent_id = 4
+# text = Und ging seinen Fußspuren nach und sah den Hund auf der Fußmatte liegen und er hatte die Fußmatte seine Hundehütte gebracht und dann sagte ach die lass ich dir .
+# gold = {'avg_dep_len':0.0, 'tree_depth':9, 'vfin_ct':5, 'vtotal':7, 's_before_vfin':{True:1 , False:1}, 'lex_np_sizes':[2,2,2,2],'deps_left':[1 ,  1 , 1 ,3 ,1, 1, 1, 3, 1, 1 , 1], 'deps_right':[2 , 3, 4, 1, 2, 2,6,7,2,5,6,2,1,2,3,1,5,28]}
+1	Und	und	CCONJ	KON	_	2	ju	_	t_end=293|t_start=290
+2	ging	gehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=298|t_start=294
+3	seinen	sein	DET	PPOSAT	Case=Dat|Gender=Fem|Number=Plur|Poss=Yes|PronType=Prs	4	nk	_	t_end=305|t_start=299
+4	Fußspuren	Fußspur	NOUN	NN	Case=Dat|Gender=Fem|Number=Plur	2	da	_	t_end=315|t_start=306
+5	nach	nach	ADP	PTKVZ	_	2	svp	_	t_end=320|t_start=316
+6	und	und	CCONJ	KON	_	2	cd	_	t_end=324|t_start=321
+7	sah	sehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin	6	cj	_	t_end=328|t_start=325
+8	den	der	DET	ART	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	9	nk	_	t_end=332|t_start=329
+9	Hund	Hund	NOUN	NN	Case=Acc|Gender=Masc|Number=Sing	7	oa	_	t_end=337|t_start=333
+10	auf	auf	ADP	APPR	_	13	mo	_	t_end=341|t_start=338
+11	der	der	DET	ART	Case=Dat|Definite=Def|Gender=Fem|Number=Sing|PronType=Art	12	nk	_	t_end=345|t_start=342
+12	Fußmatte	Fußmatte	NOUN	NN	Case=Dat|Gender=Fem|Number=Sing	10	nk	_	t_end=354|t_start=346
+13	liegen	liegen	VERB	VVINF	VerbForm=Inf	7	oc	_	t_end=361|t_start=355
+14	und	und	CCONJ	KON	_	7	cd	_	t_end=365|t_start=362
+15	er	er	PRON	PPER	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	16	sb	_	t_end=368|t_start=366
+16	hatte	haben	AUX	VAFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	14	cj	_	t_end=374|t_start=369
+17	die	der	DET	ART	Case=Acc|Definite=Def|Gender=Fem|Number=Sing|PronType=Art	18	nk	_	t_end=378|t_start=375
+18	Fußmatte	Fußmatte	NOUN	NN	Case=Acc|Gender=Fem|Number=Sing	21	oa	_	t_end=387|t_start=379
+19	seine	sein	DET	PPOSAT	Case=Acc|Gender=Fem|Number=Sing|Poss=Yes|PronType=Prs	20	nk	_	t_end=393|t_start=388
+20	Hundehütte	Hundehütte	NOUN	NN	Case=Acc|Gender=Fem|Number=Sing	21	oa	_	t_end=404|t_start=394
+21	gebracht	bringen	VERB	VVPP	VerbForm=Part	16	oc	_	t_end=413|t_start=405
+22	und	und	CCONJ	KON	_	16	cd	_	t_end=417|t_start=414
+23	dann	dann	ADV	ADV	_	24	mo	_	t_end=422|t_start=418
+24	sagte	sagen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	22	cj	_	t_end=428|t_start=423
+25	ach	ach	X	PIS	Foreign=Yes	24	mo	_	t_end=432|t_start=429
+26	die	der	PRON	ART	Case=Acc|Gender=Fem|Number=Sing|PronType=Dem	24	oa	_	t_end=436|t_start=433
+27	lass	lass	VERB	VVFIN	Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin	24	oc	_	t_end=441|t_start=437
+28	ich	ich	PRON	PPER	Case=Nom|Number=Sing|Person=1|PronType=Prs	27	sb	_	t_end=445|t_start=442
+29	dir	dir	PRON	PPER	Case=Dat|Number=Sing|Person=2|PronType=Prs	24	oc	_	t_end=449|t_start=446
+30	.	--	PUNCT	$.	_	2	punct	_	SpaceAfter=No|t_end=451|t_start=450
+

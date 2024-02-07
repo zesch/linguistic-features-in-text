@@ -26,18 +26,21 @@ def cas_to_str(cas, sentence):
         if not re.match("^\s*$", x.get_covered_text())
     ]
 
-    form_list = [x.get_covered_text for x in token_list]
+    form_list = [cas.get_covered_text(x) for x in token_list]
     orig_id_list = [x.xmiID for x in token_list]
     id_list = list(range(1, len(token_list) + 1))
 
     id_map = dict(zip(orig_id_list, id_list))
 
     lemma_list = [
-        x.get_covered_text for x in cas.select_covered(T_LEMMA, sentence)
+        #
+        x.value for x in cas.select_covered(T_LEMMA, sentence)
     ]
     pos_list = [x.PosValue for x in cas.select_covered(T_POS, sentence)]
     morph_list = [x.morphTag for x in cas.select_covered(T_MORPH, sentence)]
-    
+    if len(morph_list) == 0:
+        morph_list = ["_"] * len(token_list)
+
     # TODO why like this?
     udpos_list = ["FM"] * len(token_list)
 
