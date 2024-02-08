@@ -32,7 +32,10 @@ UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 FINITE_VERBS_STTS = ["VVFIN", "VMFIN", "VAFIN"]
 FINITE_VERBS_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
 NONFINITE_VERBS_STTS_BROAD = ["VVPP", "VAPP", "VMPP", "VVINF", "VAINF", "VMINF","VVIZU"]
+INFINITIVES_STTS = ["VVINF", "VAINF","VMINF", "VVIZU"]  # maybe leave out VVIZU?
 ALL_VERB_TAGS_STTS = FINITE_VERBS_STTS_BROAD + NONFINITE_VERBS_STTS_BROAD
+FINITE_MOD_AUX_STTS = ["VMFIN", "VAFIN"]
+
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
@@ -44,13 +47,17 @@ class StuffRegistry:
 		self.tree_depths = []  # list of int
 		self.finite_verb_counts = []  # list of int
 		self.total_verb_counts = []  # list of int
-		self.subj_relative_to_vfin = []  # list of int (where 1 signifies S after Vfin, and -1 the opposite order)
+		self.modal_verb_counts = [] # list of int
+		self.position_of_subj_relative_to_vfin = []  # list of int (where 1 signifies S after Vfin, and -1 the opposite order)
 		self.subj_less_verbs = [] # list of int
+		self.verbal_bracket_cands = [] # list of int
 		self.lex_np_sizes = []  # list of int
 		self.substituting_pronoun_counts = []  # list of int
 		self.attributive_pronoun_counts = []  # list of int
 		self.personal_pronoun_counts = []  # list of int
+		self.adposition_counts = []  # list of int
 		self.preposition_counts = []  # list of int
+		self.postposition_counts = []  # list of int
 		self.relative_pronoun_counts = []  # list of int
 		self.conjunction_counts = []  # list of int
 		self.subordinator_counts = []  # list of int
@@ -113,6 +120,21 @@ class FE_CasToTree:
 			normalized_subordinator_proportion,
 		)
 
+		###
+
+		normalized_adposition_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.adposition_counts) / doc_length)), 2
+		)
+		print("ADPOSITIONS_PER_1000 %s" % normalized_adposition_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Adpositions_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_adposition_proportion,
+		)
+
+		### 
+
 		normalized_preposition_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.preposition_counts) / doc_length)), 2
 		)
@@ -123,6 +145,23 @@ class FE_CasToTree:
 			NUM_FEATURE,
 			normalized_preposition_proportion,
 		)
+
+		### 
+
+		normalized_postposition_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.postposition_counts) / doc_length)), 2
+		)
+		print("POSTPOSITIONS_PER_1000 %s" % normalized_postposition_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Postpositions_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_postposition_proportion,
+		)
+
+
+		###
+
 
 		normalized_relative_pronoun_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.relative_pronoun_counts) / doc_length)),
@@ -288,6 +327,20 @@ class FE_CasToTree:
 
 		###
 
+		try:
+			proportion_modal_verbs_out_of_all_verbs = round(
+				float( sum(registry.modal_verb_counts) / sum(registry.total_verb_counts)),2
+			)
+		except:
+				proportion_modal_verbs_out_of_all_verbs = 0.0
+
+		print("share of modal verbs %s" %(str(proportion_modal_verbs_out_of_all_verbs)))
+		self._add_feat_to_cas(
+			cas, "Proportion_of_modal_verbs_out_of_all_verbs", NUM_FEATURE, proportion_modal_verbs_out_of_all_verbs
+		)
+
+		###
+
 		no_verb_count = registry.total_verb_counts.count(0)
 		proportion_s_without_verb = round(
 			float(no_verb_count) / len(registry.sent_lengths), 2
@@ -297,9 +350,41 @@ class FE_CasToTree:
 			cas, "Proportion_S_without_verb", NUM_FEATURE, proportion_s_without_verb
 		)
 
+		### 
+
+		bracket_ctr = Counter(registry.verbal_bracket_cands)
+		totcands = sum(bracket_ctr.values())
+		proportion_of_missing_brackets = round( float( bracket_ctr[999] / totcands),2)
+		proportion_of_switched_brackets =round( float( bracket_ctr[-1] / totcands),2)
+		proportion_of_standard_sequenced_brackets = round( float( (bracket_ctr[0] + bracket_ctr[1]) / totcands),2)
+		proportion_of_brackets_with_emtpy_midfields= round( float( bracket_ctr[0] / (bracket_ctr[0] + bracket_ctr[1] )),2)
+
+		print("Proportion_of_missing_brackets %s" % proportion_of_missing_brackets)
+		self._add_feat_to_cas(
+			cas, "Proportion_of_missing_verbal_brackets", NUM_FEATURE, proportion_of_missing_brackets
+		)
+
+		print("Proportion_of_switched_brackets %s" % proportion_of_switched_brackets)
+		self._add_feat_to_cas(
+			cas, "Proportion_of_switched_brackets", NUM_FEATURE, proportion_of_switched_brackets
+		)
+
+
+		print("Proportion_of_canonical_brackets %s" % proportion_of_standard_sequenced_brackets)
+		self._add_feat_to_cas(
+			cas, "Proportion_of_canonical_brackets", NUM_FEATURE, proportion_of_standard_sequenced_brackets
+		)
+
+		print("Proportion_of_brackets_with_empty_midfields %s" % proportion_of_brackets_with_emtpy_midfields)
+		self._add_feat_to_cas(
+			cas, "Proportion_of_brackets_with_empty_midfields", NUM_FEATURE, proportion_of_brackets_with_emtpy_midfields
+		)
+
+
+
 		###
 
-		sb4v_ctr = Counter(registry.subj_relative_to_vfin)
+		sb4v_ctr = Counter(registry.position_of_subj_relative_to_vfin)
 
 		try:
 			share_of_s_vfin_inversions = round(
@@ -396,14 +481,24 @@ class FE_CasToTree:
 			registry.total_verb_counts.append(
 				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["V.*"])
 			)
-			relative_position_of_subj_and_verb = self._check_position_of_subj_relative_to_vfin(tree)
-			registry.subj_relative_to_vfin.extend([x for x in relative_position_of_subj_and_verb if not x==0])
+
+			registry.modal_verb_counts.append(
+				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["VM.*"])
+			)
+
+
+			relative_position_of_subj_and_verb = self._check_position_of_position_of_subj_relative_to_vfin(tree)
+			registry.position_of_subj_relative_to_vfin.extend([x for x in relative_position_of_subj_and_verb if not x==0])
 
 			registry.subj_less_verbs.append(relative_position_of_subj_and_verb.count(0))
 
 			registry.coordination_is_between_verbs.extend(
 				self._check_verbal_coordination(tree)
 			)
+
+			registry.verbal_bracket_cands.extend( self._check_verbal_bracket_configurations(tree))
+
+
 
 			registry.attributive_pronoun_counts.append(
 				self._count_nodes_with_specified_values_for_feat(
@@ -423,9 +518,20 @@ class FE_CasToTree:
 				)
 			)
 
-			registry.preposition_counts.append(
+			registry.adposition_counts.append(
 				self._count_nodes_with_specified_values_for_feat(
 					tree, "xpos", ["APPR|APPRART|APPO|APZR"]
+				)
+			)
+			registry.postposition_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["APPO"]
+				)
+			)
+
+			registry.preposition_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["APPR|APPRART"]
 				)
 			)
 
@@ -595,7 +701,7 @@ class FE_CasToTree:
 				size_list.append(n_size)
 		return size_list
 
-	def _check_position_of_subj_relative_to_vfin(
+	def _check_position_of_position_of_subj_relative_to_vfin(
 		self,
 		node: Node,
 		finiteverbtags=FINITE_VERBS_STTS_BROAD,
@@ -618,6 +724,42 @@ class FE_CasToTree:
 					position_of_s_relative_to_vfin.append(rel_pos)
 		return position_of_s_relative_to_vfin
 
+
+	def _check_verbal_bracket_configurations(
+		self,
+		node: Node,
+		finitemodeauxtags=FINITE_MOD_AUX_STTS,
+	):
+		""" 
+		Check if modals and auxiliaries are part of verbal brackets with infinitives in RSK or not.
+		We return 
+		999 if there is no bracket
+		0 if there is a bracket and the midfield is empty (e.g. er hat gesagt, ...)
+		1 if there is a bracket and the midfield is  not empty (e.g. er hat das gesagt)
+		-1 if the non-finite verb is to the left of the finite form (e.g. Wollen kann man vieles.)
+		
+		"""
+		bracket_candidates = []
+		for d in node.descendants:
+			if d.xpos in finitemodeauxtags:
+				infdep =  None
+				for kid in d.children:
+					if kid.xpos in INFINITIVES_STTS:
+						infdep=kid
+				if infdep is None:
+					pass
+					#bracket_candidates.append(999)
+				else:
+					if infdep.ord > d.ord:
+						if infdep.ord - d.ord == 1:
+							bracket_candidates.append(0)
+						else:
+							bracket_candidates.append(1)
+					else:
+						print("BRACKETOLOGY %s in %s " %(d.form, node.compute_text()))
+						bracket_candidates.append(-1)
+		return bracket_candidates					
+						
 	def _check_verbal_coordination(
 		self, node: Node, verbtags=ALL_VERB_TAGS_STTS, conjtags=["KON"], coordinator_rel="cd", conjunct_rel="cj"
 	) -> List[bool]:
