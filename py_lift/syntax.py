@@ -44,7 +44,8 @@ class StuffRegistry:
 		self.tree_depths = []  # list of int
 		self.finite_verb_counts = []  # list of int
 		self.total_verb_counts = []  # list of int
-		self.subj_before_vfin = []  # list of bool
+		self.subj_relative_to_vfin = []  # list of int (where 1 signifies S after Vfin, and -1 the opposite order)
+		self.subj_less_verbs = [] # list of int
 		self.lex_np_sizes = []  # list of int
 		self.substituting_pronoun_counts = []  # list of int
 		self.attributive_pronoun_counts = []  # list of int
@@ -298,11 +299,11 @@ class FE_CasToTree:
 
 		###
 
-		sb4v_ctr = Counter(registry.subj_before_vfin)
+		sb4v_ctr = Counter(registry.subj_relative_to_vfin)
 
 		try:
 			share_of_s_vfin_inversions = round(
-				float(sb4v_ctr[False] / (sb4v_ctr[False] + sb4v_ctr[True])), 2
+				float(sb4v_ctr[1] / (sb4v_ctr[1] + sb4v_ctr[-1])), 2
 			)
 		except:
 			share_of_s_vfin_inversions = 0.0
@@ -315,6 +316,22 @@ class FE_CasToTree:
 		)
 
 		###
+
+		try:
+				share_of_subjectless_finite_verbs = round(
+					float(registry.subj_less_verbs / (sb4v_ctr[1] + sb4v_ctr[-1])),2
+				)
+		except:
+				share_of_subjectless_finite_verbs = 0.0
+
+		self._add_feat_to_cas(
+			cas,
+			"Proportion_of_subjectless_finite_verbs",
+			NUM_FEATURE,
+			share_of_subjectless_finite_verbs,
+		)
+
+		### 
 
 		coord_between_V_ctr = Counter(registry.coordination_is_between_verbs)
 		print("coordination_is_between_verbs %s" % coord_between_V_ctr)
@@ -379,8 +396,10 @@ class FE_CasToTree:
 			registry.total_verb_counts.append(
 				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["V.*"])
 			)
+			relative_position_of_subj_and_verb = self._check_position_of_subj_relative_to_vfin(tree)
+			registry.subj_relative_to_vfin.extend([x for x in relative_position_of_subj_and_verb if not x==0])
 
-			registry.subj_before_vfin.extend(self._check_s_before_vfin(tree))
+			registry.subj_less_verbs.append(relative_position_of_subj_and_verb.count(0))
 
 			registry.coordination_is_between_verbs.extend(
 				self._check_verbal_coordination(tree)
@@ -502,9 +521,7 @@ class FE_CasToTree:
 		print("Leftward rels %s" % leftward)
 		print("Rightward rels %s" % rightward)
 		anydir = leftward + rightward
-		# anydir.update(leftward)
-		# anydir.update(rightward)
-		# anydir = leftward + rightward
+
 		avg_left = self._get_average_from_counter(leftward)
 		avg_right = self._get_average_from_counter(rightward)
 		avg_all = self._get_average_from_counter(anydir)
@@ -578,34 +595,35 @@ class FE_CasToTree:
 				size_list.append(n_size)
 		return size_list
 
-	def _check_s_before_vfin(
+	def _check_position_of_subj_relative_to_vfin(
 		self,
 		node: Node,
 		finiteverbtags=FINITE_VERBS_STTS_BROAD,
 		subjlabels=TIGER_SUBJ_LABELS,
 	) -> List[bool]:
 		"""
-		True or false depending on whether a subject precedes its finite verb .
-		If a verb lacks a subject, it's disregarded.
+		1 if subject follows verb; -1 if subject precedes verb; 0 if there is no subject for the finite verb in question.
 		The lists of pos tags for finite verbs and of subj relation labels may need to be adjusted per tagger/parser used!
 		"""
-		s_before_vfin = []
+		position_of_s_relative_to_vfin = []
 		for d in node.descendants:
 			if d.xpos in finiteverbtags:
 				for kid in d.children:
+					rel_pos = 0
 					if kid.deprel.upper() in subjlabels:
 						if kid.ord > d.ord:
-							s_before_vfin.append(False)
+							rel_pos = 1
 						else:
-							s_before_vfin.append(True)
-
-		return s_before_vfin
+							rel_pos = -1
+					position_of_s_relative_to_vfin.append(rel_pos)
+		return position_of_s_relative_to_vfin
 
 	def _check_verbal_coordination(
 		self, node: Node, verbtags=ALL_VERB_TAGS_STTS, conjtags=["KON"], coordinator_rel="cd", conjunct_rel="cj"
 	) -> List[bool]:
 		"""
-		check how often conjunctions coordinate verbal elements
+		Check whether conjunctions coordinate verbal elements .
+		Method assumes Tiger syntax.
 		"""
 		coordination_is_between_verbs = []
 		for concand in node.descendants:
