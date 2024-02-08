@@ -20,9 +20,13 @@ T_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 
 ts = load_typesystem("data/TypeSystem.xml")
 
+
 # casfile = "data/k002_s04_cas.xmi_modded.xmi"
 casfile = "data/k002_s04_cas.xmi" # sample file from OSNA corpus
 myview = "corr"  # learner layer
+
+#casfile = "data/1023_0001416.xmi" #  sample file from MERLIN
+# myview = "_InitialView"
 conllufile = "data/k002_s04_corr_offsets.conllu" # conllu file from OSNA corpus, with annotations in metadata fields of sentences
 
 

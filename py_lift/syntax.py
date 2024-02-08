@@ -31,6 +31,8 @@ UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 # TODO should be in resource file
 FINITE_VERBS_STTS = ["VVFIN", "VMFIN", "VAFIN"]
 FINITE_VERBS_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
+NONFINITE_VERBS_STTS_BROAD = ["VVPP", "VAPP", "VMPP", "VVINF", "VAINF", "VMINF","VVIZU"]
+ALL_VERB_TAGS_STTS = FINITE_VERBS_STTS_BROAD + NONFINITE_VERBS_STTS_BROAD
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
@@ -44,6 +46,14 @@ class StuffRegistry:
 		self.total_verb_counts = []  # list of int
 		self.subj_before_vfin = []  # list of bool
 		self.lex_np_sizes = []  # list of int
+		self.substituting_pronoun_counts = []  # list of int
+		self.attributive_pronoun_counts = []  # list of int
+		self.personal_pronoun_counts = []  # list of int
+		self.preposition_counts = []  # list of int
+		self.relative_pronoun_counts = []  # list of int
+		self.conjunction_counts = []  # list of int
+		self.subordinator_counts = []  # list of int
+		self.coordination_is_between_verbs = []  # list of bool
 
 
 class FE_CasToTree:
@@ -52,22 +62,145 @@ class FE_CasToTree:
 		self.layer = layer
 
 	def extract(self, cas):
-		# TODO why "vu"?
-		vu = cas.get_view(self.layer)
+		# TODO find out author id ~ file name from  metadatastringfield  within cas
 
+		META_FEAT = (
+			"de.tudarmstadt.ukp.dkpro.core.api.metadata.type.MetaDataStringField"
+		)
+		meta_feats = cas.select(META_FEAT)
+		outfile = "undefined.xmi"
+		for meta_feat in meta_feats:
+			if meta_feat.get("key") == "_author_id":
+				outfile = meta_feat.get("value") + "_modded.xmi"
+		view = cas.get_view(self.layer)
 		registry = StuffRegistry()
 
 		# TODO: get rid of the magic number below; only used for debugging
 		MAXSENT = 2000
 		sct = 0
-		for sent in vu.select(T_SENT):
-			self._register_stuff(vu, registry, sent)
+		for sent in view.select(T_SENT):
+			self._register_stuff(view, registry, sent)
 
 			sct += 1
 			if sct > MAXSENT:
 				break
 
 		NUM_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
+		REF_TEXT_SIZE = 1000
+
+		doc_length = sum(registry.sent_lengths)
+
+		normalized_conjunction_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.conjunction_counts) / doc_length)), 2
+		)
+		print("CONJUNCTIONS_PER_1000 %s" % normalized_conjunction_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Conjunctions_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_conjunction_proportion,
+		)
+
+		normalized_subordinator_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.subordinator_counts) / doc_length)), 2
+		)
+		print("SUBORDINATORS_PER_1000 %s" % normalized_subordinator_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Subordinators_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_subordinator_proportion,
+		)
+
+		normalized_preposition_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.preposition_counts) / doc_length)), 2
+		)
+		print("PREPOSITIONS_PER_1000 %s" % normalized_preposition_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Prepositions_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_preposition_proportion,
+		)
+
+		normalized_relative_pronoun_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.relative_pronoun_counts) / doc_length)),
+			2,
+		)
+		print("RELATIVE_PRONOUNS_PER_1000 %s" % normalized_relative_pronoun_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Relative_pronouns_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_relative_pronoun_proportion,
+		)
+
+		normalized_attributive_pronoun_proportion = round(
+			(
+				REF_TEXT_SIZE
+				* float(sum(registry.attributive_pronoun_counts) / doc_length)
+			),
+			2,
+		)
+		print(
+			"ATTRIBUTIVE_PRONOUNS_PER_1000 %s"
+			% normalized_attributive_pronoun_proportion
+		)
+		self._add_feat_to_cas(
+			cas,
+			"Attributive_pronouns_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_attributive_pronoun_proportion,
+		)
+
+		normalized_substituting_pronoun_proportion = round(
+			(
+				REF_TEXT_SIZE
+				* float(sum(registry.substituting_pronoun_counts) / doc_length)
+			),
+			2,
+		)
+		print(
+			"SUBSTITUTING_PRONOUNS_PER_1000 %s"
+			% normalized_substituting_pronoun_proportion
+		)
+		self._add_feat_to_cas(
+			cas,
+			"Substituting_pronouns_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_substituting_pronoun_proportion,
+		)
+
+		normalized_pronoun_proportion = round(
+			(
+				REF_TEXT_SIZE
+				* float(
+					sum(
+						registry.substituting_pronoun_counts
+						+ registry.attributive_pronoun_counts
+					)
+					/ doc_length
+				)
+			),
+			2,
+		)
+		print("PRONOUNS_PER_1000 %s" % normalized_pronoun_proportion)
+		self._add_feat_to_cas(
+			cas, "Pronouns_per_1k_tokens", NUM_FEATURE, normalized_pronoun_proportion
+		)
+
+		normalized_personal_pronoun_proportion = round(
+			(REF_TEXT_SIZE * float(sum(registry.personal_pronoun_counts) / doc_length)),
+			2,
+		)
+		print("PERSONAL_PRONOUNS_PER_1000 %s" % normalized_personal_pronoun_proportion)
+		self._add_feat_to_cas(
+			cas,
+			"Personal_pronouns_per_1k_tokens",
+			NUM_FEATURE,
+			normalized_personal_pronoun_proportion,
+		)
+
 		print(
 			"Dependency length distribution per relation type\n"
 			+ pp.pformat(registry.dependency_length_distribution_per_rel_type)
@@ -107,6 +240,23 @@ class FE_CasToTree:
 		)
 		self._add_feat_to_cas(cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth)
 
+		###
+
+		assert len(registry.sent_lengths) == len(registry.finite_verb_counts)
+		no_fin_verb_count = registry.finite_verb_counts.count(0)
+		proportion_s_without_fin_verb = round(
+			float(no_fin_verb_count) / len(registry.sent_lengths), 2
+		)
+		print("Proportion_S_without_finite_verb %s" % proportion_s_without_fin_verb)
+		self._add_feat_to_cas(
+			cas,
+			"Proportion_S_without_finite_verb",
+			NUM_FEATURE,
+			proportion_s_without_fin_verb,
+		)
+
+		###
+
 		print("finite_verb_counts %s" % registry.finite_verb_counts)
 		try:
 			avg_finite_verbs = round(
@@ -119,6 +269,8 @@ class FE_CasToTree:
 		self._add_feat_to_cas(
 			cas, "Average_Number_Of_Finite_Verbs", NUM_FEATURE, avg_finite_verbs
 		)
+
+		###
 
 		print("total_verb_counts %s" % registry.total_verb_counts)
 		try:
@@ -133,11 +285,25 @@ class FE_CasToTree:
 			cas, "Average_Number_Of_Verbs", NUM_FEATURE, avg_verb_count
 		)
 
-		#print("subj_before_vfin %s" % registry.subj_before_vfin)
+		###
+
+		no_verb_count = registry.total_verb_counts.count(0)
+		proportion_s_without_verb = round(
+			float(no_verb_count) / len(registry.sent_lengths), 2
+		)
+		print("Proportion_S_without_verb %s" % proportion_s_without_verb)
+		self._add_feat_to_cas(
+			cas, "Proportion_S_without_verb", NUM_FEATURE, proportion_s_without_verb
+		)
+
+		###
+
 		sb4v_ctr = Counter(registry.subj_before_vfin)
-		#print("Inversion counter global %s" % invc)
+
 		try:
-			share_of_s_vfin_inversions = round(float(sb4v_ctr[False] /( sb4v_ctr[False] + sb4v_ctr[True] )), 2)
+			share_of_s_vfin_inversions = round(
+				float(sb4v_ctr[False] / (sb4v_ctr[False] + sb4v_ctr[True])), 2
+			)
 		except:
 			share_of_s_vfin_inversions = 0.0
 
@@ -147,6 +313,30 @@ class FE_CasToTree:
 			NUM_FEATURE,
 			share_of_s_vfin_inversions,
 		)
+
+		###
+
+		coord_between_V_ctr = Counter(registry.coordination_is_between_verbs)
+		print("coordination_is_between_verbs %s" % coord_between_V_ctr)
+		try:
+			share_of_verbal_coordinations = round(
+				float(
+					coord_between_V_ctr[True]
+					/ (coord_between_V_ctr[False] + coord_between_V_ctr[True])
+				),
+				2,
+			)
+		except:
+			share_of_verbal_coordinations = 0.0
+
+		self._add_feat_to_cas(
+			cas,
+			"Proportion_of_coordination_between_verbs",
+			NUM_FEATURE,
+			share_of_verbal_coordinations,
+		)
+
+		###
 
 		print("lex_np_sizes %s" % registry.lex_np_sizes)
 		try:
@@ -158,6 +348,10 @@ class FE_CasToTree:
 		self._add_feat_to_cas(
 			cas, "Average_Size_Of_Lexical_NP", NUM_FEATURE, avg_lex_np_size
 		)
+
+		###
+
+		cas.to_xmi(outfile, pretty_print=True)
 		return True
 
 	def _add_feat_to_cas(self, cas, name, featpath, value):
@@ -169,7 +363,7 @@ class FE_CasToTree:
 		udapi_doc = Document()
 		cas_in_str_form = cas_to_str(cas, sent)
 		udapi_doc.from_conllu_string(cas_in_str_form)
-		sct=1
+		sct = 1
 		# udapi_doc.from_conllu_string(TEST_STRING)
 		for bundle in udapi_doc.bundles:
 			tree = bundle.get_tree()
@@ -180,11 +374,57 @@ class FE_CasToTree:
 					tree, "xpos", [".*FIN"]
 				)
 			)
+
 			# all verbal forms have a pos-Tag beginning with "V"
 			registry.total_verb_counts.append(
 				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["V.*"])
 			)
+
 			registry.subj_before_vfin.extend(self._check_s_before_vfin(tree))
+
+			registry.coordination_is_between_verbs.extend(
+				self._check_verbal_coordination(tree)
+			)
+
+			registry.attributive_pronoun_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]
+				)
+			)
+			registry.substituting_pronoun_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree,
+					"xpos",
+					["PPER|PRF|PIS|PPOS|PDS|PRELS|PWS"],  # leaving out PWAV!
+				)
+			)
+			registry.personal_pronoun_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["PPER|PRF"]
+				)
+			)
+
+			registry.preposition_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["APPR|APPRART|APPO|APZR"]
+				)
+			)
+
+			registry.relative_pronoun_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["PRELAT|PRELS"]
+				)
+			)
+
+			registry.subordinator_counts.append(
+				self._count_nodes_with_specified_values_for_feat(
+					tree, "xpos", ["KOUI|KOUS"]
+				)
+			)
+
+			registry.conjunction_counts.append(
+				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["KON"])
+			)
 
 			registry.tree_depths.append(self._get_max_subtree_depth(tree))
 			registry.sent_lengths.append(len(tree.descendants))
@@ -194,17 +434,25 @@ class FE_CasToTree:
 			# print(list(self.get_triples(tree, feats=["xpos","deprel"])))
 
 			(sent_wise_dep_len_dist, dir_lens) = self._get_dep_dist(tree)
-			print("directed lengths for sentence %s: %s, %s left and %s right " %( sct,dir_lens, len(dir_lens["l"]) , len(dir_lens["r"]) ))
+			print(
+				"directed lengths for sentence %s: %s, %s left and %s right "
+				% (sct, dir_lens, len(dir_lens["l"]), len(dir_lens["r"]))
+			)
 
 			# registry.dependency_length_distribution_per_rel_type.update(
 			# 	sent_wise_dep_len_dist
 			# )
-			registry.dependency_length_distribution_per_rel_type = self._merge_sentwise_counts_into_global_counts(sent_wise_dep_len_dist,registry.dependency_length_distribution_per_rel_type)
+			registry.dependency_length_distribution_per_rel_type = (
+				self._merge_sentwise_counts_into_global_counts(
+					sent_wise_dep_len_dist,
+					registry.dependency_length_distribution_per_rel_type,
+				)
+			)
 			# registry.dependency_length_distribution_per_rel_type = self._get_dep_dist(
 			# 	tree, registry.dependency_length_distribution_per_rel_type
 			# )
 
-	def _merge_sentwise_counts_into_global_counts(self, sentwise_dist,global_dist):
+	def _merge_sentwise_counts_into_global_counts(self, sentwise_dist, global_dist):
 		for rel in sentwise_dist.keys():
 			if rel not in global_dist:
 				global_dist[rel] = Counter()
@@ -241,22 +489,22 @@ class FE_CasToTree:
 			for kee in ctr.keys():
 				if kee < 0:
 					if not abs(kee) in leftward:
-    						leftward[abs(kee)] = 0
-					leftward[abs(kee)]+=ctr[kee]
-				elif kee>0:
-					#rightward.update({kee: ctr[kee]})
+						leftward[abs(kee)] = 0
+					leftward[abs(kee)] += ctr[kee]
+				elif kee > 0:
+					# rightward.update({kee: ctr[kee]})
 					if not kee in rightward:
-    						rightward[kee] = 0
-					rightward[kee]+=ctr[kee]
+						rightward[kee] = 0
+					rightward[kee] += ctr[kee]
 				else:
 					continue
 
 		print("Leftward rels %s" % leftward)
 		print("Rightward rels %s" % rightward)
 		anydir = leftward + rightward
-		#anydir.update(leftward)
-		#anydir.update(rightward)
-		#anydir = leftward + rightward
+		# anydir.update(leftward)
+		# anydir.update(rightward)
+		# anydir = leftward + rightward
 		avg_left = self._get_average_from_counter(leftward)
 		avg_right = self._get_average_from_counter(rightward)
 		avg_all = self._get_average_from_counter(anydir)
@@ -331,7 +579,10 @@ class FE_CasToTree:
 		return size_list
 
 	def _check_s_before_vfin(
-		self, node: Node, finiteverbtags=FINITE_VERBS_STTS_BROAD, subjlabels=TIGER_SUBJ_LABELS
+		self,
+		node: Node,
+		finiteverbtags=FINITE_VERBS_STTS_BROAD,
+		subjlabels=TIGER_SUBJ_LABELS,
 	) -> List[bool]:
 		"""
 		True or false depending on whether a subject precedes its finite verb .
@@ -349,3 +600,28 @@ class FE_CasToTree:
 							s_before_vfin.append(True)
 
 		return s_before_vfin
+
+	def _check_verbal_coordination(
+		self, node: Node, verbtags=ALL_VERB_TAGS_STTS, conjtags=["KON"], coordinator_rel="cd", conjunct_rel="cj"
+	) -> List[bool]:
+		"""
+		check how often conjunctions coordinate verbal elements
+		"""
+		coordination_is_between_verbs = []
+		for concand in node.descendants:
+			if concand.xpos in conjtags and concand.deprel == coordinator_rel:
+				parent = concand.parent
+				if not parent.xpos in verbtags:
+					coordination_is_between_verbs.append(False)
+				else:
+					found_match = False
+					for child in concand.children:
+						print("Kid of conj is %s with %s and %s" %(child.form,child.xpos,child.deprel))
+
+						if child.xpos in verbtags and child.deprel == conjunct_rel:
+							found_match = True
+					if found_match==True:
+						coordination_is_between_verbs.append(True)
+					else:
+						coordination_is_between_verbs.append(False)
+		return coordination_is_between_verbs
