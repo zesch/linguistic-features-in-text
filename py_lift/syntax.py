@@ -31,13 +31,26 @@ UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 # TODO should be in resource file
 FINITE_VERBS_STTS = ["VVFIN", "VMFIN", "VAFIN"]
 FINITE_VERBS_STTS_BROAD = ["VVFIN", "VVIMP", "VMFIN", "VAFIN", "VMIMP", "VAIMP"]
-NONFINITE_VERBS_STTS_BROAD = ["VVPP", "VAPP", "VMPP", "VVINF", "VAINF", "VMINF","VVIZU"]
-INFINITIVES_STTS = ["VVINF", "VAINF","VMINF", "VVIZU"]  # maybe leave out VVIZU?
+NONFINITE_VERBS_STTS_BROAD = [
+	"VVPP",
+	"VAPP",
+	"VMPP",
+	"VVINF",
+	"VAINF",
+	"VMINF",
+	"VVIZU",
+]
+INFINITIVES_STTS = ["VVINF", "VAINF", "VMINF", "VVIZU"]  # maybe leave out VVIZU?
 ALL_VERB_TAGS_STTS = FINITE_VERBS_STTS_BROAD + NONFINITE_VERBS_STTS_BROAD
 FINITE_MOD_AUX_STTS = ["VMFIN", "VAFIN"]
 
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
+
+POS_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
+DEP_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
+TOK_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
+STRUCT_FEAT = "org.lift.type.Structure"
 
 
 class StuffRegistry:
@@ -47,10 +60,12 @@ class StuffRegistry:
 		self.tree_depths = []  # list of int
 		self.finite_verb_counts = []  # list of int
 		self.total_verb_counts = []  # list of int
-		self.modal_verb_counts = [] # list of int
-		self.position_of_subj_relative_to_vfin = []  # list of int (where 1 signifies S after Vfin, and -1 the opposite order)
-		self.subj_less_verbs = [] # list of int
-		self.verbal_bracket_cands = [] # list of int
+		self.modal_verb_counts = []  # list of int
+		self.position_of_subj_relative_to_vfin = (
+			[]
+		)  # list of int (where 1 signifies S after Vfin, and -1 the opposite order)
+		self.subj_less_verbs = []  # list of int
+		self.verbal_bracket_cands = []  # list of int
 		self.lex_np_sizes = []  # list of int
 		self.substituting_pronoun_counts = []  # list of int
 		self.attributive_pronoun_counts = []  # list of int
@@ -62,12 +77,43 @@ class StuffRegistry:
 		self.conjunction_counts = []  # list of int
 		self.subordinator_counts = []  # list of int
 		self.coordination_is_between_verbs = []  # list of bool
+		self.rels_of_conjunctions = Counter()  # counter for deprel-strings as keys
 
 
 class FE_CasToTree:
 	def __init__(self, layer, ts):
 		self.ts = ts
 		self.layer = layer
+
+	def annotate(self, cas):
+		"""Annotate the junctors in the CAS."""
+		DEFAULT_JUNCTOR = "und"
+		junctor_list = [DEFAULT_JUNCTOR]
+		print("getting ready for some annotation!")
+		view = cas.get_view(self.layer)
+		deprels = view.select(DEP_FEAT)
+		print("got ourseln %s deps " % (str(len(deprels))))
+		junctor_coords = []
+		for deprel in deprels:
+			if deprel.DependencyType.upper() == "JU":
+				dependent = deprel.Dependent
+				ds = dependent.get("begin")
+				de = dependent.get("end")
+				junctor_coords.append((ds, de))
+		print("ju instances found %s" % str(junctor_coords))
+		tox_for_view = view.select(TOK_FEAT)
+		print("found %s tokens for this view" % str(len(tox_for_view)))
+		for cand in junctor_coords:
+			print("candidate %s" % str(cand))
+			for tok in tox_for_view:
+				if tok.get_covered_text().lower() in junctor_list and tok.begin == cand[0] and tok.end == cand[1]: 
+					name='JUNCTOR'
+					F = self.ts.get_type(STRUCT_FEAT)
+					feature = F(name=name, begin=cand[0],end=cand[1])
+					print("nu feature! %s" %feature)
+					view.add(feature)
+				else:
+					pass
 
 	def extract(self, cas):
 		# TODO find out author id ~ file name from  metadatastringfield  within cas
@@ -95,6 +141,33 @@ class FE_CasToTree:
 
 		NUM_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 		REF_TEXT_SIZE = 1000
+
+		# register rels of `und`` without a preceding left clause
+		# in STTS these uses have the rel `ju`
+		JUNCTOR_REL = "ju"
+		try:
+			share_of_conj_uses_without_left_clause = round(
+				float(
+					registry.rels_of_conjunctions[JUNCTOR_REL]
+					/ sum(registry.rels_of_conjunctions.values())
+				),
+				2,
+			)
+		except:
+			share_of_conj_uses_without_left_clause = 0.0
+
+		print(
+			"Share_of_conj_uses_without_left_clause %s"
+			% share_of_conj_uses_without_left_clause
+		)
+		self._add_feat_to_cas(
+			cas,
+			"Share_of_conj_uses_without_left_clause",
+			NUM_FEATURE,
+			share_of_conj_uses_without_left_clause,
+		)
+
+		###
 
 		doc_length = sum(registry.sent_lengths)
 
@@ -133,7 +206,7 @@ class FE_CasToTree:
 			normalized_adposition_proportion,
 		)
 
-		### 
+		###
 
 		normalized_preposition_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.preposition_counts) / doc_length)), 2
@@ -146,7 +219,7 @@ class FE_CasToTree:
 			normalized_preposition_proportion,
 		)
 
-		### 
+		###
 
 		normalized_postposition_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.postposition_counts) / doc_length)), 2
@@ -159,9 +232,7 @@ class FE_CasToTree:
 			normalized_postposition_proportion,
 		)
 
-
 		###
-
 
 		normalized_relative_pronoun_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.relative_pronoun_counts) / doc_length)),
@@ -329,14 +400,22 @@ class FE_CasToTree:
 
 		try:
 			proportion_modal_verbs_out_of_all_verbs = round(
-				float( sum(registry.modal_verb_counts) / sum(registry.total_verb_counts)),2
+				float(
+					sum(registry.modal_verb_counts) / sum(registry.total_verb_counts)
+				),
+				2,
 			)
 		except:
-				proportion_modal_verbs_out_of_all_verbs = 0.0
+			proportion_modal_verbs_out_of_all_verbs = 0.0
 
-		print("share of modal verbs %s" %(str(proportion_modal_verbs_out_of_all_verbs)))
+		print(
+			"share of modal verbs %s" % (str(proportion_modal_verbs_out_of_all_verbs))
+		)
 		self._add_feat_to_cas(
-			cas, "Proportion_of_modal_verbs_out_of_all_verbs", NUM_FEATURE, proportion_modal_verbs_out_of_all_verbs
+			cas,
+			"Proportion_of_modal_verbs_out_of_all_verbs",
+			NUM_FEATURE,
+			proportion_modal_verbs_out_of_all_verbs,
 		)
 
 		###
@@ -350,37 +429,56 @@ class FE_CasToTree:
 			cas, "Proportion_S_without_verb", NUM_FEATURE, proportion_s_without_verb
 		)
 
-		### 
+		###
 
 		bracket_ctr = Counter(registry.verbal_bracket_cands)
 		totcands = sum(bracket_ctr.values())
-		proportion_of_missing_brackets = round( float( bracket_ctr[999] / totcands),2)
-		proportion_of_switched_brackets =round( float( bracket_ctr[-1] / totcands),2)
-		proportion_of_standard_sequenced_brackets = round( float( (bracket_ctr[0] + bracket_ctr[1]) / totcands),2)
-		proportion_of_brackets_with_emtpy_midfields= round( float( bracket_ctr[0] / (bracket_ctr[0] + bracket_ctr[1] )),2)
+		proportion_of_missing_brackets = round(float(bracket_ctr[999] / totcands), 2)
+		proportion_of_switched_brackets = round(float(bracket_ctr[-1] / totcands), 2)
+		proportion_of_standard_sequenced_brackets = round(
+			float((bracket_ctr[0] + bracket_ctr[1]) / totcands), 2
+		)
+		proportion_of_brackets_with_emtpy_midfields = round(
+			float(bracket_ctr[0] / (bracket_ctr[0] + bracket_ctr[1])), 2
+		)
 
 		print("Proportion_of_missing_brackets %s" % proportion_of_missing_brackets)
 		self._add_feat_to_cas(
-			cas, "Proportion_of_missing_verbal_brackets", NUM_FEATURE, proportion_of_missing_brackets
+			cas,
+			"Proportion_of_missing_verbal_brackets",
+			NUM_FEATURE,
+			proportion_of_missing_brackets,
 		)
 
 		print("Proportion_of_switched_brackets %s" % proportion_of_switched_brackets)
 		self._add_feat_to_cas(
-			cas, "Proportion_of_switched_brackets", NUM_FEATURE, proportion_of_switched_brackets
+			cas,
+			"Proportion_of_switched_brackets",
+			NUM_FEATURE,
+			proportion_of_switched_brackets,
 		)
 
-
-		print("Proportion_of_canonical_brackets %s" % proportion_of_standard_sequenced_brackets)
+		print(
+			"Proportion_of_canonical_brackets %s"
+			% proportion_of_standard_sequenced_brackets
+		)
 		self._add_feat_to_cas(
-			cas, "Proportion_of_canonical_brackets", NUM_FEATURE, proportion_of_standard_sequenced_brackets
+			cas,
+			"Proportion_of_canonical_brackets",
+			NUM_FEATURE,
+			proportion_of_standard_sequenced_brackets,
 		)
 
-		print("Proportion_of_brackets_with_empty_midfields %s" % proportion_of_brackets_with_emtpy_midfields)
+		print(
+			"Proportion_of_brackets_with_empty_midfields %s"
+			% proportion_of_brackets_with_emtpy_midfields
+		)
 		self._add_feat_to_cas(
-			cas, "Proportion_of_brackets_with_empty_midfields", NUM_FEATURE, proportion_of_brackets_with_emtpy_midfields
+			cas,
+			"Proportion_of_brackets_with_empty_midfields",
+			NUM_FEATURE,
+			proportion_of_brackets_with_emtpy_midfields,
 		)
-
-
 
 		###
 
@@ -403,11 +501,11 @@ class FE_CasToTree:
 		###
 
 		try:
-				share_of_subjectless_finite_verbs = round(
-					float(registry.subj_less_verbs / (sb4v_ctr[1] + sb4v_ctr[-1])),2
-				)
+			share_of_subjectless_finite_verbs = round(
+				float(registry.subj_less_verbs / (sb4v_ctr[1] + sb4v_ctr[-1])), 2
+			)
 		except:
-				share_of_subjectless_finite_verbs = 0.0
+			share_of_subjectless_finite_verbs = 0.0
 
 		self._add_feat_to_cas(
 			cas,
@@ -416,7 +514,7 @@ class FE_CasToTree:
 			share_of_subjectless_finite_verbs,
 		)
 
-		### 
+		###
 
 		coord_between_V_ctr = Counter(registry.coordination_is_between_verbs)
 		print("coordination_is_between_verbs %s" % coord_between_V_ctr)
@@ -453,7 +551,8 @@ class FE_CasToTree:
 
 		###
 
-		cas.to_xmi(outfile, pretty_print=True)
+		# TODO change this so that the code calling this class write the cas at the end, if desired
+		# cas.to_xmi(outfile, pretty_print=True)
 		return True
 
 	def _add_feat_to_cas(self, cas, name, featpath, value):
@@ -477,6 +576,11 @@ class FE_CasToTree:
 				)
 			)
 
+			DEFAULT_CONJ = "und"
+			registry.rels_of_conjunctions += self._get_uses_of_conjunctions(
+				DEFAULT_CONJ, tree
+			)
+
 			# all verbal forms have a pos-Tag beginning with "V"
 			registry.total_verb_counts.append(
 				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["V.*"])
@@ -486,9 +590,12 @@ class FE_CasToTree:
 				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["VM.*"])
 			)
 
-
-			relative_position_of_subj_and_verb = self._check_position_of_position_of_subj_relative_to_vfin(tree)
-			registry.position_of_subj_relative_to_vfin.extend([x for x in relative_position_of_subj_and_verb if not x==0])
+			relative_position_of_subj_and_verb = (
+				self._check_position_of_position_of_subj_relative_to_vfin(tree)
+			)
+			registry.position_of_subj_relative_to_vfin.extend(
+				[x for x in relative_position_of_subj_and_verb if not x == 0]
+			)
 
 			registry.subj_less_verbs.append(relative_position_of_subj_and_verb.count(0))
 
@@ -496,9 +603,9 @@ class FE_CasToTree:
 				self._check_verbal_coordination(tree)
 			)
 
-			registry.verbal_bracket_cands.extend( self._check_verbal_bracket_configurations(tree))
-
-
+			registry.verbal_bracket_cands.extend(
+				self._check_verbal_bracket_configurations(tree)
+			)
 
 			registry.attributive_pronoun_counts.append(
 				self._count_nodes_with_specified_values_for_feat(
@@ -524,9 +631,7 @@ class FE_CasToTree:
 				)
 			)
 			registry.postposition_counts.append(
-				self._count_nodes_with_specified_values_for_feat(
-					tree, "xpos", ["APPO"]
-				)
+				self._count_nodes_with_specified_values_for_feat(tree, "xpos", ["APPO"])
 			)
 
 			registry.preposition_counts.append(
@@ -564,18 +669,12 @@ class FE_CasToTree:
 				% (sct, dir_lens, len(dir_lens["l"]), len(dir_lens["r"]))
 			)
 
-			# registry.dependency_length_distribution_per_rel_type.update(
-			# 	sent_wise_dep_len_dist
-			# )
 			registry.dependency_length_distribution_per_rel_type = (
 				self._merge_sentwise_counts_into_global_counts(
 					sent_wise_dep_len_dist,
 					registry.dependency_length_distribution_per_rel_type,
 				)
 			)
-			# registry.dependency_length_distribution_per_rel_type = self._get_dep_dist(
-			# 	tree, registry.dependency_length_distribution_per_rel_type
-			# )
 
 	def _merge_sentwise_counts_into_global_counts(self, sentwise_dist, global_dist):
 		for rel in sentwise_dist.keys():
@@ -624,8 +723,6 @@ class FE_CasToTree:
 				else:
 					continue
 
-		print("Leftward rels %s" % leftward)
-		print("Rightward rels %s" % rightward)
 		anydir = leftward + rightward
 
 		avg_left = self._get_average_from_counter(leftward)
@@ -724,31 +821,40 @@ class FE_CasToTree:
 					position_of_s_relative_to_vfin.append(rel_pos)
 		return position_of_s_relative_to_vfin
 
+	def _get_uses_of_conjunctions(self, curr_lemma: str, node: Node) -> Counter:
+		"""retrieve the rels of a particular conjunction"""
+		conjrelctr = Counter()
+		for d in node.descendants:
+			if re.match(d.lemma, curr_lemma):
+				conjrelctr[d.deprel] += 1
+		print("found conjunction uses: %s" % conjrelctr)
+		return conjrelctr
 
 	def _check_verbal_bracket_configurations(
 		self,
 		node: Node,
 		finitemodeauxtags=FINITE_MOD_AUX_STTS,
+		nonfinitetags=NONFINITE_VERBS_STTS_BROAD,
 	):
-		""" 
+		"""
 		Check if modals and auxiliaries are part of verbal brackets with infinitives in RSK or not.
-		We return 
+		We return
 		999 if there is no bracket
 		0 if there is a bracket and the midfield is empty (e.g. er hat gesagt, ...)
 		1 if there is a bracket and the midfield is  not empty (e.g. er hat das gesagt)
 		-1 if the non-finite verb is to the left of the finite form (e.g. Wollen kann man vieles.)
-		
+		Method assumes STTS POS tags.
 		"""
 		bracket_candidates = []
 		for d in node.descendants:
 			if d.xpos in finitemodeauxtags:
-				infdep =  None
+				infdep = None
 				for kid in d.children:
-					if kid.xpos in INFINITIVES_STTS:
-						infdep=kid
+					if kid.xpos in nonfinitetags:
+						infdep = kid
 				if infdep is None:
 					pass
-					#bracket_candidates.append(999)
+					# bracket_candidates.append(999)
 				else:
 					if infdep.ord > d.ord:
 						if infdep.ord - d.ord == 1:
@@ -756,12 +862,17 @@ class FE_CasToTree:
 						else:
 							bracket_candidates.append(1)
 					else:
-						print("BRACKETOLOGY %s in %s " %(d.form, node.compute_text()))
+						print("BRACKETOLOGY %s in %s " % (d.form, node.compute_text()))
 						bracket_candidates.append(-1)
-		return bracket_candidates					
-						
+		return bracket_candidates
+
 	def _check_verbal_coordination(
-		self, node: Node, verbtags=ALL_VERB_TAGS_STTS, conjtags=["KON"], coordinator_rel="cd", conjunct_rel="cj"
+		self,
+		node: Node,
+		verbtags=ALL_VERB_TAGS_STTS,
+		conjtags=["KON"],
+		coordinator_rel="cd",
+		conjunct_rel="cj",
 	) -> List[bool]:
 		"""
 		Check whether conjunctions coordinate verbal elements .
@@ -776,11 +887,14 @@ class FE_CasToTree:
 				else:
 					found_match = False
 					for child in concand.children:
-						print("Kid of conj is %s with %s and %s" %(child.form,child.xpos,child.deprel))
+						print(
+							"Kid of conj is %s with %s and %s"
+							% (child.form, child.xpos, child.deprel)
+						)
 
 						if child.xpos in verbtags and child.deprel == conjunct_rel:
 							found_match = True
-					if found_match==True:
+					if found_match == True:
 						coordination_is_between_verbs.append(True)
 					else:
 						coordination_is_between_verbs.append(False)
