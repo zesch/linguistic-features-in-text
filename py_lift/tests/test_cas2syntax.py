@@ -43,6 +43,9 @@ def test_syntax():
         else:
             fe2cas = FE_CasToTree(myview, ts)
             fe2cas.extract(cas)
+            print("and now annotate!")
+            fe2cas.annotate(cas)
+
             numfeats = cas.select(T_FEATURE)
 
         for numfeat in numfeats:

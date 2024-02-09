@@ -47,10 +47,23 @@ FINITE_MOD_AUX_STTS = ["VMFIN", "VAFIN"]
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
+LEMMA_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"
 POS_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
 DEP_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
 TOK_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
 STRUCT_FEAT = "org.lift.type.Structure"
+
+DEFAULT_FEATLIST = [
+	LEMMA_FEAT,
+	POS_FEAT,
+	DEP_FEAT,
+]
+
+MAP_FEAT_TO_KEY_ATTRIB = {
+	LEMMA_FEAT: "value",
+	POS_FEAT: "PosValue",
+	DEP_FEAT: "DependencyType",
+}
 
 
 class StuffRegistry:
@@ -84,15 +97,76 @@ class FE_CasToTree:
 	def __init__(self, layer, ts):
 		self.ts = ts
 		self.layer = layer
+		self.offset2label_map = {}
 
 	def annotate(self, cas):
-		"""Annotate the junctors in the CAS."""
-		DEFAULT_JUNCTOR = "und"
-		junctor_list = [DEFAULT_JUNCTOR]
-		print("getting ready for some annotation!")
 		view = cas.get_view(self.layer)
+
+		self._fill_offset_map(view)
+
+		# DEFAULT_JUNCTOR = "und"
+		# junctor_list = [DEFAULT_JUNCTOR]
+
+		myconstraints = {DEP_FEAT: ["ju"], LEMMA_FEAT: ["und"]}
+		self._annotate_custom_struct(view, "JUNKTOR", myconstraints)
+
+		myconstraints = {POS_FEAT: ["PPER","PRF","PIS","PPOS","PDS","PRELS","PWS"]}
+		self._annotate_custom_struct(view, "PRON_SUBST", myconstraints)
+	
+		myconstraints = {POS_FEAT:["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]}
+		self._annotate_custom_struct(view, "PRON_ATTRIB", myconstraints)
+
+
+	def _fill_offset_map(self, view):
+		for FEAT in DEFAULT_FEATLIST:
+			self.offset2label_map[FEAT] = {}
+			items = view.select(FEAT)
+			if FEAT != DEP_FEAT:
+				for item in items:
+					self.offset2label_map[FEAT][(item.begin, item.end)] = item.get(
+						MAP_FEAT_TO_KEY_ATTRIB[FEAT]
+					)
+			else:
+				# <dependency:Dependency xmi:id="519" Governor="12" Dependent="11" DependencyType="nk" flavor="basic" sofa="2"/>
+				for deprel in items:
+					rellabel = deprel.get(MAP_FEAT_TO_KEY_ATTRIB[FEAT])
+					governed = deprel.get("Dependent")
+					g_start = governed.begin
+					g_end = governed.end
+					self.offset2label_map[FEAT][(g_start, g_end)] = rellabel
+
+	def _annotate_custom_struct(self, view: Cas, struct_name: str, constraints: Dict):
+		"""annotate structures defined in terms of pos, dep and lemma"""
+		matches = {}
+		for CURR_FEAT in constraints:
+			matches[CURR_FEAT] = set()
+			ok_values = [item.lower() for item in constraints[CURR_FEAT]]
+
+			cands = view.select(CURR_FEAT)
+			if CURR_FEAT != DEP_FEAT:
+				for cand in cands:
+					if cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT]).lower() in ok_values:
+						matches[CURR_FEAT].add((cand.begin, cand.end))
+
+			else:
+				for cand in cands:
+					if cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT]).lower() in  ok_values:
+						matches[CURR_FEAT].add(
+							(cand.Dependent.begin, cand.Dependent.end)
+						)
+
+		sublists = [matches[kee] for kee in matches.keys()]
+		final_matches = set.intersection(*sublists)
+		for fm in final_matches:
+			F = self.ts.get_type(STRUCT_FEAT)
+			feature = F(name=struct_name, begin=fm[0], end=fm[1])
+			view.add(feature)
+
+	def _annotate_junctors(self, view, junctor_list):
+
+
 		deprels = view.select(DEP_FEAT)
-		print("got ourseln %s deps " % (str(len(deprels))))
+
 		junctor_coords = []
 		for deprel in deprels:
 			if deprel.DependencyType.upper() == "JU":
@@ -100,17 +174,21 @@ class FE_CasToTree:
 				ds = dependent.get("begin")
 				de = dependent.get("end")
 				junctor_coords.append((ds, de))
-		print("ju instances found %s" % str(junctor_coords))
+
 		tox_for_view = view.select(TOK_FEAT)
-		print("found %s tokens for this view" % str(len(tox_for_view)))
+
 		for cand in junctor_coords:
-			print("candidate %s" % str(cand))
+
 			for tok in tox_for_view:
-				if tok.get_covered_text().lower() in junctor_list and tok.begin == cand[0] and tok.end == cand[1]: 
-					name='JUNCTOR'
+				if (
+					tok.get_covered_text().lower() in junctor_list
+					and tok.begin == cand[0]
+					and tok.end == cand[1]
+				):
+					name = "JUNCTOR"
 					F = self.ts.get_type(STRUCT_FEAT)
-					feature = F(name=name, begin=cand[0],end=cand[1])
-					print("nu feature! %s" %feature)
+					feature = F(name=name, begin=cand[0], end=cand[1])
+
 					view.add(feature)
 				else:
 					pass
@@ -246,59 +324,66 @@ class FE_CasToTree:
 			normalized_relative_pronoun_proportion,
 		)
 
-		normalized_attributive_pronoun_proportion = round(
-			(
-				REF_TEXT_SIZE
-				* float(sum(registry.attributive_pronoun_counts) / doc_length)
-			),
-			2,
-		)
-		print(
-			"ATTRIBUTIVE_PRONOUNS_PER_1000 %s"
-			% normalized_attributive_pronoun_proportion
-		)
-		self._add_feat_to_cas(
-			cas,
-			"Attributive_pronouns_per_1k_tokens",
-			NUM_FEATURE,
-			normalized_attributive_pronoun_proportion,
-		)
+		###
 
-		normalized_substituting_pronoun_proportion = round(
-			(
-				REF_TEXT_SIZE
-				* float(sum(registry.substituting_pronoun_counts) / doc_length)
-			),
-			2,
-		)
-		print(
-			"SUBSTITUTING_PRONOUNS_PER_1000 %s"
-			% normalized_substituting_pronoun_proportion
-		)
-		self._add_feat_to_cas(
-			cas,
-			"Substituting_pronouns_per_1k_tokens",
-			NUM_FEATURE,
-			normalized_substituting_pronoun_proportion,
-		)
+		# normalized_attributive_pronoun_proportion = round(
+		# 	(
+		# 		REF_TEXT_SIZE
+		# 		* float(sum(registry.attributive_pronoun_counts) / doc_length)
+		# 	),
+		# 	2,
+		# )
+		# print(
+		# 	"ATTRIBUTIVE_PRONOUNS_PER_1000 %s"
+		# 	% normalized_attributive_pronoun_proportion
+		# )
+		# self._add_feat_to_cas(
+		# 	cas,
+		# 	"Attributive_pronouns_per_1k_tokens",
+		# 	NUM_FEATURE,
+		# 	normalized_attributive_pronoun_proportion,
+		# )
 
-		normalized_pronoun_proportion = round(
-			(
-				REF_TEXT_SIZE
-				* float(
-					sum(
-						registry.substituting_pronoun_counts
-						+ registry.attributive_pronoun_counts
-					)
-					/ doc_length
-				)
-			),
-			2,
-		)
-		print("PRONOUNS_PER_1000 %s" % normalized_pronoun_proportion)
-		self._add_feat_to_cas(
-			cas, "Pronouns_per_1k_tokens", NUM_FEATURE, normalized_pronoun_proportion
-		)
+		###
+
+		# normalized_substituting_pronoun_proportion = round(
+		# 	(
+		# 		REF_TEXT_SIZE
+		# 		* float(sum(registry.substituting_pronoun_counts) / doc_length)
+		# 	),
+		# 	2,
+		# )
+
+		# print(
+		# 	"SUBSTITUTING_PRONOUNS_PER_1000 %s"
+		# 	% normalized_substituting_pronoun_proportion
+		# )
+		# self._add_feat_to_cas(
+		# 	cas,
+		# 	"Substituting_pronouns_per_1k_tokens",
+		# 	NUM_FEATURE,
+		# 	normalized_substituting_pronoun_proportion,
+		# )
+
+		###
+
+		# normalized_pronoun_proportion = round(
+		# 	(
+		# 		REF_TEXT_SIZE
+		# 		* float(
+		# 			sum(
+		# 				registry.substituting_pronoun_counts
+		# 				+ registry.attributive_pronoun_counts
+		# 			)
+		# 			/ doc_length
+		# 		)
+		# 	),
+		# 	2,
+		# )
+		# print("PRONOUNS_PER_1000 %s" % normalized_pronoun_proportion)
+		# self._add_feat_to_cas(
+		# 	cas, "Pronouns_per_1k_tokens", NUM_FEATURE, normalized_pronoun_proportion
+		# )
 
 		normalized_personal_pronoun_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.personal_pronoun_counts) / doc_length)),
@@ -551,8 +636,6 @@ class FE_CasToTree:
 
 		###
 
-		# TODO change this so that the code calling this class write the cas at the end, if desired
-		# cas.to_xmi(outfile, pretty_print=True)
 		return True
 
 	def _add_feat_to_cas(self, cas, name, featpath, value):
@@ -607,18 +690,19 @@ class FE_CasToTree:
 				self._check_verbal_bracket_configurations(tree)
 			)
 
-			registry.attributive_pronoun_counts.append(
-				self._count_nodes_with_specified_values_for_feat(
-					tree, "xpos", ["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]
-				)
-			)
-			registry.substituting_pronoun_counts.append(
-				self._count_nodes_with_specified_values_for_feat(
-					tree,
-					"xpos",
-					["PPER|PRF|PIS|PPOS|PDS|PRELS|PWS"],  # leaving out PWAV!
-				)
-			)
+			# registry.attributive_pronoun_counts.append(
+			# 	self._count_nodes_with_specified_values_for_feat(
+			# 		tree, "xpos", ["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]
+			# 	)
+			# )
+			# registry.substituting_pronoun_counts.append(
+			# 	self._count_nodes_with_specified_values_for_feat(
+			# 		tree,
+			# 		"xpos",
+			# 		["PPER|PRF|PIS|PPOS|PDS|PRELS|PWS"],  # leaving out PWAV!
+			# 	)
+			# )
+
 			registry.personal_pronoun_counts.append(
 				self._count_nodes_with_specified_values_for_feat(
 					tree, "xpos", ["PPER|PRF"]
@@ -827,7 +911,7 @@ class FE_CasToTree:
 		for d in node.descendants:
 			if re.match(d.lemma, curr_lemma):
 				conjrelctr[d.deprel] += 1
-		print("found conjunction uses: %s" % conjrelctr)
+
 		return conjrelctr
 
 	def _check_verbal_bracket_configurations(
@@ -862,7 +946,7 @@ class FE_CasToTree:
 						else:
 							bracket_candidates.append(1)
 					else:
-						print("BRACKETOLOGY %s in %s " % (d.form, node.compute_text()))
+
 						bracket_candidates.append(-1)
 		return bracket_candidates
 
@@ -887,10 +971,6 @@ class FE_CasToTree:
 				else:
 					found_match = False
 					for child in concand.children:
-						print(
-							"Kid of conj is %s with %s and %s"
-							% (child.form, child.xpos, child.deprel)
-						)
 
 						if child.xpos in verbtags and child.deprel == conjunct_rel:
 							found_match = True

@@ -44,15 +44,14 @@ def extract_feats_into_metadata():
         else:
             fe2cas = FE_CasToTree(myview, ts)
             fe2cas.extract(cas)
-            print("and now annotate!")
-            fe2cas.annotate(cas)
 
+            fe2cas.annotate(cas)
             numfeats = cas.select(T_FEATURE)
             for numfeat in numfeats:
                 stored_vals[numfeat.get("name")] = numfeat.get("value")
 
-        cas.to_xmi(casfile + "_modded.xmi",pretty_print=True)
-        print(stored_vals)
+            cas.to_xmi(casfile + "_modded.xmi",pretty_print=True)
+            print(stored_vals)
 
 if __name__ == "__main__":
     extract_feats_into_metadata()
