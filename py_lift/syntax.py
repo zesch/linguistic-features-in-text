@@ -450,6 +450,7 @@ class FE_CasToTree:
 			NUM_FEATURE,
 			proportion_s_without_fin_verb,
 		)
+		self._add_feat_to_cas(cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth)
 
 		###
 

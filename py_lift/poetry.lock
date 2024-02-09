@@ -542,6 +542,17 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "pyconll"
+version = "3.2.0"
+description = "Read and manipulate CoNLL files"
+optional = false
+python-versions = "~=3.8"
+files = [
+    {file = "pyconll-3.2.0-py3-none-any.whl", hash = "sha256:6106a1136dfe6a524e41228b35b4f4aaae17bebe62d4aafc480feeb2b7ca769d"},
+    {file = "pyconll-3.2.0.tar.gz", hash = "sha256:402aca6b8e769caea8440aa33a04adf5e0fe060a0fa128178a91f5b986107b19"},
+]
+
+[[package]]
 name = "pyphen"
 version = "0.14.0"
 description = "Pure Python module to hyphenate text"
@@ -887,4 +898,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <3.12"
-content-hash = "49f6e3646c3a58044db62bd3b60fd90c3729c02cc218d7e2672030a50099aea2"
+content-hash = "770da6c973a2c59e94a9157a7338fa6e2f05e09471d3d2018d1d05f870aa71a3"
