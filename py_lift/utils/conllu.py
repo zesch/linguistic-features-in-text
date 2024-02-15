@@ -45,10 +45,11 @@ def cas_to_str(cas, sentence):
     udpos_list = ["FM"] * len(token_list)
 
     enhanced_deps_list = ["_"] * len(token_list)
-    misc_list = ["_"] * len(token_list)
+    #misc_list = ["_"] * len(token_list)
 
     for token in token_list:
         token_id = token.xmiID
+        misc_list.append("t_start="+str(token.begin)+"|"+"t_end="+str(token.end))
         dep_matches = []
         for dep in deps_list:
             if (

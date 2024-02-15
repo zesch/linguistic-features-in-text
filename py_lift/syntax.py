@@ -166,6 +166,53 @@ class FE_CasToTree:
 			feature = F(name=struct_name, begin=fm[0], end=fm[1])
 			view.add(feature)
 
+
+	def _annotate_distant_verbal_brackets(
+		self,
+		node: Node,
+		cas: Cas,
+		finitemodeauxtags=FINITE_MOD_AUX_STTS,
+		nonfinitetags=NONFINITE_VERBS_STTS_BROAD,
+
+	):
+		"""
+		The code assumes that we're iterating sentences 
+		in the udapi mode unlike the other annotation methods
+		which just are based on selecting items from the cas.
+		Therefore, for we currently simply call this from within extract.
+
+		Maybe it would be cleaner to write code that 
+		a) finds potential LSKs based on cas,
+		b)  retrieves the sentences based on the coordinates of the token 
+		c) and then processes the sentence in udapi node form
+
+		"""
+		bracket_candidates = []
+		for d in node.descendants:
+			if d.xpos in finitemodeauxtags:
+				infdep = None
+				for kid in d.children:
+					if kid.xpos in nonfinitetags:
+						infdep = kid
+				if infdep is None:
+					pass
+					# bracket_candidates.append(999)
+				else:
+					if infdep.ord - d.ord > 1:
+						name = "LSK"
+						F = self.ts.get_type(STRUCT_FEAT)
+						feature = F(name=name, begin=int(d.misc["t_start"]), end=int(d.misc["t_end"]))
+						cas.add(feature)
+						name = "RSK"
+						F = self.ts.get_type(STRUCT_FEAT)
+						feature = F(name=name, begin=int(infdep.misc["t_start"]), end=int(infdep.misc["t_end"]))
+						cas.add(feature)
+
+					else:
+						pass
+		return bracket_candidates
+
+
 	def _annotate_junctors(self, view, junctor_list):
 
 
@@ -656,6 +703,11 @@ class FE_CasToTree:
 		# udapi_doc.from_conllu_string(TEST_STRING)
 		for bundle in udapi_doc.bundles:
 			tree = bundle.get_tree()
+
+
+			# fIXME
+			self._annotate_distant_verbal_brackets(tree,cas)
+
 
 			# finite verbs are identifed by their xpos-tag; we're not looking at any info in the morphological feats
 			registry.finite_verb_counts.append(
