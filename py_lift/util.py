@@ -27,7 +27,7 @@ def map_from_type(x, type_to_mapper: dict):
 def identity(x):
     return x
 
-def resolve_annotation(annotation_path: str, feature_seperator='/') -> tuple[str, str]:
+def resolve_annotation(annotation_path: str, feature_seperator='/') -> typing.Tuple[str, str]:
     if feature_seperator == '.':
         raise ValueError('Feature separator must not be "."')
 

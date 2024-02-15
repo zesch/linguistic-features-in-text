@@ -116,6 +116,10 @@ class FE_CasToTree:
 		myconstraints = {POS_FEAT:["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]}
 		self._annotate_custom_struct(view, "PRON_ATTRIB", myconstraints)
 
+		myconstraints = {DEP_FEAT:["ep","ph"], LEMMA_FEAT:["es"]}
+		self._annotate_custom_struct(view, "EXPLETIVE", myconstraints)
+
+
 
 	def _fill_offset_map(self, view):
 		for FEAT in DEFAULT_FEATLIST:
@@ -675,7 +679,7 @@ class FE_CasToTree:
 			)
 
 			relative_position_of_subj_and_verb = (
-				self._check_position_of_position_of_subj_relative_to_vfin(tree)
+				self._check_position_of_subj_relative_to_vfin(tree)
 			)
 			registry.position_of_subj_relative_to_vfin.extend(
 				[x for x in relative_position_of_subj_and_verb if not x == 0]
@@ -883,7 +887,7 @@ class FE_CasToTree:
 				size_list.append(n_size)
 		return size_list
 
-	def _check_position_of_position_of_subj_relative_to_vfin(
+	def _check_position_of_subj_relative_to_vfin(
 		self,
 		node: Node,
 		finiteverbtags=FINITE_VERBS_STTS_BROAD,
@@ -910,7 +914,8 @@ class FE_CasToTree:
 		"""retrieve the rels of a particular conjunction"""
 		conjrelctr = Counter()
 		for d in node.descendants:
-			if re.match(d.lemma, curr_lemma):
+			print("d.lemma %s curr_lemma %s" % (d.lemma, curr_lemma))
+			if re.match(re.escape(d.lemma), curr_lemma):
 				conjrelctr[d.deprel] += 1
 
 		return conjrelctr
