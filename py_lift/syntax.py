@@ -7,7 +7,7 @@ from utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 from dkpro import *
-
+import statistics as stats
 UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 # text = Solltest Du dann auf einmal kalte Füße bekommen, dann gnade Dir Gott.
 1	Solltest	Solltest	AUX	VMFIN	Mood=Sub|Number=Sing|Person=2|Tense=Past|VerbForm=Fin	8	aux	_	Morph=2sit|NE=O|TopoField=LK
@@ -69,6 +69,8 @@ MAP_FEAT_TO_KEY_ATTRIB = {
 class StuffRegistry:
 	def __init__(self):
 		self.dependency_length_distribution_per_rel_type = {}
+		self.dependents_count_distribution_per_verb_type = {}
+
 		self.max_dep_lengths =[] # list of int
 		self.sent_lengths = []  # list of int
 		self.tree_depths = []  # list of int
@@ -311,6 +313,17 @@ class FE_CasToTree:
 			NUM_FEATURE,
 			normalized_conjunction_proportion,
 		)
+
+
+		for pos_class in registry.dependents_count_distribution_per_verb_type:
+			self._add_feat_to_cas(
+				cas,
+				"Average_number_of_dependents_for_"+pos_class,
+				NUM_FEATURE,
+				stats.mean(registry.dependents_count_distribution_per_verb_type[pos_class]),
+			)
+    	
+	
 
 		normalized_subordinator_proportion = round(
 			(REF_TEXT_SIZE * float(sum(registry.subordinator_counts) / doc_length)), 2
@@ -714,9 +727,7 @@ class FE_CasToTree:
 			tree = bundle.get_tree()
 
 
-			# fIXME
 			self._annotate_distant_verbal_brackets(tree,cas)
-
 
 			# finite verbs are identifed by their xpos-tag; we're not looking at any info in the morphological feats
 			registry.finite_verb_counts.append(
@@ -810,8 +821,18 @@ class FE_CasToTree:
 			registry.sent_lengths.append(len(tree.descendants))
 			registry.lex_np_sizes.extend(self._get_lex_np_sizes(tree))
 
-			# Not used for now
-			# print(list(self.get_triples(tree, feats=["xpos","deprel"])))
+
+			
+			dep_counts_for_posclasses = self._get_dep_counts_for_specified_classes_of_stts_tags(tree, 
+			{"FINITE_VERBS_STTS_BROAD":FINITE_VERBS_STTS_BROAD, 'NONFINITE_VERBS_STTS_BROAD':NONFINITE_VERBS_STTS_BROAD,
+			'LEXICAL_NOUNS_STTS':TIGER_LEX_NOUN_POS})
+			
+			registry.dependents_count_distribution_per_verb_type = (
+                self._merge_sentwise_counts_into_global_counts(
+                    dep_counts_for_posclasses,
+                    registry.dependents_count_distribution_per_verb_type,
+                )
+			)
 
 			(sent_wise_dep_len_dist, dir_lens) = self._get_dep_dist(tree)
 			print(
@@ -850,6 +871,24 @@ class FE_CasToTree:
 
 		return avg_dep_len
 
+
+	def _get_filtered_children(self,node,excluded_rels):
+		return [tuple([child.form,child.deprel]) for child in node.children if not child.deprel.lower() in excluded_rels]
+
+
+	def _get_dep_counts_for_specified_classes_of_stts_tags(self,node, dict_of_postypelists,excluded_rels=["punct", "--"]):
+		#print("On s %s " %node.print_subtree())
+		list_of_postypelists = list(dict_of_postypelists.values())
+		child_counts_per_type={}
+		for d in node.descendants:
+			for kee in dict_of_postypelists:
+				if d.xpos in dict_of_postypelists[kee]:
+					if kee not in child_counts_per_type:
+						child_counts_per_type[kee]=[]
+					acceptable_child_count = self._get_filtered_children(d,excluded_rels)
+					child_counts_per_type[kee].append(len(acceptable_child_count))
+		#print("child counts per type %s" %(str(child_counts_per_type)))
+		return child_counts_per_type
 	# def get_dependency_lengths_across_all_rels_in_doc(counts_per_rel):
 	def _get_dependency_lengths_across_all_rels_in_doc(
 		self, counts_per_rel: Dict
