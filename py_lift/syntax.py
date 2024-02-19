@@ -69,6 +69,7 @@ MAP_FEAT_TO_KEY_ATTRIB = {
 class StuffRegistry:
 	def __init__(self):
 		self.dependency_length_distribution_per_rel_type = {}
+		self.max_dep_lengths =[] # list of int
 		self.sent_lengths = []  # list of int
 		self.tree_depths = []  # list of int
 		self.finite_verb_counts = []  # list of int
@@ -475,6 +476,14 @@ class FE_CasToTree:
 			cas, "Average_Dependency_Length_All", NUM_FEATURE, avg_all_dep_len
 		)
 
+		avg_max_dep_len = round(float(sum(registry.max_dep_lengths)/len(registry.max_dep_lengths)),2)
+
+		print("average max dependency length all %s based on %s" %(str(avg_max_dep_len),str(registry.max_dep_lengths)))
+		self._add_feat_to_cas(
+			cas, "Average_Maximal_Dependency_Length", NUM_FEATURE, avg_max_dep_len
+		)
+
+
 		print("sent lengths %s" % registry.sent_lengths)
 		avg_sent_len = round(
 			float(sum(registry.sent_lengths)) / len(registry.sent_lengths), 2
@@ -810,6 +819,9 @@ class FE_CasToTree:
 				% (sct, dir_lens, len(dir_lens["l"]), len(dir_lens["r"]))
 			)
 
+			# TODO _get_max_dep_length
+			registry.max_dep_lengths.append(self._get_max_dep_length(tree))
+
 			registry.dependency_length_distribution_per_rel_type = (
 				self._merge_sentwise_counts_into_global_counts(
 					sent_wise_dep_len_dist,
@@ -889,6 +901,21 @@ class FE_CasToTree:
 				]
 			)
 		)
+
+
+	def _get_max_dep_length(self,node, excluded_rels=["root","punct"]) -> int:
+		""" return the longest dependency length in the subtree rooted at the given node"""
+		deplens = []
+		for d in node.descendants:
+			if d.deprel.lower() in excluded_rels:
+				continue
+			deplens.append(abs(d.ord - d.parent.ord))
+		if len(deplens)>0:
+			return max(deplens)
+		else:
+			return 1
+		#return max(max([ abs(d.ord - d.parent.ord) for d in node.descendants if d.deprel.lower() not in excluded_rels]),1)
+
 
 	def _get_dep_dist(self, node, excluded_rels=["root"]) -> Dict:
 		"""Update the document-level distribution of dependency lenghts per dependency type by processing the nodes in the tree.

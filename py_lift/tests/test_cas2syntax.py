@@ -43,8 +43,6 @@ def test_syntax():
         else:
             fe2cas = FE_CasToTree(myview, ts)
             fe2cas.extract(cas)
-            print("and now annotate!")
-            fe2cas.annotate(cas)
 
             numfeats = cas.select(T_FEATURE)
 
@@ -61,12 +59,13 @@ def test_syntax():
     s_after_vfin = 0
     deps_left = []
     deps_right = []
+    max_dep_lengths =[]
     for sent in goldconllu:
         s_lens.append(sent.__len__())
         annots_str_raw = sent.meta_value("gold")
         annots_str = re.sub("'", '"', annots_str_raw)
         annots = ast.literal_eval(annots_str)
-
+        max_dep_lengths.append(annots["max_dep_len"])
         tree_depths.append(annots["tree_depth"])
         v_counts.append(annots["vtotal"])
         v_fin_counts.append(annots["vfin_ct"])
@@ -82,6 +81,7 @@ def test_syntax():
     assert stored_vals["Average_Number_Of_Verbs"] == stats.mean(v_counts)
     assert stored_vals["Average_Number_Of_Finite_Verbs"] == stats.mean(v_fin_counts)
     assert stored_vals["Average_Sentence_Length"] == stats.mean(s_lens)
+    assert stored_vals["Average_Maximal_Dependency_Length"] == stats.mean(max_dep_lengths)
 
     
     propinv = round( s_after_vfin / (s_before_vfin + s_after_vfin), 2)

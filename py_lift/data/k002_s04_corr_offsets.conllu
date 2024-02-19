@@ -4,7 +4,7 @@
 # text = Ein alter Mann wohnte in einer 140 Jahre alten Hütte .
 # text_{"tree-depth" = 6, "lex-np-size":[3, 5,2]}
 # doc id = k002_s04
-# gold = {'avg_dep_len':0.0, 'tree_depth':6, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:1 , False:0}, 'lex_np_sizes':[3,5,2], 'deps_left':[2,1,1,4,1,1,1] ,'deps_right':[1,5,7] ,}
+# gold = {'avg_dep_len':0.0, 'tree_depth':6, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:1 , False:0}, 'lex_np_sizes':[3,5,2], 'deps_left':[2,1,1,4,1,1,1] ,'deps_right':[1,5,7] ,'max_dep_len':5}
 1	Ein	ein	DET	ART	Case=Nom|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	3	nk	_	t_end=3|t_start=0
 2	alter	alt	ADJ	ADJA	Case=Nom|Degree=Pos|Gender=Masc|Number=Sing	3	nk	_	t_end=9|t_start=4
 3	Mann	Mann	NOUN	NN	Case=Nom|Gender=Masc|Number=Sing	4	sb	_	t_end=14|t_start=10
@@ -19,7 +19,7 @@
 
 # sent_id = 2
 # text = Eines Tages kam ein Hund an seinem Hüttenfenster vorbei .
-# gold = {'avg_dep_len':0.0, 'tree_depth':4, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:0 , False:1}, 'lex_np_sizes':[2,2,2], 'deps_left':[1,1,1,1], 'deps_right':[7,6,2,3,2]}
+# gold = {'avg_dep_len':0.0, 'tree_depth':4, 'vfin_ct':1, 'vtotal':1, 's_before_vfin':{True:0 , False:1}, 'lex_np_sizes':[2,2,2], 'deps_left':[1,1,1,1], 'deps_right':[7,6,2,3,2],'max_dep_len':6}
 1	Eines	ein	DET	ART	Case=Gen|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	2	nk	_	t_end=60|t_start=55
 2	Tages	Tag	NOUN	NN	Case=Gen|Gender=Masc|Number=Sing	3	mo	_	t_end=66|t_start=61
 3	kam	kommen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=70|t_start=67
@@ -33,7 +33,7 @@
 
 # sent_id = 3
 # text = Als der man sah , dass der Hund zu Fußmatte ging dachte er , dass er rein möchte und machte die Tür auf und da sah nur den Abdruck von der Fußmatte und war sauer auf den Hund .
-# gold = {'avg_dep_len':0.0, 'tree_depth':11, 'vfin_ct':7, 'vtotal':7, 's_before_vfin':{True:4 , False:1}, 'lex_np_sizes':[2,2,5,2,2], 'deps_left':[3,2,1,8,5,1,3,2,3,2,1,1,1,1,1,1], 'deps_right':[1,1,7,1,2,6,7,1,2,3,4,2,1,3,1,2,7,1,1,1,2,27]}
+# gold = {'avg_dep_len':0.0, 'tree_depth':11, 'vfin_ct':7, 'vtotal':7, 's_before_vfin':{True:4 , False:1}, 'lex_np_sizes':[2,2,5,2,2], 'deps_left':[3,2,1,8,5,1,3,2,3,2,1,1,1,1,1,1], 'deps_right':[1,1,7,1,2,6,7,1,2,3,4,2,1,3,1,2,7,1,1,1,2,27], 'max_dep_len':8}
 1	Als	als	SCONJ	KOUS	_	4	cp	_	t_end=116|t_start=113
 2	der	der	PRON	PDS	Case=Nom|Gender=Masc|Number=Sing|PronType=Dem	4	sb	_	t_end=120|t_start=117
 3	man	man	PRON	PIS	Case=Nom|Number=Sing|PronType=Ind	4	sb	_	t_end=124|t_start=121
@@ -76,7 +76,7 @@
 
 # sent_id = 4
 # text = Und ging seinen Fußspuren nach und sah den Hund auf der Fußmatte liegen und er hatte die Fußmatte seine Hundehütte gebracht und dann sagte ach die lass ich dir .
-# gold = {'avg_dep_len':0.0, 'tree_depth':9, 'vfin_ct':5, 'vtotal':7, 's_before_vfin':{True:1 , False:1}, 'lex_np_sizes':[2,2,2,2],'deps_left':[1 ,  1 , 1 ,3 ,1, 1, 1, 3, 1, 1 , 1], 'deps_right':[2 , 3, 4, 1, 2, 2,6,7,2,5,6,2,1,2,3,1,5,28]}
+# gold = {'avg_dep_len':0.0, 'tree_depth':9, 'vfin_ct':5, 'vtotal':7, 's_before_vfin':{True:1 , False:1}, 'lex_np_sizes':[2,2,2,2],'deps_left':[1 ,  1 , 1 ,3 ,1, 1, 1, 3, 1, 1 , 1], 'deps_right':[2 , 3, 4, 1, 2, 2,6,7,2,5,6,2,1,2,3,1,5,28],'max_dep_len':7}
 1	Und	und	CCONJ	KON	_	2	ju	_	t_end=293|t_start=290
 2	ging	gehen	VERB	VVFIN	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	root	_	t_end=298|t_start=294
 3	seinen	sein	DET	PPOSAT	Case=Dat|Gender=Fem|Number=Plur|Poss=Yes|PronType=Prs	4	nk	_	t_end=305|t_start=299
