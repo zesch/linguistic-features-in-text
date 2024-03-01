@@ -26,7 +26,7 @@ def cas_to_str(cas, sentence):
         if not re.match("^\s*$", x.get_covered_text())
     ]
 
-    form_list = [cas.get_covered_text(x) for x in token_list]
+    form_list = [x.get_covered_text() for x in token_list]
     orig_id_list = [x.xmiID for x in token_list]
     id_list = list(range(1, len(token_list) + 1))
 

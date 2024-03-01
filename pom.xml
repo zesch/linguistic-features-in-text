@@ -7,7 +7,7 @@
 	</parent>
 	<groupId>org.lift</groupId>
 	<build>
-		<plugins>
+   		<plugins>
 		  <plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-plugin</artifactId>
@@ -40,8 +40,10 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>org.lift.api</module>
-  	<module>org.lift.features</module>
-  	<module>org.lift.preprocessing</module>
+	<module>shared_resources</module>
+	<module>j_lift/org.lift.api</module>
+  	<module>j_lift/org.lift.features</module>
+  	<module>j_lift/org.lift.io</module>
+  	<module>j_lift/org.lift.preprocessing</module>
   </modules>
 </project>

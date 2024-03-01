@@ -2,10 +2,13 @@ package org.lift.structures;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -32,21 +35,33 @@ public abstract class ListBasedAnnotator_ImplBase
     {
         super.initialize(context);
 
+		if (listFilePath != "" && listFilePath != null) {
+			listSet = readList(listFilePath);
+		}
+    }
+    
+	protected static Set<String> readList(String listFilePath) 
+			throws ResourceInitializationException
+	{
+		
+		Set<String> listSet = new HashSet<String>();
 		try {
-			if (listFilePath != "" && listFilePath != null) {
-				listSet = readList(listFilePath);
+			for (String line : FileUtils.readLines(new File(listFilePath), "UTF-8")) {
+				listSet.add(line);
 			}
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
 		}
-    }
-    
-	static Set<String> readList(String listFilePath) throws IOException {
-		
-		Set<String> listSet = new HashSet<String>();
-		for (String line : FileUtils.readLines(new File(listFilePath), "UTF-8")) {
-			listSet.add(line);
-		}
 		return listSet;
+	}
+	
+	protected static Set<String> readList(InputStream is) 
+			throws ResourceInitializationException
+	{
+		try {
+			return new HashSet<String>(IOUtils.readLines(is, StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			throw new ResourceInitializationException(e);
+		}
 	}
 }

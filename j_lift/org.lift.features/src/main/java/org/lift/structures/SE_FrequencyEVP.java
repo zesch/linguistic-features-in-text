@@ -1,28 +1,36 @@
 package org.lift.structures;
 
-import java.io.File;
+import static org.lift.util.ResourceUtils.getSharedResourceAsStream;
+
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collection;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.component.JCasAnnotator_ImplBase;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.lift.api.StructureExtractor;
 import org.lift.type.CEFR;
+
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 public class SE_FrequencyEVP 
-	extends JCasAnnotator_ImplBase
+	extends StructureExtractor
 {
 	
 	private Map<Vocabulary, Integer> vocab;
+	
+	
+	@Override
+	public String getPublicStructureName() {
+		return "FreqEVP";
+	}
 	
 	@Override
 	public void initialize(final UimaContext context) 
@@ -30,8 +38,8 @@ public class SE_FrequencyEVP
 	{			
 		try {
 			vocab = readMapping(
-				"src/main/resources/evp/EVP.csv", 
-				"src/main/resources/evp/EVP_extension.csv"
+				"evp/EVP.csv", 
+				"evp/EVP_extension.csv"
 			);
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
@@ -39,11 +47,14 @@ public class SE_FrequencyEVP
 	}
 
 	protected Map<Vocabulary, Integer> readMapping(String listFilePath1, String listFilePath2) 
-		throws IOException 
+		throws IOException, ResourceInitializationException
 	{
+		 
 		// TODO the list also contains phrases, how to handle?
+		
+		 InputStream is1 = getSharedResourceAsStream(this.getClass(), listFilePath1);
 		 Map<Vocabulary, Integer> map = new HashMap<Vocabulary, Integer>();
-		 for (String line : FileUtils.readLines(new File(listFilePath1), "UTF-8")) {
+		 for (String line : IOUtils.readLines(is1, StandardCharsets.UTF_8)) {
 				String[] parts = line.split(",");
 				String wordName = parts[0].toLowerCase();
 				String wordType = parts[1].toLowerCase();
@@ -62,8 +73,11 @@ public class SE_FrequencyEVP
 				}
 		 }
 
+		 
 		 // TODO code duplication, consider wrapping in method
-		 for (String line : FileUtils.readLines(new File(listFilePath2), "UTF-8")) {
+		 
+		 InputStream is2 = getSharedResourceAsStream(this.getClass(), listFilePath2);
+		 for (String line : IOUtils.readLines(is2, StandardCharsets.UTF_8)) {
 				String[] parts = line.split(",");
 				String wordName = parts[0].toLowerCase();
 				String wordType = parts[1].toLowerCase();
@@ -80,7 +94,6 @@ public class SE_FrequencyEVP
 		//This data needs to be written (Object[])
         Map<String, Object[]> data = new TreeMap<String, Object[]>();
 		
-		int i=1;
 		for (Token t : JCasUtil.select(aJCas, Token.class)){
 			String lemma = t.getLemma().getValue().toLowerCase();
 //			String pOS =   t.getPos().getPosValue();

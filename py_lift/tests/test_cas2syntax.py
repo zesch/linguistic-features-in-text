@@ -99,6 +99,3 @@ def test_syntax():
     assert stored_vals["Average_Dependency_Length_All"] == round(
         stats.mean(all_deps), 2
     )
-
-    return True
-

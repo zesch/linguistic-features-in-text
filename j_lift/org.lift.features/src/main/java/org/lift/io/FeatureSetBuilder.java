@@ -13,12 +13,6 @@ import org.lift.higherorder.genuine.FE_LexicalVariation;
 import org.lift.higherorder.genuine.FE_NrOfChars;
 import org.lift.higherorder.genuine.FE_TypeTokenRatio;
 
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
-import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.NC;
-import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.PC;
-import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.VC;
-import edu.stanford.nlp.patterns.surface.Token;
-
 public class FeatureSetBuilder {
 
 	public static Set<Feature> buildFeatureSet(JCas jcas) throws LiftFeatureExtrationException {

@@ -1,9 +1,8 @@
 package org.lift.structures;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static org.lift.util.ResourceUtils.getSharedResourceAsStream;
+
+import java.io.InputStream;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -50,27 +49,16 @@ public class SE_DiscourseReferent
 				tagset = "stts";
 			} 
 			else {
-				// TODO add better explanation what the user should do ...
-				throw new ResourceInitializationException( new Throwable("No default tagset for language " + language));
+				throw new ResourceInitializationException( 
+						new Throwable("No default tagset for language " + language)
+				);
 			}
 
 		}
-
-		try {
-			Path path = Paths.get("src/main/resources", "discourse_referent_postags",
-					"discourse_referent_postags" + "_" + language + "_" + tagset + ".txt");
-			
-			if (Files.notExists(path)) {
-				throw new ResourceInitializationException(new Throwable(
-						"Cannot load list of discourse referent POS tags from path " + path.toString()));
-			}
-			
-			// TODO maybe change list-based base class to take path instead
-			listSet = readList(path.toString());
-
-		} catch (IOException e) {
-			throw new ResourceInitializationException(e);
-		}
+		
+		String file = "/discourse_referent_postags/discourse_referent_postags" + "_" + language + "_" + tagset + ".txt";
+		InputStream is = getSharedResourceAsStream(this.getClass(), file);
+		listSet = readList(is);
 	}
 
 	@Override

@@ -21,8 +21,6 @@ public class SE_DiscourseReferentTest {
 	@Test
 	public void discourseReferentTestGerman() throws Exception {
 
-		// TODO SE should be able to provide its name
-		// TODO SE should use internal name (package/class + FE)
 		String featurePath = Structure.class.getName() + "/" + new SE_DiscourseReferent().getStructureName();
 		
 		AnalysisEngine engine = createEngine(
@@ -46,8 +44,6 @@ public class SE_DiscourseReferentTest {
 	@Test
 	public void discourseReferentTestEnglish() throws Exception {
 
-		// TODO SE should be able to provide its name
-		// TODO SE should use internal name (package/class + FE)
 		String structureName = "DiscourseReferent";
 		String featurePath = Structure.class.getName() + "/" + structureName;
 		

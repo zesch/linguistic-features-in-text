@@ -13,11 +13,8 @@ import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.lift.type.Structure;
 
-import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
-import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.*;
-import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
+import de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.ROOT;
 
 /**
  * 
@@ -56,32 +53,28 @@ public class SE_DLTIntegrationCost
 			break;
 		}
 
-		try {
-			// read object dependency labels
-			Path pathObj = Paths.get("src/main/resources", "ud_dependency_relation",
-					"object_dependency_relation" + listConfig + ".txt");
-			if (Files.notExists(pathObj)) {
-				throw new ResourceInitializationException(new Throwable(
-						"Cannot load list of object dependency labels from path " + pathObj.toString()));
-			}
-			listFilePathObj = pathObj.toString();
-			listSetObj = readList(listFilePathObj);
-
-			// read sentence adverb dependency labels
-			Path pathAdv= Paths.get("src/main/resources", "ud_dependency_relation",
-					"sentence_adverb_dependency_relation" + listConfig + ".txt");
-			if (Files.notExists(pathObj)) {
-				throw new ResourceInitializationException(new Throwable(
-						"Cannot load list of object dependency labels from path " + pathObj.toString()));
-			}
-			listFilePathObj = pathObj.toString();
-			listSetObj = readList(listFilePathObj);
-			
-			// TODO load list using ListBasedAnnotator_ImplBase
-
-		} catch (IOException e) {
-			throw new ResourceInitializationException(e);
+		// read object dependency labels
+		Path pathObj = Paths.get("src/main/resources", "ud_dependency_relation",
+				"object_dependency_relation" + listConfig + ".txt");
+		if (Files.notExists(pathObj)) {
+			throw new ResourceInitializationException(new Throwable(
+					"Cannot load list of object dependency labels from path " + pathObj.toString()));
 		}
+		listFilePathObj = pathObj.toString();
+		listSetObj = readList(listFilePathObj);
+
+		// read sentence adverb dependency labels
+		Path pathAdv= Paths.get("src/main/resources", "ud_dependency_relation",
+				"sentence_adverb_dependency_relation" + listConfig + ".txt");
+		if (Files.notExists(pathObj)) {
+			throw new ResourceInitializationException(new Throwable(
+					"Cannot load list of object dependency labels from path " + pathObj.toString()));
+		}
+		listFilePathObj = pathObj.toString();
+		listSetObj = readList(listFilePathObj);
+		
+		// TODO load list using ListBasedAnnotator_ImplBase
+
 	}
 
 	@Override
