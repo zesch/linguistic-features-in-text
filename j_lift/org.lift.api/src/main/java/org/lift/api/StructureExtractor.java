@@ -11,5 +11,4 @@ public abstract class StructureExtractor
 	public String getStructureName() {
 		return this.getClass().getName() + "/" + getPublicStructureName();
 	};
-
 }

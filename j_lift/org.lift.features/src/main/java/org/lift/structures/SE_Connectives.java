@@ -1,9 +1,8 @@
 package org.lift.structures;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static org.lift.util.ResourceUtils.getSharedResourceAsStream;
+
+import java.io.InputStream;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -34,21 +33,9 @@ public class SE_Connectives
     {
         super.initialize(context);
 
-		try {
-			// if list file is not set, try to load default for language
-			if (listFilePath == "" || listFilePath == null) {
-				Path path = Paths.get("src/main/resources", "connectives", "connectives" + "_" + language + ".txt");
-				if (Files.notExists(path)) {
-					throw new ResourceInitializationException(new Throwable("Cannot load list of connectives for language: " + language));
-				}
-				listFilePath = path.toString();
-			}
-			
-			listSet = readList(listFilePath);
-			
-		} catch (IOException e) {
-			throw new ResourceInitializationException(e);
-		}
+		String file = "connectives/connectives" + "_" + language + ".txt";
+		InputStream is = getSharedResourceAsStream(this.getClass(), file);
+		listSet = readList(is);			
     }
     
 	@Override

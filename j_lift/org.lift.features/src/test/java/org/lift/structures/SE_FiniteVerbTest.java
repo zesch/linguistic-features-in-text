@@ -21,8 +21,6 @@ public class SE_FiniteVerbTest {
 	@Test
 	public void finiteVerbTestGerman() throws Exception {
 
-		// TODO SE should be able to provide its name
-		// TODO SE should use internal name (package/class + FE)
 		String featurePath = Structure.class.getName() + "/" + new SE_FiniteVerb().getStructureName();
 		
 		AnalysisEngine engine = createEngine(

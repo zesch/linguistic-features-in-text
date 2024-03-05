@@ -2,13 +2,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.lift.features</artifactId>
+	<artifactId>shared_resources</artifactId>
 	<properties>
 		<uima.version>3.1.0</uima.version>
 		<dkpro.version>2.2.0</dkpro.version>
 	</properties>
 
-	<!--
 	<repositories>
 		<repository>
 			<id>ltl-model</id>
@@ -42,20 +41,8 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	-->
-	
+
 	<dependencies>
-		<dependency>
-			<groupId>org.lift</groupId>
-			<artifactId>org.lift.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lift</groupId>
-			<artifactId>org.lift.preprocessing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.uima</groupId>
 			<artifactId>uimafit-core</artifactId>
@@ -157,14 +144,14 @@
 			<artifactId>com.googlecode.jweb1t</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.lift</groupId>
-			<artifactId>shared_resources</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<build>
-		<plugins>
+		<resources>
+     		<resource>
+       			<directory>resources</directory>
+     		</resource>
+   		</resources>
+   		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>

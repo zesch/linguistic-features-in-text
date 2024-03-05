@@ -62,7 +62,14 @@ if __name__ == "__main__":
     flist =  sorted([ x for x in  glob.glob(indir + "/*.xmi") if not "modded" in x])
     print(str(len(flist))+ " files to process")
     #sys.exit(-2)
+    #MAXPROC=1
+    #fct=0
+
     for file in flist:
         print("## PROCESSING %s" % (file))
         extract_feats_into_metadata(file,"learner")
         extract_feats_into_metadata(file,"TH1")
+
+        #fct+=1
+        #if fct>MAXPROC:
+        #    break

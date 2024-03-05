@@ -16,6 +16,7 @@ wordfreq = "^3.1.1"
 pandas = "^2.2.0"
 udapi = "^0.3.0"
 pyconll = "^3.2.0"
+pyarrow = "^15.0.0"
 
 [build-system]
 requires = ["poetry-core"]

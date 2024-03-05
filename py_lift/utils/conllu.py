@@ -25,10 +25,12 @@ def cas_to_str(cas, sentence):
         for x in unfiltered_token_list
         if not re.match("^\s*$", x.get_covered_text())
     ]
-    if len(unfiltered_token_list)!)len(token_list):
+
+    if len(unfiltered_token_list)!=len(token_list):
         logger.warning("some tokens are empty!")
     form_list = [cas.get_covered_text(x) for x in token_list]
     print("form_list %s" %(str(form_list)))
+
     orig_id_list = [x.xmiID for x in token_list]
     id_list = list(range(1, len(token_list) + 1))
 
