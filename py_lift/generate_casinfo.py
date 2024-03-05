@@ -8,7 +8,9 @@ from cassis import Cas, load_cas_from_xmi
 from syntax import FE_CasToTree  # FE_TokensPerSentence
 import udapi
 import pyconll
+import os
 import logging
+import glob
 import statistics as stats
 
 logger = logging.getLogger(__name__)
@@ -25,13 +27,14 @@ ts = load_typesystem("data/TypeSystem.xml")
 #casfile = "data/k002_s04_cas.xmi" # sample file from OSNA corpus
 #myview = "corr"  # learner layer
 
-casfile = "data/1091_0000266.xmi" #  sample file from MERLIN
-myview = "_InitialView"
+#casfile = "/mnt/big/jkrcode/paula2cas/retagged/spacy/1091_0000274.xmi"#1091_0000266.xmi" #  sample file from MERLIN
+#myview = "learner"
 #conllufile = "data/k002_s04_corr_offsets.conllu" # conllu file from OSNA corpus, with annotations in metadata fields of sentences
 
 
-def extract_feats_into_metadata():
-    
+def extract_feats_into_metadata(casfile,myview):
+    if os.path.exists(casfile + "_modded_"+myview+".xmi"):
+        print("target file exists, skipping! %s" %(casfile + "_modded_"+myview+".xmi"))
     # if the cas has the info stored already, we use that;   otherwise, we compute it
     stored_vals = {}
     with open(casfile, "rb") as f:
@@ -40,6 +43,7 @@ def extract_feats_into_metadata():
 
 
         if len(numfeats) > 0:
+            sys.stderr.write("Found %d features\n" % (len(numfeats)))
             pass
         else:
             fe2cas = FE_CasToTree(myview, ts)
@@ -50,8 +54,15 @@ def extract_feats_into_metadata():
             for numfeat in numfeats:
                 stored_vals[numfeat.get("name")] = numfeat.get("value")
 
-            cas.to_xmi(casfile + "_modded.xmi",pretty_print=True)
+            cas.to_xmi(casfile + "_modded_"+myview+".xmi",pretty_print=True)
             print(stored_vals)
 
 if __name__ == "__main__":
-    extract_feats_into_metadata()
+    indir = "/mnt/big/jkrcode/paula2cas/retagged/experiment"
+    flist =  sorted([ x for x in  glob.glob(indir + "/*.xmi") if not "modded" in x])
+    print(str(len(flist))+ " files to process")
+    #sys.exit(-2)
+    for file in flist:
+        print("## PROCESSING %s" % (file))
+        extract_feats_into_metadata(file,"learner")
+        extract_feats_into_metadata(file,"TH1")

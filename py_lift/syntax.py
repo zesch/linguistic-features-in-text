@@ -265,6 +265,7 @@ class FE_CasToTree:
 		MAXSENT = 2000
 		sct = 0
 		for sent in view.select(T_SENT):
+			#print(sent.get_covered_text())
 			self._register_stuff(view, registry, sent)
 
 			sct += 1
@@ -510,7 +511,6 @@ class FE_CasToTree:
 		self._add_feat_to_cas(cas, "Average_Tree_Depth", NUM_FEATURE, avg_tree_depth)
 
 		###
-
 		assert len(registry.sent_lengths) == len(registry.finite_verb_counts)
 		no_fin_verb_count = registry.finite_verb_counts.count(0)
 		proportion_s_without_fin_verb = round(
@@ -592,14 +592,23 @@ class FE_CasToTree:
 
 		bracket_ctr = Counter(registry.verbal_bracket_cands)
 		totcands = sum(bracket_ctr.values())
-		proportion_of_missing_brackets = round(float(bracket_ctr[999] / totcands), 2)
-		proportion_of_switched_brackets = round(float(bracket_ctr[-1] / totcands), 2)
-		proportion_of_standard_sequenced_brackets = round(
-			float((bracket_ctr[0] + bracket_ctr[1]) / totcands), 2
-		)
-		proportion_of_brackets_with_emtpy_midfields = round(
-			float(bracket_ctr[0] / (bracket_ctr[0] + bracket_ctr[1])), 2
-		)
+		if totcands == 0:
+			proportion_of_missing_brackets=0.00
+			proportion_of_switched_brackets=0.00
+			proportion_of_standard_sequenced_brackets=0.00
+		else:
+			proportion_of_missing_brackets = round(float(bracket_ctr[999] / totcands), 2)
+			proportion_of_switched_brackets = round(float(bracket_ctr[-1] / totcands), 2)
+			proportion_of_standard_sequenced_brackets = round(
+				float((bracket_ctr[0] + bracket_ctr[1]) / totcands), 2
+			)
+
+		if bracket_ctr[0] > 0 or bracket_ctr[1] > 0:
+			proportion_of_brackets_with_emtpy_midfields = round(
+				float(bracket_ctr[0] / (bracket_ctr[0] + bracket_ctr[1])), 2
+			)
+		else:
+			proportion_of_brackets_with_emtpy_midfields=0.00
 
 		print("Proportion_of_missing_brackets %s" % proportion_of_missing_brackets)
 		self._add_feat_to_cas(
@@ -719,13 +728,14 @@ class FE_CasToTree:
 
 	def _register_stuff(self, cas, registry: StuffRegistry, sent):
 		udapi_doc = Document()
+		print("registration for sent %s " %(sent.get_covered_text()))
 		cas_in_str_form = cas_to_str(cas, sent)
 		udapi_doc.from_conllu_string(cas_in_str_form)
 		sct = 1
 		# udapi_doc.from_conllu_string(TEST_STRING)
 		for bundle in udapi_doc.bundles:
 			tree = bundle.get_tree()
-
+			#print(tree.print_subtree())
 
 			self._annotate_distant_verbal_brackets(tree,cas)
 
