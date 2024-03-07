@@ -890,6 +890,8 @@ class FE_CasToTree:
 		#print("On s %s " %node.print_subtree())
 		list_of_postypelists = list(dict_of_postypelists.values())
 		child_counts_per_type={}
+		for kee in dict_of_postypelists:
+			child_counts_per_type[kee]=[0]
 		for d in node.descendants:
 			for kee in dict_of_postypelists:
 				if d.xpos in dict_of_postypelists[kee]:
