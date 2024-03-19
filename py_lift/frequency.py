@@ -1,8 +1,7 @@
 from cassis import Cas
 from util import load_typesystem
 from wordfreq import zipf_frequency
-
-T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
+from dkpro import T_TOKEN
 
 class SE_WordFrequency:
 
