@@ -7,6 +7,7 @@ from utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 from dkpro import *
+
 import statistics as stats
 UD_SYNTAX_TEST_STRING = """# sent_id = 299,300
 # text = Solltest Du dann auf einmal kalte Füße bekommen, dann gnade Dir Gott.
@@ -47,22 +48,18 @@ FINITE_MOD_AUX_STTS = ["VMFIN", "VAFIN"]
 TIGER_SUBJ_LABELS = ["SB", "EP"]  # the inclusion of expletives (EP) is sorta debatable
 TIGER_LEX_NOUN_POS = ["NN", "NE"]
 
-LEMMA_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"
-POS_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
-DEP_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
-TOK_FEAT = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
-STRUCT_FEAT = "org.lift.type.Structure"
+T_STRUCT = "org.lift.type.Structure"
 
 DEFAULT_FEATLIST = [
-	LEMMA_FEAT,
-	POS_FEAT,
-	DEP_FEAT,
+	T_LEMMA,
+	T_POS,
+	T_DEP,
 ]
 
 MAP_FEAT_TO_KEY_ATTRIB = {
-	LEMMA_FEAT: "value",
-	POS_FEAT: "PosValue",
-	DEP_FEAT: "DependencyType",
+	T_LEMMA: "value",
+	T_POS: "PosValue",
+	T_DEP: "DependencyType",
 }
 
 
@@ -110,16 +107,16 @@ class FE_CasToTree:
 		# DEFAULT_JUNCTOR = "und"
 		# junctor_list = [DEFAULT_JUNCTOR]
 
-		myconstraints = {DEP_FEAT: ["ju"], LEMMA_FEAT: ["und"]}
+		myconstraints = {T_DEP: ["ju"], T_LEMMA: ["und"]}
 		self._annotate_custom_struct(view, "JUNKTOR", myconstraints)
 
-		myconstraints = {POS_FEAT: ["PPER","PRF","PIS","PPOS","PDS","PRELS","PWS"]}
+		myconstraints = {T_POS: ["PPER","PRF","PIS","PPOS","PDS","PRELS","PWS"]}
 		self._annotate_custom_struct(view, "PRON_SUBST", myconstraints)
 	
-		myconstraints = {POS_FEAT:["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]}
+		myconstraints = {T_POS:["PPOSAT|PIAT|PDAT|PIDAT|PRELAT|PWAT"]}
 		self._annotate_custom_struct(view, "PRON_ATTRIB", myconstraints)
 
-		myconstraints = {DEP_FEAT:["ep","ph"], LEMMA_FEAT:["es"]}
+		myconstraints = {T_DEP:["ep","ph"], T_LEMMA:["es"]}
 		self._annotate_custom_struct(view, "EXPLETIVE", myconstraints)
 
 
@@ -128,7 +125,7 @@ class FE_CasToTree:
 		for FEAT in DEFAULT_FEATLIST:
 			self.offset2label_map[FEAT] = {}
 			items = view.select(FEAT)
-			if FEAT != DEP_FEAT:
+			if FEAT != T_DEP:
 				for item in items:
 					self.offset2label_map[FEAT][(item.begin, item.end)] = item.get(
 						MAP_FEAT_TO_KEY_ATTRIB[FEAT]
@@ -150,7 +147,7 @@ class FE_CasToTree:
 			ok_values = [item.lower() for item in constraints[CURR_FEAT]]
 
 			cands = view.select(CURR_FEAT)
-			if CURR_FEAT != DEP_FEAT:
+			if CURR_FEAT != T_DEP:
 				for cand in cands:
 					if cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT]).lower() in ok_values:
 						matches[CURR_FEAT].add((cand.begin, cand.end))
@@ -165,7 +162,7 @@ class FE_CasToTree:
 		sublists = [matches[kee] for kee in matches.keys()]
 		final_matches = set.intersection(*sublists)
 		for fm in final_matches:
-			F = self.ts.get_type(STRUCT_FEAT)
+			F = self.ts.get_type(T_STRUCT)
 			feature = F(name=struct_name, begin=fm[0], end=fm[1])
 			view.add(feature)
 
@@ -203,11 +200,11 @@ class FE_CasToTree:
 				else:
 					if infdep.ord - d.ord > 1:
 						name = "LSK"
-						F = self.ts.get_type(STRUCT_FEAT)
+						F = self.ts.get_type(T_STRUCT)
 						feature = F(name=name, begin=int(d.misc["t_start"]), end=int(d.misc["t_end"]))
 						cas.add(feature)
 						name = "RSK"
-						F = self.ts.get_type(STRUCT_FEAT)
+						F = self.ts.get_type(T_STRUCT)
 						feature = F(name=name, begin=int(infdep.misc["t_start"]), end=int(infdep.misc["t_end"]))
 						cas.add(feature)
 
@@ -219,7 +216,7 @@ class FE_CasToTree:
 	def _annotate_junctors(self, view, junctor_list):
 
 
-		deprels = view.select(DEP_FEAT)
+		deprels = view.select(T_DEP)
 
 		junctor_coords = []
 		for deprel in deprels:
@@ -229,7 +226,7 @@ class FE_CasToTree:
 				de = dependent.get("end")
 				junctor_coords.append((ds, de))
 
-		tox_for_view = view.select(TOK_FEAT)
+		tox_for_view = view.select(T_TOKEN)
 
 		for cand in junctor_coords:
 

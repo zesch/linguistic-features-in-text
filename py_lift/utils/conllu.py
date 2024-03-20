@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-import sys
 from dkpro import *
 
 def cas_to_str(cas, sentence):
@@ -28,7 +27,7 @@ def cas_to_str(cas, sentence):
 
     if len(unfiltered_token_list)!=len(token_list):
         logger.warning("some tokens are empty!")
-    form_list = [cas.get_covered_text(x) for x in token_list]
+    form_list = [x.get_covered_text() for x in token_list]
     print("form_list %s" %(str(form_list)))
 
     orig_id_list = [x.xmiID for x in token_list]

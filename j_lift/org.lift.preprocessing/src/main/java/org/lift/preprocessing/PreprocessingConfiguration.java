@@ -36,12 +36,13 @@ public class PreprocessingConfiguration {
 		AnalysisEngineDescription checker   = getChecker_LanguageTool(language.code);
 		AnalysisEngineDescription ner       = getNER_Stanford(language.code);
 		
-		AnalysisEngineDescription lemmatizer = createEngineDescription(NoOpAnnotator.class);
-		AnalysisEngineDescription morphTagger    = createEngineDescription(NoOpAnnotator.class);
-		AnalysisEngineDescription chunker    = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription lemmatizer 	= createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription morphTagger   = createEngineDescription(NoOpAnnotator.class);
+		AnalysisEngineDescription chunker    	= createEngineDescription(NoOpAnnotator.class);
 		
 		AnalysisEngineDescription constituentParser = getParser_CoreNLP(language.code);
 		AnalysisEngineDescription dependencyParser  = getDepParser_CoreNLP(language.code);
+
 		// overwrite defaults with language specific stuff if needed 
 		if (language.equals(Language.English)){
 
