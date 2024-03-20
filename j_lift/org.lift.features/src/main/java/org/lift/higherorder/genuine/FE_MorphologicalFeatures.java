@@ -16,7 +16,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatur
 /**
  * Which proportion of the finite verbs belongs to which person (1st/2nd/3rd
  * person Sg/Pl)
- * actual only for German
+ * currently only for German
  * 
  * @author vietphe
  */
@@ -40,37 +40,35 @@ public class FE_MorphologicalFeatures extends FeatureExtractor_ImplBase {
 		int nrOfFiniteVerb1PersonPl = 0;
 		int nrOfFiniteVerb2PersonPl = 0;
 		int nrOfFiniteVerb3PersonPl = 0;
-		for (MorphologicalFeatures m : morphologicalFeatures) {
+		int nrOfOtherFiniteVerb = 0;
+		for (MorphologicalFeatures m : morphologicalFeatures) {		
 			
 			String value = m.getValue(); // value form: "number=pl|person=1|tense=pres|mood=ind"
 			// extract morphological features
 			if (value.contains("tense") && value.contains("mood")) {
-				System.out.println(m.getCoveredText()+": "+m.getValue());
 				String[] detailsValue = value.split("\\|");
 				String number = detailsValue[0].split("=")[1];
 				String person = detailsValue[1].split("=")[1];
 				if (number.equals("sg") && person.equals("1")) {
 					nrOfFiniteVerb1PersonSg++;
-				}
-				if (number.equals("sg") && person.equals("2")) {
+				}else if (number.equals("sg") && person.equals("2")) {
 					nrOfFiniteVerb2PersonSg++;
-				}
-				if (number.equals("sg") && person.equals("3")) {
+				}else if (number.equals("sg") && person.equals("3")) {
 					nrOfFiniteVerb3PersonSg++;
-				}
-				if (number.equals("pl") && person.equals("1")) {
+				}else if (number.equals("pl") && person.equals("1")) {
 					nrOfFiniteVerb1PersonPl++;
-				}
-				if (number.equals("pl") && person.equals("2")) {
+				}else if (number.equals("pl") && person.equals("2")) {
 					nrOfFiniteVerb2PersonPl++;
-				}
-				if (number.equals("pl") && person.equals("3")) {
+				}else if (number.equals("pl") && person.equals("3")) {
 					nrOfFiniteVerb3PersonPl++;
+				}else {
+					nrOfOtherFiniteVerb++;
 				}
 			}
 		}
 		int nrOfAllFiniteVerbs = nrOfFiniteVerb1PersonSg + nrOfFiniteVerb2PersonSg + nrOfFiniteVerb3PersonSg
-				+ nrOfFiniteVerb1PersonPl + nrOfFiniteVerb2PersonPl + nrOfFiniteVerb3PersonPl;
+				+ nrOfFiniteVerb1PersonPl + nrOfFiniteVerb2PersonPl 
+				+ nrOfFiniteVerb3PersonPl+nrOfOtherFiniteVerb;
 
 		featureList.add(new Feature(FINITE_VERB_1_PERSON_SG_RATIO,
 				(double) nrOfFiniteVerb1PersonSg / nrOfAllFiniteVerbs, FeatureType.NUMERIC));

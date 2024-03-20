@@ -42,9 +42,6 @@ public class PreprocessingConfiguration {
 		
 		AnalysisEngineDescription constituentParser = getParser_CoreNLP(language.code);
 		AnalysisEngineDescription dependencyParser  = getDepParser_CoreNLP(language.code);
-		//actual only German model
-		AnalysisEngineDescription morphTag = createEngineDescription(MateMorphTagger.class, MateMorphTagger.PARAM_LANGUAGE, language.code);
-
 		// overwrite defaults with language specific stuff if needed 
 		if (language.equals(Language.English)){
 
@@ -80,7 +77,6 @@ public class PreprocessingConfiguration {
 		components.add(ner);
 		components.add(constituentParser);
 		components.add(dependencyParser);
-		components.add(morphTag);
 	}
 	
 	public AnalysisEngineDescription getUimaEngineDescription() 
