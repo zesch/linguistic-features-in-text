@@ -40,7 +40,7 @@ public class FE_MorphologicalFeatures extends FeatureExtractor_ImplBase {
 		int nrOfFiniteVerb1PersonPl = 0;
 		int nrOfFiniteVerb2PersonPl = 0;
 		int nrOfFiniteVerb3PersonPl = 0;
-
+    
 		for (MorphologicalFeatures m : JCasUtil.select(jcas, MorphologicalFeatures.class)) {
 			
 			String value = m.getValue(); // value form: "number=pl|person=1|tense=pres|mood=ind"
@@ -53,21 +53,18 @@ public class FE_MorphologicalFeatures extends FeatureExtractor_ImplBase {
 				
 				if (number.equals("sg") && person.equals("1")) {
 					nrOfFiniteVerb1PersonSg++;
-				}
-				if (number.equals("sg") && person.equals("2")) {
+				}else if (number.equals("sg") && person.equals("2")) {
 					nrOfFiniteVerb2PersonSg++;
-				}
-				if (number.equals("sg") && person.equals("3")) {
+				}else if (number.equals("sg") && person.equals("3")) {
 					nrOfFiniteVerb3PersonSg++;
-				}
-				if (number.equals("pl") && person.equals("1")) {
+				}else if (number.equals("pl") && person.equals("1")) {
 					nrOfFiniteVerb1PersonPl++;
-				}
-				if (number.equals("pl") && person.equals("2")) {
+				}else if (number.equals("pl") && person.equals("2")) {
 					nrOfFiniteVerb2PersonPl++;
-				}
-				if (number.equals("pl") && person.equals("3")) {
+				}else if (number.equals("pl") && person.equals("3")) {
 					nrOfFiniteVerb3PersonPl++;
+				}else {
+					nrOfOtherFiniteVerb++;
 				}
 			}
 		}
