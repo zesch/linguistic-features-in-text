@@ -3,10 +3,7 @@ from cassis import Cas
 from util import load_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
-
-T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
-T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
-T_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
+from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION
 
 class SE_SpellErrorAnnotator():
 
