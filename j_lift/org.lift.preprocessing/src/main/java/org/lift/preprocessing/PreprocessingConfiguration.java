@@ -1,6 +1,7 @@
 package org.lift.preprocessing;
 
 import static org.apache.uima.fit.factory.AnalysisEngineFactory.createEngineDescription;
+import static org.apache.uima.fit.factory.ExternalResourceFactory.createResourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,11 @@ import org.dkpro.core.corenlp.CoreNlpLemmatizer;
 import org.dkpro.core.corenlp.CoreNlpParser;
 import org.dkpro.core.corenlp.CoreNlpPosTagger;
 import org.dkpro.core.corenlp.CoreNlpSegmenter;
+import org.dkpro.core.decompounding.uima.annotator.CompoundAnnotator;
+import org.dkpro.core.decompounding.uima.resource.AsvToolboxSplitterResource;
+import org.dkpro.core.decompounding.uima.resource.SharedDictionary;
+import org.dkpro.core.decompounding.uima.resource.SharedLinkingMorphemes;
+import org.dkpro.core.decompounding.uima.resource.SharedPatriciaTries;
 import org.dkpro.core.languagetool.LanguageToolChecker;
 import org.dkpro.core.matetools.MateLemmatizer;
 import org.dkpro.core.matetools.MateMorphTagger;
@@ -42,6 +48,7 @@ public class PreprocessingConfiguration {
 		
 		AnalysisEngineDescription constituentParser = getParser_CoreNLP(language.code);
 		AnalysisEngineDescription dependencyParser  = getDepParser_CoreNLP(language.code);
+		AnalysisEngineDescription compoundAnnotator = getCompoundAnnotator(language.code);
 
 		// overwrite defaults with language specific stuff if needed 
 		if (language.equals(Language.English)){
@@ -78,6 +85,7 @@ public class PreprocessingConfiguration {
 		components.add(ner);
 		components.add(constituentParser);
 		components.add(dependencyParser);
+		components.add(compoundAnnotator);
 	}
 	
 	public AnalysisEngineDescription getUimaEngineDescription() 
@@ -148,5 +156,20 @@ public class PreprocessingConfiguration {
 				CoreNlpDependencyParser.PARAM_PRINT_TAGSET, false,
 				CoreNlpDependencyParser.PARAM_VARIANT, "ud"
 		);
+	}
+	private AnalysisEngineDescription getCompoundAnnotator(String languageCode) 
+			throws ResourceInitializationException {
+		
+		return createEngineDescription(
+				CompoundAnnotator.class,
+                CompoundAnnotator.RES_SPLITTING_ALGO,
+                createResourceDescription(
+                        AsvToolboxSplitterResource.class,
+                        AsvToolboxSplitterResource.PARAM_DICT_RESOURCE,
+                        createResourceDescription(SharedDictionary.class),
+                        AsvToolboxSplitterResource.PARAM_MORPHEME_RESOURCE,
+                        createResourceDescription(SharedLinkingMorphemes.class),
+                        AsvToolboxSplitterResource.PARAM_PATRICIA_TRIES_RESOURCE,
+                        createResourceDescription(SharedPatriciaTries.class)));
 	}
 }
