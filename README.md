@@ -9,7 +9,7 @@ LiFT is currently maintained by:
 
 ## First steps
 
-See: (first-steps.md)
+See: [First Steps with LiFT](first-steps.md)
 
 ## Philosophy
 We rely on a UIMA CAS repesentation model based on the [DKPro Core](https://dkpro.github.io/dkpro-core/) type system and preprocessing components.
