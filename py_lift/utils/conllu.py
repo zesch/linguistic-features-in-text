@@ -22,7 +22,7 @@ def cas_to_str(cas, sentence):
     token_list = [
         x
         for x in unfiltered_token_list
-        if not re.match("^\s*$", x.get_covered_text())
+        if not re.match(r"^\s*$", x.get_covered_text())
     ]
 
     if len(unfiltered_token_list)!=len(token_list):
