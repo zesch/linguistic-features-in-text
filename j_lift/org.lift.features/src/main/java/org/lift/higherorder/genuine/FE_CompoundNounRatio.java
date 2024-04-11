@@ -15,11 +15,11 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
 /**
- * extract compound ratio, normalised by number of tokens and nouns
+ * extract compound nouns ratio, normalised by number of tokens and nouns
  * currently only implemented for German
  * @author Viet Phe
  */
-public class FE_CompoundRatio extends FeatureExtractor_ImplBase {
+public class FE_CompoundNounRatio extends FeatureExtractor_ImplBase {
 
 	public static final String AVG_NR_OF_COMPOUND_PER_NR_OF_TOKEN = "avgNumCompoundPerNumToken";
 	public static final String AVG_NR_OF_COMPOUND_PER_NR_OF_NOUN = "avgNumCompoundPerNumNoun";
@@ -32,7 +32,7 @@ public class FE_CompoundRatio extends FeatureExtractor_ImplBase {
 		int nrOfCompound = 0;
 		int nrOfNoun = 0;
 		for (Structure s : JCasUtil.select(jcas, Structure.class)) {
-			if (s.getName().equals("Compound")) {
+			if (s.getName().equals("CompoundNoun")) {
 				nrOfCompound++;
 			}
 		}
@@ -50,6 +50,6 @@ public class FE_CompoundRatio extends FeatureExtractor_ImplBase {
 
 	@Override
 	public String getPublicName() {
-		return "CompoundRatio";
+		return "CompoundNounRatio";
 	}
 }

@@ -19,9 +19,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.api.Feature;
 import org.lift.features.util.FeatureTestUtil;
-import org.lift.structures.SE_Compound;
+import org.lift.structures.SE_CompoundNoun;
 
-class FE_CompoundRatioTest {
+class FE_CompoundNounRatioTest {
 
 	@Test
 	void compoundRatioTest() throws Exception {
@@ -37,7 +37,7 @@ class FE_CompoundRatioTest {
 						createResourceDescription(SharedLinkingMorphemes.class),
 						AsvToolboxSplitterResource.PARAM_PATRICIA_TRIES_RESOURCE,
 						createResourceDescription(SharedPatriciaTries.class)));
-		AnalysisEngineDescription compound = createEngineDescription(SE_Compound.class);
+		AnalysisEngineDescription compound = createEngineDescription(SE_CompoundNoun.class);
 		AnalysisEngineDescription description = createEngineDescription(segmenter, tagger, compoundAnnotator, compound);
 		AnalysisEngine engine = createEngine(description);
 
@@ -47,7 +47,7 @@ class FE_CompoundRatioTest {
 		jcas.setDocumentText("Die Regenwettervorhersage verlangt nach Regenschutzkleidung.");
 		engine.process(jcas);
 
-		FE_CompoundRatio extractor = new FE_CompoundRatio();
+		FE_CompoundNounRatio extractor = new FE_CompoundNounRatio();
 		Set<Feature> features = extractor.extract(jcas);
 
 		Assertions.assertAll(() -> assertEquals(2, features.size()),

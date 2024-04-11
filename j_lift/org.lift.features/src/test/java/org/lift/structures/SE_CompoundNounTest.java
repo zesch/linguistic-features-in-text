@@ -9,6 +9,7 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.dkpro.core.corenlp.CoreNlpPosTagger;
 import org.dkpro.core.decompounding.uima.annotator.CompoundAnnotator;
 import org.dkpro.core.decompounding.uima.resource.AsvToolboxSplitterResource;
 import org.dkpro.core.decompounding.uima.resource.SharedDictionary;
@@ -19,12 +20,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.lift.type.Structure;
 
-class SE_CompoundTest {
+class SE_CompoundNounTest {
 
 	@Test
 	void compoundTest() throws Exception {
 
 		AnalysisEngineDescription segmenter = createEngineDescription(BreakIteratorSegmenter.class);
+		AnalysisEngineDescription tagger = createEngineDescription(CoreNlpPosTagger.class,
+				CoreNlpPosTagger.PARAM_LANGUAGE, "de");
 		AnalysisEngineDescription compoundAnnotator = createEngineDescription(CompoundAnnotator.class,
 				CompoundAnnotator.RES_SPLITTING_ALGO,
 				createResourceDescription(AsvToolboxSplitterResource.class,
@@ -34,8 +37,8 @@ class SE_CompoundTest {
 						createResourceDescription(SharedLinkingMorphemes.class),
 						AsvToolboxSplitterResource.PARAM_PATRICIA_TRIES_RESOURCE,
 						createResourceDescription(SharedPatriciaTries.class)));
-		AnalysisEngineDescription compound = createEngineDescription(SE_Compound.class);
-		AnalysisEngineDescription description = createEngineDescription(segmenter, compoundAnnotator, compound);
+		AnalysisEngineDescription compound = createEngineDescription(SE_CompoundNoun.class);
+		AnalysisEngineDescription description = createEngineDescription(segmenter, tagger, compoundAnnotator, compound);
 		AnalysisEngine engine = createEngine(description);
 
 		JCas jcas = engine.newJCas();
@@ -48,7 +51,7 @@ class SE_CompoundTest {
 		Assertions.assertAll(
 				// 12 words and 1 phrase
 				() -> assertEquals(2, structures.size()),
-				() -> assertEquals("Compound", structures.iterator().next().getName()));
+				() -> assertEquals("CompoundNoun", structures.iterator().next().getName()));
 	}
 
 }
