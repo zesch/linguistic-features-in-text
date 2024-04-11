@@ -26,9 +26,11 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
  */
 public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 	
-	//TODO: adjust sliding size by number of tokens
-	private static final int SLIDING_SIZE = 6;
-
+	private int slidingSize;
+	
+	public FE_MovingAverageTypeTokenRatio(int slidingSize) {
+		this.slidingSize = slidingSize;
+	}
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
 		Set<Feature> features = new HashSet<Feature>();
@@ -41,7 +43,7 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 		Map<Integer,Double> ttrs = new HashMap<>();
 		
 		// if the length of the text is less than the sliding size
-		if (tokenSize <= SLIDING_SIZE) { 
+		if (tokenSize <= slidingSize) { 
 			List<String> words = new ArrayList<>();
 			Set<String> differentWords = new HashSet<>();
 			for (Token t : tokens) {
@@ -51,10 +53,10 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 			ttrs.put(0, (double) differentWords.size()/words.size());
 		} else {			
 			int stepper = 0;		
-			while ((stepper+SLIDING_SIZE) <= tokenSize) {
+			while ((stepper+slidingSize) <= tokenSize) {
 				List<String> words = new ArrayList<>();
 				Set<String> differentWords = new HashSet<>();
-				for (int i = stepper; i <= stepper+SLIDING_SIZE-1; i++) {
+				for (int i = stepper; i <= stepper+slidingSize-1; i++) {
 					words.add(tokens.get(i).getCoveredText().toLowerCase());
 					differentWords.add(tokens.get(i).getCoveredText().toLowerCase());
 				}
@@ -65,12 +67,12 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 		double average = calculateAverage(ttrs);
 		double standardDeviation = calculateStandardDeviation(ttrs, average);
 		features.add(
-				new Feature("AVERAGE_MATTR_OF_SLIDING_WINDOW_SIZE_" + SLIDING_SIZE, 
+				new Feature("AVERAGE_MATTR_OF_SLIDING_WINDOW_SIZE_" + slidingSize, 
 						average, 
 						FeatureType.NUMERIC)
 				);
 		features.add(
-				new Feature("STANDARD_DEVIATION_MATTR_OF_SLIDING_WINDOW_SIZE_" + SLIDING_SIZE, 
+				new Feature("STANDARD_DEVIATION_MATTR_OF_SLIDING_WINDOW_SIZE_" + slidingSize, 
 						standardDeviation, 
 						FeatureType.NUMERIC)
 				);
