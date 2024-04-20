@@ -2,18 +2,18 @@ package org.lift.higherorder.genuine;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.lift.api.Feature;
 import org.lift.api.FeatureType;
 import org.lift.api.LiftFeatureExtrationException;
 import org.lift.features.FeatureExtractor_ImplBase;
+import org.lift.features.util.FeatureUtils;
 
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 
@@ -27,10 +27,11 @@ import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token;
 public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 	
 	private int slidingSize;
-	
+
 	public FE_MovingAverageTypeTokenRatio(int slidingSize) {
 		this.slidingSize = slidingSize;
 	}
+	
 	@Override
 	public Set<Feature> extract(JCas jcas) throws LiftFeatureExtrationException {
 		Set<Feature> features = new HashSet<Feature>();
@@ -39,8 +40,8 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 		// copy the token collection to an array list
 		List<Token> tokens = new ArrayList<>(ts);
 		int tokenSize = tokens.size();
-		// a map to contain the ttr values of all sliding windows
-		Map<Integer,Double> ttrs = new HashMap<>();
+		// a list to contain the ttr values of all sliding windows
+		List<Double> ttrs = new ArrayList<>();
 		
 		// if the length of the text is less than the sliding size
 		if (tokenSize <= slidingSize) { 
@@ -50,7 +51,7 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 				words.add(t.getCoveredText().toLowerCase());
 				differentWords.add(t.getCoveredText().toLowerCase());
 			}
-			ttrs.put(0, (double) differentWords.size()/words.size());
+			ttrs.add((double) differentWords.size()/words.size());
 		} else {			
 			int stepper = 0;		
 			while ((stepper+slidingSize) <= tokenSize) {
@@ -60,12 +61,12 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 					words.add(tokens.get(i).getCoveredText().toLowerCase());
 					differentWords.add(tokens.get(i).getCoveredText().toLowerCase());
 				}
-				ttrs.put(stepper, (double) differentWords.size()/words.size());
+				ttrs.add((double) differentWords.size()/words.size());
 				stepper++;
 			}
 		}								
-		double average = calculateAverage(ttrs);
-		double standardDeviation = calculateStandardDeviation(ttrs, average);
+		double average = FeatureUtils.getAverage(ttrs);
+		double standardDeviation = FeatureUtils.getStandardDeviation(ttrs, average);
 		features.add(
 				new Feature("AVERAGE_MATTR_OF_SLIDING_WINDOW_SIZE_" + slidingSize, 
 						average, 
@@ -83,27 +84,4 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 	public String getPublicName() {		
 		return "MovingAverageTypeTokenRatio";
 	}
-	
-	private static double calculateAverage(Map<Integer, Double> ttrs) {
-        double sum = 0.0;
-
-        for (double value : ttrs.values()) {
-            sum += value;
-        }
-
-        return sum / ttrs.size();
-    }
-
-    private static double calculateStandardDeviation(Map<Integer, Double> ttrs, double average) {
-        double sumSquaredDiff = 0.0;
-
-        for (double value : ttrs.values()) {
-            double diff = value - average;
-            sumSquaredDiff += diff * diff;
-        }
-
-        double variance = sumSquaredDiff / ttrs.size();
-        return Math.sqrt(variance);
-    }
-
 }
