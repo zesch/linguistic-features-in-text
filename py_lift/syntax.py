@@ -237,7 +237,7 @@ class FE_CasToTree:
 					and tok.end == cand[1]
 				):
 					name = "JUNCTOR"
-					F = self.ts.get_type(STRUCT_FEAT)
+					F = self.ts.get_type(T_STRUCT)
 					feature = F(name=name, begin=cand[0], end=cand[1])
 
 					view.add(feature)
@@ -1092,7 +1092,7 @@ class FE_CasToTree:
 		conjunct_rel="cj",
 	) -> List[bool]:
 		"""
-		Check whether conjunctions coordinate verbal elements .
+		Check whether conjunctions coordinate verbal elements.
 		Method assumes Tiger syntax.
 		"""
 		coordination_is_between_verbs = []

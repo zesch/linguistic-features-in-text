@@ -27,6 +27,7 @@ class SE_SpellErrorAnnotator():
             t_str = token.get_covered_text()
             if t_str in self.spell.unknown([t_str]):
                 suggested_action = self.S(replacement=self.spell.correction(t_str), begin=token.begin, end=token.end)
+                cas.add(suggested_action)
                 anomaly = self.A(begin=token.begin, end=token.end, suggestions=self.FSArray(elements=[suggested_action])) 
                 cas.add(anomaly)
 

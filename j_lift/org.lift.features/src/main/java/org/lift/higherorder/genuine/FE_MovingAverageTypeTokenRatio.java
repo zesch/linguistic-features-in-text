@@ -74,6 +74,7 @@ public class FE_MovingAverageTypeTokenRatio extends FeatureExtractor_ImplBase{
 				);
 		features.add(
 				new Feature("STANDARD_DEVIATION_MATTR_OF_SLIDING_WINDOW_SIZE_" + slidingSize, 
+
 						standardDeviation, 
 						FeatureType.NUMERIC)
 				);
