@@ -97,8 +97,27 @@
 			<artifactId> dkpro-core-stanfordnlp-gpl</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-
-
+		<dependency>
+      		<groupId>org.dkpro.core</groupId>
+      		<artifactId>dkpro-core-decompounding-asl</artifactId>
+       		<version>2.2.0</version>
+    	</dependency>
+    	   	
+		<dependency>
+  			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+  			<artifactId>de.tudarmstadt.ukp.dkpro.core.decompounding-model-splitter-de-kompVVic</artifactId>
+  			<version>20130521.0</version>
+		</dependency>
+		<dependency>
+  			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+  			<artifactId>de.tudarmstadt.ukp.dkpro.core.decompounding-model-splitter-de-kompVHic</artifactId>
+  			<version>20130521.0</version>
+		</dependency>
+		<dependency>
+  			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
+  			<artifactId>de.tudarmstadt.ukp.dkpro.core.decompounding-model-splitter-de-grfExt</artifactId>
+  			<version>20130521.0</version>
+		</dependency>
 		<dependency>
 			<groupId>de.tudarmstadt.ukp.dkpro.core</groupId>
 			<artifactId>de.tudarmstadt.ukp.dkpro.core.stanfordnlp-model-parser-en-pcfg</artifactId>

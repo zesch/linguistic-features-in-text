@@ -12,7 +12,6 @@ import org.lift.features.FeatureExtractor_ImplBase;
 
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.MorphologicalFeatures;
 
-
 /**
  * Which proportion of the finite verbs belongs to which person (1st/2nd/3rd person Sg/Pl)
  * currently only implemented for German
@@ -39,8 +38,8 @@ public class FE_MorphologicalFeatures extends FeatureExtractor_ImplBase {
 		int nrOfFiniteVerb3PersonSg = 0;
 		int nrOfFiniteVerb1PersonPl = 0;
 		int nrOfFiniteVerb2PersonPl = 0;
-		int nrOfFiniteVerb3PersonPl = 0;
-    
+		int nrOfFiniteVerb3PersonPl = 0
+      
 		for (MorphologicalFeatures m : JCasUtil.select(jcas, MorphologicalFeatures.class)) {
 			
 			String value = m.getValue(); // value form: "number=pl|person=1|tense=pres|mood=ind"
@@ -69,11 +68,11 @@ public class FE_MorphologicalFeatures extends FeatureExtractor_ImplBase {
 			}
 		}
 		int nrOfAllFiniteVerbs = nrOfFiniteVerb1PersonSg + 
-								 nrOfFiniteVerb2PersonSg + 
-								 nrOfFiniteVerb3PersonSg + 
-								 nrOfFiniteVerb1PersonPl + 
-								 nrOfFiniteVerb2PersonPl + 
-								 nrOfFiniteVerb3PersonPl;
+						 nrOfFiniteVerb2PersonSg + 
+						 nrOfFiniteVerb3PersonSg + 
+						 nrOfFiniteVerb1PersonPl + 
+						 nrOfFiniteVerb2PersonPl + 
+						 nrOfFiniteVerb3PersonPl;
 		
 		if (nrOfAllFiniteVerbs > 0) {
 			featureList.add(new Feature(FINITE_VERB_1_PERSON_SG_RATIO,

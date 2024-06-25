@@ -26,7 +26,7 @@ class FE_MovingAverageTypeTokenRatioTest {
         jcas.setDocumentText("This is a test and this is an example.");
         engine.process(jcas);
         
-        FE_MovingAverageTypeTokenRatio extractor = new FE_MovingAverageTypeTokenRatio();
+        FE_MovingAverageTypeTokenRatio extractor = new FE_MovingAverageTypeTokenRatio(6);
         Set<Feature> features = new HashSet<Feature>(extractor.extract(jcas));
         
         //Note: This test is applied to sliding_size = 6
