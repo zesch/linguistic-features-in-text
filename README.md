@@ -3,9 +3,8 @@
 LiFT is a library for extracting linguistic features from textual data.
 
 LiFT is currently maintained by:
-* [ICALL Research Group](http://icall-research.de), University of Tübingen
 * [Procoli](https://www.fernuni-hagen.de/computerlinguistik/), FernUniversität in Hagen
-* Digitale Geisteswissenschaft, Universität Hildesheim
+* [Educational Measurement and Data Science](https://www.leibniz-ipn.de/en/the-ipn/about-us/staff/andrea-horbach), IPN Kiel
 
 ## First steps
 
