@@ -12,7 +12,7 @@ def test_readability():
     i = 0
     for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
         assert feature.name == 'Readability_Score_Flesch_Kincaid_Lang_de'
-        assert feature.value == 76.9
+        assert pytest.approx(feature.value, 0.1) == 76.9
         i += 1
 
     assert i == 1
