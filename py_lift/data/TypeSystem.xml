@@ -1406,10 +1406,12 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
                 </featureDescription>
                       
               </features>
-                                    
-            
-            
-            
+            </typeDescription>
+
+
+            <typeDescription>
+              <name>org.lift.type.EasyWord</name>
+              <supertypeName>uima.tcas.Annotation</supertypeName>
             </typeDescription>
                       
             

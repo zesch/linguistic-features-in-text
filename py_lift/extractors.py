@@ -47,4 +47,9 @@ class FE_TokensPerSentence(FEL_AnnotationRatio):
                          'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence')
 
 
+class FE_EasyWordRatio(FEL_AnnotationRatio):
+    def __init__(self):
+        super().__init__('org.lift.type.EasyWord',
+                         'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token')
+
 
