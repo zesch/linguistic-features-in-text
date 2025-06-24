@@ -1,7 +1,7 @@
 import pytest
 import re
 import ast
-from util import load_typesystem
+from util import load_lift_typesystem
 from cassis import load_cas_from_xmi
 from syntax import FE_CasToTree  # FE_TokensPerSentence
 import pyconll
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 T_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 
-ts = load_typesystem("data/TypeSystem.xml")
+ts = load_lift_typesystem("data/TypeSystem.xml")
 
 casfile = "data/k002_s04_cas.xmi" # sample file from OSNA corpus
 myview = "corr"  # learner layer

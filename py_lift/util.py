@@ -2,7 +2,7 @@ import typing
 import cassis
 import pathlib
 
-def load_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
+def load_lift_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
     def load_typesystem_from_file(path):
         with open(path, 'rb') as f:
             return cassis.load_typesystem(f)

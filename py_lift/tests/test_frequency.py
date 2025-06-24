@@ -1,5 +1,5 @@
 import pytest
-from util import load_typesystem
+from util import load_lift_typesystem
 from cassis import Cas
 from frequency import SE_WordFrequency
 from lift_fixtures import *

@@ -1,5 +1,6 @@
 import pytest
-from cassis import *
+from cassis import Cas
+from util import load_lift_typesystem
 
 T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
 T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
@@ -8,14 +9,17 @@ T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
 def typesystem_xml():
     with open("data/TypeSystem.xml", "r") as f:
         return f.read()
+    
+@pytest.fixture
+def typesystem():
+    return load_lift_typesystem("data/TypeSystem.xml")
 
 @pytest.fixture
-def tokens_en(typesystem_xml):
-    ts = load_typesystem(typesystem_xml)
-    cas = Cas(ts)
+def tokens_en(typesystem):
+    cas = Cas(typesystem)
     cas.sofa_string = "This is a test. A small one."
 
-    T = ts.get_type(T_TOKEN)
+    T = typesystem.get_type(T_TOKEN)
     tokens = [
         T(begin=0, end=4),
         T(begin=5, end=7),
@@ -33,12 +37,11 @@ def tokens_en(typesystem_xml):
     return tokens
 
 @pytest.fixture
-def sentences_en(typesystem_xml):
-    ts = load_typesystem(typesystem_xml)
-    cas = Cas(ts)
+def sentences_en(typesystem):
+    cas = Cas(typesystem)
     cas.sofa_string = "This is a test. A small one."
     
-    S = ts.get_type(T_SENTENCE)
+    S = typesystem.get_type(T_SENTENCE)
     
     sentences = [
         S(begin=0, end=15, id="0"),
@@ -52,17 +55,15 @@ def sentences_en(typesystem_xml):
     return sentences
 
 @pytest.fixture
-def cas_no_annotations(typesystem_xml):
-    ts = load_typesystem(typesystem_xml)
-    cas = Cas(ts)
+def cas_no_annotations(typesystem):
+    cas = Cas(typesystem)
     cas.sofa_string = "This is a test. A small one."
 
     return cas
 
 @pytest.fixture
-def cas_en_simple(typesystem_xml, tokens_en, sentences_en):
-    ts = load_typesystem(typesystem_xml)
-    cas = Cas(ts)
+def cas_en_simple(typesystem, tokens_en, sentences_en):
+    cas = Cas(typesystem)
     cas.sofa_string = "This is a test. A small one."
 
     cas.add_all(tokens_en)
@@ -71,9 +72,8 @@ def cas_en_simple(typesystem_xml, tokens_en, sentences_en):
     return cas
 
 @pytest.fixture
-def cas_en_simple_with_errors(typesystem_xml, tokens_en, sentences_en):
-    ts = load_typesystem(typesystem_xml)
-    cas = Cas(ts)
+def cas_en_simple_with_errors(typesystem, tokens_en, sentences_en):
+    cas = Cas(typesystem)
     cas.sofa_string = "This is a tast. A smoll one."
 
     cas.add_all(tokens_en)

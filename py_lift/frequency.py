@@ -1,12 +1,12 @@
 from cassis import Cas
-from util import load_typesystem
+from util import load_lift_typesystem
 from wordfreq import zipf_frequency
 from dkpro import T_TOKEN
 
 class SE_WordFrequency:
 
     def __init__(self, language):
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
         self.language = language
 
     def process(self, cas: Cas) -> bool:

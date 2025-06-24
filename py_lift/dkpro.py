@@ -6,3 +6,5 @@ T_MORPH      = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.Morpheme"
 T_DEP        = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency"
 T_ANOMALY    = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
 T_SUGGESTION = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
+
+T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'

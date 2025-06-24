@@ -1,10 +1,10 @@
 from cassis import Cas
-from util import load_typesystem
+from util import load_lift_typesystem
 from textstat import *
 
 class FEL_ReadabilityScore:
     def __init__(self, language):
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
         self.language = language
 
     def extract(self, cas: Cas) -> bool:

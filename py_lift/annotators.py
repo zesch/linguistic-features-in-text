@@ -1,6 +1,6 @@
 from cassis import Cas
 
-from util import load_typesystem
+from util import load_lift_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
@@ -18,7 +18,7 @@ class SE_SpellErrorAnnotator():
             )
         self.spell = SpellChecker(language=self.language)
             
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
         
         self.A = self.ts.get_type(T_ANOMALY)
         self.S = self.ts.get_type(T_SUGGESTION)
