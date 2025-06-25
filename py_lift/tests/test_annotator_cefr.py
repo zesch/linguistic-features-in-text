@@ -1,5 +1,5 @@
 import pytest
-from util import load_typesystem
+from util import load_lift_typesystem
 from cassis import Cas
 from extractors import FE_TokensPerSentence, FE_EasyWordRatio
 from annotators import SE_EasyWordAnnotator, SE_CEFRAnnotator
@@ -12,7 +12,7 @@ T_LEMMA = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma'
 T_POS = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
 
 def test_cefr_extractor():
-    ts = load_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A minimal metaphor. Fake. Fake."
 
@@ -74,7 +74,7 @@ def test_cefr_extractor():
 
     for feature in cas.select(T_FEATURE):
         if feature.get_covered_text() in words:
-            assert feature.level == words_with_level[feature.get_covered_text()]
+            assert feature.get('level') == words_with_level[feature.get_covered_text()]
         else:
             print('Test failed :)')
 

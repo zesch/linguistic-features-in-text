@@ -35,7 +35,7 @@ def test_ratio_extractors():
 
     i = 0
     for feature in cas.select(T_FEATURE):
-        assert feature.name == T_TOKEN + '_PER_' + T_SENTENCE
+        assert feature.get('name') == T_TOKEN + '_PER_' + T_SENTENCE
         assert feature.value == 4.5
         i += 1
 
@@ -79,7 +79,7 @@ def test_easy_word_extractor():
 
     i = 0
     for feature in cas.select(T_FEATURE):
-        assert feature.name == T_EASYWORD + '_PER_' + T_TOKEN
+        assert feature.get('name') == T_EASYWORD + '_PER_' + T_TOKEN
         assert feature.value == 7/9
         i += 1
 
@@ -111,9 +111,9 @@ def test_count_extractor():
     
     i = 0
     for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
-        if feature.name == 'COUNT_UNIQUE_' + T_TOKEN:
+        if feature.get('name') == 'COUNT_UNIQUE_' + T_TOKEN:
             assert feature.value == 6
-        elif feature.name == 'COUNT_' + T_TOKEN:
+        elif feature.get('name') == 'COUNT_' + T_TOKEN:
             assert feature.value == 9
         i += 1
 
@@ -133,7 +133,7 @@ def test_count_extractor_feature_path():
     counter_unique.extract(cas)
     
     for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
-        if feature.name == T_POS + 'COUNT_UNIQUE_PosValue_NN_ADV':
+        if feature.get('name') == T_POS + 'COUNT_UNIQUE_PosValue_NN_ADV':
             assert feature.value == 33
 
 def test_count_extractor_custom_to_string():
@@ -153,5 +153,5 @@ def test_count_extractor_custom_to_string():
     counter_unique.extract(cas)
     
     for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
-        if feature.name == T_LEMMA + '_COUNT_UNIQUE':
+        if feature.get('name') == T_LEMMA + '_COUNT_UNIQUE':
             assert feature.value == 101
