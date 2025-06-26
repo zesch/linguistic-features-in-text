@@ -2,20 +2,16 @@ import pytest
 import re
 import ast
 import sys
-import textwrap
+from dkpro import T_FEATURE
 from util import load_lift_typesystem
 from cassis import load_cas_from_xmi
-from syntax import FE_CasToTree  # FE_TokensPerSentence
-import pyconll
+from syntax import FE_CasToTree
+from pyconll.load import load_from_file
 import logging
 import statistics as stats
-import udapi
 from udapi.core.document import Document
-from udapi.core.node import Node
 
 logger = logging.getLogger(__name__)
-
-T_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 
 ts = load_lift_typesystem("data/TypeSystem.xml")
 
@@ -95,10 +91,11 @@ def test_multi_sentence_results():
         cas = load_cas_from_xmi(f, typesystem=ts)
         numfeats = cas.select(T_FEATURE)
 
+        fe2cas = FE_CasToTree(myview, ts, "de", False)
+        
         if len(numfeats) > 0:
             pass
         else:
-            fe2cas = FE_CasToTree(myview, ts, "de", False)
             fe2cas.extract(cas)
 
             numfeats = cas.select(T_FEATURE)
@@ -110,7 +107,7 @@ def test_multi_sentence_results():
         cas.to_xmi("modified.xmi")
 
     # process the manual annos in the conllu file
-    goldconllu = pyconll.load_from_file(conllufile)
+    goldconllu = load_from_file(conllufile)
     tree_depths = []
     v_counts = []
     s_lens = []
@@ -122,7 +119,7 @@ def test_multi_sentence_results():
     max_dep_lengths = []
     for sent in goldconllu:
         s_lens.append(sent.__len__())
-        annots_str_raw = sent.meta_value("gold")
+        annots_str_raw = str(sent.meta_value("gold"))
         annots_str = re.sub("'", '"', annots_str_raw)
         annots = ast.literal_eval(annots_str)
         max_dep_lengths.append(annots["max_dep_len"])

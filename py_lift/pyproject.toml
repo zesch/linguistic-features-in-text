@@ -22,6 +22,7 @@ pyarrow = "^15.0.0"
 setuptools = "80.4.0"
 cas-visualizer = "^0.0.9"
 jupyter = "^1.1.1"
+Deprecated = "^1.2.18"
 
 [build-system]
 requires = ["poetry-core"]
