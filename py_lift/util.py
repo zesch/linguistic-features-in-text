@@ -57,3 +57,9 @@ def df_features(cas: Cas) -> pl.DataFrame:
         })
 
     return pl.DataFrame(features)
+
+
+def read_list(file_path: pathlib.Path) -> typing.List[str]:
+    with file_path.open("r", encoding="utf-8") as f:
+        readlist = [line.strip() for line in f]
+    return readlist
