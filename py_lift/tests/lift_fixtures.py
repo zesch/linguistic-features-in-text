@@ -1,9 +1,7 @@
 import pytest
 from cassis import Cas
 from util import load_lift_typesystem
-
-T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
-T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
+from dkpro import T_TOKEN, T_SENT
 
 @pytest.fixture
 def typesystem_xml():
@@ -41,7 +39,7 @@ def sentences_en(typesystem):
     cas = Cas(typesystem)
     cas.sofa_string = "This is a test. A small one."
     
-    S = typesystem.get_type(T_SENTENCE)
+    S = typesystem.get_type(T_SENT)
     
     sentences = [
         S(begin=0, end=15, id="0"),

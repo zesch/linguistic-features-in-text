@@ -6,8 +6,6 @@ from lift_fixtures import *
 from dkpro import T_TOKEN, T_POS, T_LEMMA, T_SENT, T_FEATURE
 from annotators import SE_EasyWordAnnotator
 
-T_EASYWORD = 'org.lift.type.EasyWord'
-
 def test_ratio_extractors():
     ts = load_lift_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
@@ -35,7 +33,7 @@ def test_ratio_extractors():
 
     i = 0
     for feature in cas.select(T_FEATURE):
-        assert feature.get('name') == T_TOKEN + '_PER_' + T_SENTENCE
+        assert feature.get('name') == T_TOKEN + '_PER_' + T_SENT
         assert feature.value == 4.5
         i += 1
 
@@ -79,7 +77,7 @@ def test_easy_word_extractor():
 
     i = 0
     for feature in cas.select(T_FEATURE):
-        assert feature.get('name') == T_EASYWORD + '_PER_' + T_TOKEN
+        assert feature.get('name') == 'EasyWord_PER_Token'
         assert feature.value == 7/9
         i += 1
 
@@ -110,7 +108,7 @@ def test_count_extractor():
     counter_unique.extract(cas)
     
     i = 0
-    for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
+    for feature in cas.select(T_FEATURE):
         if feature.get('name') == 'COUNT_UNIQUE_' + T_TOKEN:
             assert feature.value == 6
         elif feature.get('name') == 'COUNT_' + T_TOKEN:
@@ -132,7 +130,7 @@ def test_count_extractor_feature_path():
     )
     counter_unique.extract(cas)
     
-    for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
+    for feature in cas.select(T_FEATURE):
         if feature.get('name') == T_POS + 'COUNT_UNIQUE_PosValue_NN_ADV':
             assert feature.value == 33
 
@@ -152,6 +150,6 @@ def test_count_extractor_custom_to_string():
 
     counter_unique.extract(cas)
     
-    for feature in cas.select("org.lift.type.FeatureAnnotationNumeric"):
+    for feature in cas.select(T_FEATURE):
         if feature.get('name') == T_LEMMA + '_COUNT_UNIQUE':
             assert feature.value == 101

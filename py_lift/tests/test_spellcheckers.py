@@ -1,8 +1,7 @@
 import pytest
 from annotators import SE_SpellErrorAnnotator
+from dkpro import T_ANOMALY
 from lift_fixtures import *
-
-T_ANOMALY = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly'
 
 def test_extractors(cas_en_simple_with_errors):
     SE_SpellErrorAnnotator("en").process(cas_en_simple_with_errors)

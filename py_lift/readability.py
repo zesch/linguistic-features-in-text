@@ -16,7 +16,7 @@ class FEL_ReadabilityScore:
         T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
 
         F = self.ts.get_type(T_FEATURE)
-        feature = F(name=name, value=readability_score)
+        feature = F(name=name, value=readability_score, begin=0, end=0)
         cas.add(feature)
 
         return True

@@ -100,18 +100,18 @@ class FEL_AnnotationRatio:
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('de.tudarmstadt.ukp.dkpro.core.api.syntax.type.chunk.NC',
-                         'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence')
+        super().__init__('NC',
+                         'Sentence')
         
 class FE_TokensPerSentence(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token',
-                         'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence')
+        super().__init__('Token',
+                         'Sentence')
 
 
 class FE_EasyWordRatio(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('org.lift.type.EasyWord',
-                         'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token')
+        super().__init__('EasyWord',
+                         'Token')
 
 
