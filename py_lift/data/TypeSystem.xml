@@ -2230,6 +2230,39 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
         </typeDescription>
         
 
+<typeDescription>
+
+            <name>custom.UniversalDependencies.UPOS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
 
 
         <typeDescription>
