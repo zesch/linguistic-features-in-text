@@ -148,8 +148,8 @@ class FE_CasToTree:
         with file_path.open("r", encoding="utf-8") as f:
             js = [line.strip() for line in f]
             expletive_form_list, expletive_rel_list = re.split("\t", js[0])
-        self.expletive_forms = re.split("\s*,\s*", expletive_form_list)
-        self.expletive_rels = re.split("\s*,\s*", expletive_rel_list)
+        self.expletive_forms = re.split(r"\s*,\s*", expletive_form_list)
+        self.expletive_rels = re.split(r"\s*,\s*", expletive_rel_list)
 
         file_path = (
             Path(__file__).parent.parent
