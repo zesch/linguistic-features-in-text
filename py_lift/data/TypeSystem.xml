@@ -75,7 +75,7 @@ Usually in [0,1].</description>
 
             <description/>
 
-            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.ner.type.NamedEntity</supertypeName>
+            <supertypeName>uima.tcas.DocumentAnnotation</supertypeName>
 
             <features>
 
