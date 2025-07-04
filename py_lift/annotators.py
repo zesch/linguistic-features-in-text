@@ -69,7 +69,7 @@ class SE_EasyWordAnnotator():
         return True
 
 
-class SE_CEFRAnnotator():
+class SE_EvpCefrAnnotator():
 
     def __init__(self, language):
         self.language = language
@@ -129,40 +129,40 @@ class SE_CEFRAnnotator():
             word_dict[pos] = level
             cefr_words[word] = word_dict
 
-        self.cefr_words = cefr_words
+        self.evp_cefr_words = cefr_words
         self.ts = load_typesystem('data/TypeSystem.xml')
-        self.cefr = self.ts.get_type("org.lift.type.CEFR")
+        self.evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
 
     def process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
             t_str = lemma.value
 
-            if t_str in self.cefr_words.keys():
+            if t_str in self.evp_cefr_words.keys():
 
-                if len(self.cefr_words[t_str]) > 1:
+                if len(self.evp_cefr_words[t_str]) > 1:
 
-                    word_dict = self.cefr_words[t_str]
+                    word_dict = self.evp_cefr_words[t_str]
 
                     t_pos = cas.select_covered(type_=T_POS, covering_annotation=lemma)[0]
                     pos_value = t_pos.PosValue
                     our_pos_value = self.pos_tag_map[pos_value]
 
                     if our_pos_value in word_dict.keys():
-                        cefr_word = self.cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
+                        cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
                         cas.add(cefr_word)
 
                     else:
 
                         # Take pos with lowest level
-                        cefr_word = self.cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
+                        cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
                         cas.add(cefr_word)
 
                 else:
 
-                    cefr_word = self.cefr(begin=lemma.begin, end=lemma.end, level=list(self.cefr_words[t_str].values())[0], pos=list(self.cefr_words[t_str].keys())[0])
+                    cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
                     cas.add(cefr_word)
 
-                print("Found cefr word: ", t_str)
+                print("Found evp cefr word: ", t_str)
             else:
-                print("Found not so cefr word: ", t_str)
+                print("Found not so evp cefr word: ", t_str)
         return True
