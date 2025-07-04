@@ -1,10 +1,11 @@
 from cassis import Cas
 
-from util import load_typesystem
+from util import load_lift_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
 
+# TODO switch to polars?
 import pandas as pd
 
 class SE_SpellErrorAnnotator():
@@ -18,7 +19,7 @@ class SE_SpellErrorAnnotator():
             )
         self.spell = SpellChecker(language=self.language)
             
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
         
         self.A = self.ts.get_type(T_ANOMALY)
         self.S = self.ts.get_type(T_SUGGESTION)
@@ -28,9 +29,17 @@ class SE_SpellErrorAnnotator():
         for token in cas.select(T_TOKEN):
             t_str = token.get_covered_text()
             if t_str in self.spell.unknown([t_str]):
-                suggested_action = self.S(replacement=self.spell.correction(t_str), begin=token.begin, end=token.end)
+                suggested_action = self.S(
+                    replacement=self.spell.correction(t_str),
+                    begin=token.get('begin'),
+                    end=token.get('end')
+                )
                 cas.add(suggested_action)
-                anomaly = self.A(begin=token.begin, end=token.end, suggestions=self.FSArray(elements=[suggested_action])) 
+                anomaly = self.A(
+                    begin=token.get('begin'),
+                    end=token.get('end'), 
+                    suggestions=self.FSArray(elements=[suggested_action])
+                ) 
                 cas.add(anomaly)
 
         return True
@@ -53,15 +62,14 @@ class SE_EasyWordAnnotator():
         with file_path.open("r", encoding="utf-8") as f:
             self.easy_words = [line.strip() for line in f]
 
-
-        self.ts = load_typesystem('data/TypeSystem.xml')
-        self.easy = self.ts.get_type("org.lift.type.EasyWord")
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.EW = self.ts.get_type("org.lift.type.EasyWord")
 
     def process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
             t_str = lemma.value
             if t_str in self.easy_words:
-                easy_word = self.easy(begin=lemma.begin, end=lemma.end)
+                easy_word = self.EW(begin=lemma.get('begin'), end=lemma.get('end'))
                 cas.add(easy_word)
                 print("Found easy word: ", t_str)
             else:
@@ -70,6 +78,7 @@ class SE_EasyWordAnnotator():
 
 
 class SE_EvpCefrAnnotator():
+    """ADD DOCUMENTATION."""
 
     def __init__(self, language):
         self.language = language
@@ -116,7 +125,15 @@ class SE_EvpCefrAnnotator():
             'TO': 'none',
             'UH': 'none',
             'VB': 'verb',
-        'VBD': "verb", "VBG": "verb", "VBN": "verb", "VBP":"verb", "VBZ": "verb", "WDT": "determiner", "WP": "pronoun", "WP$": "determiner", "WRB": "adverb"
+            'VBD': "verb", 
+            "VBG": "verb", 
+            "VBN": "verb", 
+            "VBP":"verb", 
+            "VBZ": "verb", 
+            "WDT": "determiner", 
+            "WP": "pronoun", 
+            "WP$": "determiner", 
+            "WRB": "adverb"
         }
 
         # TODO: Move pos info to keys of dictionary?
@@ -130,7 +147,7 @@ class SE_EvpCefrAnnotator():
             cefr_words[word] = word_dict
 
         self.evp_cefr_words = cefr_words
-        self.ts = load_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
         self.evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
 
     def process(self, cas: Cas) -> bool:
@@ -138,9 +155,7 @@ class SE_EvpCefrAnnotator():
             t_str = lemma.value
 
             if t_str in self.evp_cefr_words.keys():
-
                 if len(self.evp_cefr_words[t_str]) > 1:
-
                     word_dict = self.evp_cefr_words[t_str]
 
                     t_pos = cas.select_covered(type_=T_POS, covering_annotation=lemma)[0]
@@ -150,19 +165,16 @@ class SE_EvpCefrAnnotator():
                     if our_pos_value in word_dict.keys():
                         cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
                         cas.add(cefr_word)
-
                     else:
-
                         # Take pos with lowest level
                         cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
                         cas.add(cefr_word)
-
                 else:
-
                     cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
                     cas.add(cefr_word)
 
                 print("Found evp cefr word: ", t_str)
             else:
                 print("Found not so evp cefr word: ", t_str)
+
         return True

@@ -3,7 +3,7 @@ import sys
 import re
 import json
 import ast
-from util import load_typesystem
+from util import load_lift_typesystem
 from cassis import Cas, load_cas_from_xmi
 from syntax import FE_CasToTree  # FE_TokensPerSentence
 import udapi
@@ -20,7 +20,7 @@ T_SENTENCE = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"
 T_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 
 
-ts = load_typesystem("data/TypeSystem.xml")
+ts = load_lift_typesystem("data/TypeSystem.xml")
 
 
 # casfile = "data/k002_s04_cas.xmi_modded.xmi"

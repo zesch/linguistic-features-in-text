@@ -1,8 +1,11 @@
 import typing
 import cassis
 import pathlib
+import polars as pl
+from cassis import Cas
+from dkpro import T_FEATURE
 
-def load_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
+def load_lift_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
     def load_typesystem_from_file(path):
         with open(path, 'rb') as f:
             return cassis.load_typesystem(f)
@@ -43,3 +46,20 @@ def resolve_annotation(annotation_path: str, feature_seperator='/') -> typing.Tu
     type_path, feature_path = split
 
     return type_path, feature_path
+
+def df_features(cas: Cas) -> pl.DataFrame:
+    features = []
+
+    for anno in cas.select(T_FEATURE):
+        features.append({
+            'name': anno.get('name'),
+            'value': anno.get('value')
+        })
+
+    return pl.DataFrame(features)
+
+
+def read_list(file_path: pathlib.Path) -> typing.List[str]:
+    with file_path.open("r", encoding="utf-8") as f:
+        readlist = [line.strip() for line in f]
+    return readlist

@@ -26,7 +26,7 @@ def cas_to_str(cas, sentence):
     ]
 
     if len(unfiltered_token_list)!=len(token_list):
-        logger.warning("some tokens are empty!")
+        print("some tokens are empty!")
     form_list = [x.get_covered_text() for x in token_list]
     print("form_list %s" %(str(form_list)))
 
