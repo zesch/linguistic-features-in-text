@@ -1415,7 +1415,7 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
             </typeDescription>
 
             <typeDescription>
-              <name>org.lift.type.CEFR</name>
+              <name>org.lift.type.EvpCefr</name>
               <supertypeName>uima.tcas.Annotation</supertypeName>
 
                 <features>

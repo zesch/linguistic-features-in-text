@@ -1,11 +1,18 @@
 import pytest
-from util import load_lift_typesystem
+from util import load_typesystem
 from cassis import Cas
-from annotators import SE_CEFRAnnotator
-from dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
+from extractors import FE_TokensPerSentence, FE_EasyWordRatio
+from annotators import SE_EasyWordAnnotator, SE_EvpCefrAnnotator
 
-def test_cefr_extractor():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
+T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
+T_FEATURE = 'org.lift.type.EvpCefr'
+T_EASYWORD = 'org.lift.type.EasyWord'
+T_LEMMA = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma'
+T_POS = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
+
+def test_evp_cefr_extractor():
+    ts = load_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A minimal metaphor. Fake. Fake."
 
@@ -58,7 +65,7 @@ def test_cefr_extractor():
     pos13 = POS(begin=45, end=46, PosValue=".")
     cas.add_all([pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10, pos11, pos12, pos13])
 
-    SE_CEFRAnnotator("en").process(cas)
+    SE_EvpCefrAnnotator("en").process(cas)
 
     words = ["This", "is", "a", "test", "A", "minimal", "metaphor", "Fake", "Fake"]
     labels_cefr = [1, 1, 1, 1, 1, 5, 6, 5, 6]
@@ -67,6 +74,11 @@ def test_cefr_extractor():
 
     for feature in cas.select(T_FEATURE):
         if feature.get_covered_text() in words:
-            assert feature.get('level') == words_with_level[feature.get_covered_text()]
+            assert feature.level == words_with_level[feature.get_covered_text()]
         else:
             print('Test failed :)')
+
+
+
+
+    
