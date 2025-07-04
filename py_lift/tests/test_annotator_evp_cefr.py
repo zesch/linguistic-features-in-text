@@ -1,18 +1,11 @@
 import pytest
-from util import load_typesystem
+from util import load_lift_typesystem
 from cassis import Cas
-from extractors import FE_TokensPerSentence, FE_EasyWordRatio
-from annotators import SE_EasyWordAnnotator, SE_EvpCefrAnnotator
-
-T_TOKEN = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token'
-T_SENTENCE = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence'
-T_FEATURE = 'org.lift.type.EvpCefr'
-T_EASYWORD = 'org.lift.type.EasyWord'
-T_LEMMA = 'de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma'
-T_POS = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
+from annotators import SE_EvpCefrAnnotator
+from dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
 
 def test_evp_cefr_extractor():
-    ts = load_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A minimal metaphor. Fake. Fake."
 
