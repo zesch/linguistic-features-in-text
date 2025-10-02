@@ -1,6 +1,6 @@
 from cassis import Cas
 
-from util import load_lift_typesystem
+from util import load_lift_typesystem, read_tsv_to_dict
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
@@ -8,7 +8,11 @@ from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
 # TODO switch to polars?
 import pandas as pd
 
-class SE_SpellErrorAnnotator():
+class SEL_BaseAnnotator():
+    """Marker base class for all annotators."""
+    pass
+
+class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.language = language
@@ -45,7 +49,7 @@ class SE_SpellErrorAnnotator():
         return True
 
 
-class SE_EasyWordAnnotator():
+class SE_EasyWordAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.language = language
@@ -76,8 +80,44 @@ class SE_EasyWordAnnotator():
                 print("Found not so easy word: ", t_str)
         return True
 
+class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
-class SE_EvpCefrAnnotator():
+    def __init__(self, language):
+        self.language = language
+        supported_langs = ['de', 'en']
+        if self.language not in supported_langs:
+            raise ValueError(
+                f"{self.language} is not a supported language."
+            )
+        from pathlib import Path
+
+        # file_path = Path(
+        #     __file__).parent.parent / "shared_resources" / "resources" / "abstractness" / self.language / "ratings_lrec16_koeper_ssiw.txt"
+
+        # self.data_dict = read_tsv_to_dict(file_path, 'Word', 'AbstConc')
+
+        from importlib.resources import files
+        import lift_resources_lists
+        
+        # Access a specific file
+        data_dir = files('lift_resources_lists').joinpath('abstractness').joinpath(self.language)
+        model_path = data_dir / 'ratings_lrec16_koeper_ssiw.txt'
+        print(model_path)
+
+        self.data_dict = read_tsv_to_dict(model_path, 'Word', 'AbstConc')        
+
+        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.AC = self.ts.get_type("org.lift.type.AbstractnessConcreteness")
+
+    def process(self, cas: Cas) -> bool:
+        for lemma in cas.select(T_LEMMA):
+            l_str = lemma.value
+            if l_str in self.data_dict:
+                anno = self.AC(begin=lemma.get('begin'), end=lemma.get('end'), value=self.data_dict[l_str])
+                cas.add(anno)
+        return True
+
+class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
     """ADD DOCUMENTATION."""
 
     def __init__(self, language):

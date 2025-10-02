@@ -1415,6 +1415,18 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
             </typeDescription>
 
             <typeDescription>
+              <name>org.lift.type.AbstractnessConcreteness</name>
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+              <features>
+                <featureDescription>
+                <name>value</name>
+                <description/>
+                    <rangeTypeName>uima.cas.Double</rangeTypeName>
+                </featureDescription>            
+              </features>
+            </typeDescription>
+
+            <typeDescription>
               <name>org.lift.type.EvpCefr</name>
               <supertypeName>uima.tcas.Annotation</supertypeName>
 

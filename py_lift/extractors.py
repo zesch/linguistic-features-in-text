@@ -97,6 +97,9 @@ class FEL_AnnotationRatio:
 
         return True
 
+class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
+    def __init__(self):
+        super().__init__('SpellingAnomaly')
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
     def __init__(self):

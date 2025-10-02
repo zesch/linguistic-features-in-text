@@ -1,0 +1,5 @@
+projektname/
+├── pyproject.toml
+└── projektname/         # we need this "duplicate" so that poetry can import this properly
+    ├── __init__.py
+    └── ...

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "lift-resources-lists"
+version = "0.1.0"
+description = "LiFT list resources"
+authors = ["Your Name <you@example.com>"]
+
+packages = [
+    { include = "lift_resources_lists" },
+]
+
+include = [
+    "lift_resources_lists/abstractness/de/**/*.txt",
+]
+
+exclude = [
+    "**/*/.DS_Store",
+    "**/*/.gitignore",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

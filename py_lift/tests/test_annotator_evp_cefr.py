@@ -4,7 +4,7 @@ from cassis import Cas
 from annotators import SE_EvpCefrAnnotator
 from dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
 
-def test_evp_cefr_extractor():
+def test_evp_cefr_annotator():
     ts = load_lift_typesystem('data/TypeSystem.xml')
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A minimal metaphor. Fake. Fake."
