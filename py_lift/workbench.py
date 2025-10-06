@@ -32,21 +32,21 @@ with open('data/TypeSystem.xml', 'rb') as f:
 cas = load_cas_from_xmi(file, typesystem=typesys)
 
 #length
-FE_TokensPerSentence().extract(cas.get_view('ctok'))
+FE_TokensPerSentence().extract(cas)
 
 # readability
 # Readability_Score_Flesch_Kincaid_Lang_de
-FEL_ReadabilityScore('de').extract(cas.get_view('ctok'))
+FEL_ReadabilityScore('de').extract(cas)
 
 
 # spelling
 # de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly
 # de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction
 # SpellingAnomaly_PER_Token
-SE_SpellErrorAnnotator('de').process(cas.get_view('ctok'))
+SE_SpellErrorAnnotator('de').process(cas)
 
 # frequency
-SE_WordFrequency('de').process(cas.get_view('ctok'))
+SE_WordFrequency('de').process(cas)
 
 # syntax
 # Average_Size_Of_Lexical_NP
@@ -59,8 +59,8 @@ SE_WordFrequency('de').process(cas.get_view('ctok'))
 # Average_Dependency_Length_All
 # Average_Number_Of_Finite_Verbs
 # Average_Number_Of_Verbs
-fe2cas1 = FE_CasToTree('ctok', typesys, 'de', False)
-fe2cas1.extract(cas.get_view('ctok'))
+fe2cas1 = FE_CasToTree(ts=typesys, language='de', ud=False)
+fe2cas1.extract(cas)
 
 #start visualization
 all_features = []
