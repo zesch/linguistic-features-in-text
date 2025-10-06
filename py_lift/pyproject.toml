@@ -24,6 +24,8 @@ cas-visualizer = "^0.0.9"
 jupyter = "^1.1.1"
 Deprecated = "^1.2.18"
 lift-resources-lists = {path = "../shared_resources/resources/lift_resources_lists", develop = true}
+streamlit = "^1.50.0"
+spacy = "^3.8.7"
 
 [build-system]
 requires = ["poetry-core"]
