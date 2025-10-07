@@ -1,68 +1,46 @@
 import streamlit as st
-from cassis import *
-import spacy
-import pandas as pd
-from cas_visualizer.visualizer import SpanVisualiser
-from extractors import FE_TokensPerSentence
-from readability import FEL_ReadabilityScore
-from annotators import SE_SpellErrorAnnotator
-from frequency import SE_WordFrequency
-from syntax import FE_CasToTree
-
-
-
+import inspect
+from cassis import Cas
+from dkpro import T_ANOMALY
+from preprocessing import Spacy_Preprocessor
+from util import get_all_subclasses, get_constructor_params, load_lift_typesystem
+import polars as pl
+from cas_visualizer.visualizer import SpanVisualizer
+import annotators
+from readability import *
+from annotators import *
+from frequency import *
 
 st.set_page_config(layout='wide')
 st.title('LiFT Workbench')
 
-with st.expander('Enter text'):
-    text = st.text_area('Enter text')
+text = st.text_area('Enter text', value="Das ist ein einfacher Beispielsatz. Hier ist ein zweiter Satz mit einem Fehler: einfcher.")    
 
-#######################
-#                     #
-# PREPROCESSING MAGIC #
-#stub:                #
-file = 'blub'         #
-#                     #
-#######################
+ts = load_lift_typesystem()
+spacy = Spacy_Preprocessor(language='de')
+cas = spacy.run(text)
 
-#add lift stuff to cas
-with open('data/TypeSystem.xml', 'rb') as f:
-    typesys = load_typesystem(f)
-cas = load_cas_from_xmi(file, typesystem=typesys)
+cls = get_all_subclasses(annotators, SEL_BaseAnnotator)[0]
 
-#length
-FE_TokensPerSentence().extract(cas)
+try:
+    params = get_constructor_params(cls)
 
-# readability
-# Readability_Score_Flesch_Kincaid_Lang_de
-FEL_ReadabilityScore('de').extract(cas)
+    user_inputs = {}
+    for param in params:
+        if param.annotation == int:
+            user_inputs[param.name] = st.number_input(param.name, value=0)
+        elif param.annotation == float:
+            user_inputs[param.name] = st.number_input(param.name, value=0.0)
+        else:  # Default to string
+            user_inputs[param.name] = st.text_input(param.name)
 
+    if st.button("Instantiate"):
+        obj = cls(**user_inputs)
+        if not obj.process(cas):
+            st.error("Processing of {obj.__class__.__name__} failed.")
+except Exception as e:
+    st.error(f"Error: {e}")
 
-# spelling
-# de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly
-# de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction
-# SpellingAnomaly_PER_Token
-SE_SpellErrorAnnotator('de').process(cas)
-
-# frequency
-SE_WordFrequency('de').process(cas)
-
-# syntax
-# Average_Size_Of_Lexical_NP
-# Proportion_of_Subj_Vfin_Inversions
-# Average_Tree_Depth
-# Average_Sentence_Length
-# Average_Maximal_Dependency_Length
-# Average_Dependency_Length_Left
-# Average_Dependency_Length_Right
-# Average_Dependency_Length_All
-# Average_Number_Of_Finite_Verbs
-# Average_Number_Of_Verbs
-fe2cas1 = FE_CasToTree(ts=typesys, language='de', ud=False)
-fe2cas1.extract(cas)
-
-#start visualization
 all_features = []
 all_feature_values = []
 for anno in cas.select('FeatureAnnotationNumeric'):
@@ -74,24 +52,23 @@ col1, col2 = st.columns(2)
 
 with col1:
     select_type = st.selectbox('Select type to highlight', ['Frequency', 'Spelling', 'POS'])
-    span_vis = SpanVisualiser(typesys)
-    span_vis.selected_span_type = SpanVisualiser.HIGHLIGHT
+    span_vis = SpanVisualizer(ts)
+    span_vis.selected_span_type = SpanVisualizer.UNDERLINE
     span_vis.allow_highlight_overlap = True
 
     match select_type:
         case 'Spelling':
-            span_vis.add_type(type_name='de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SpellingAnomaly')
+            span_vis.add_type(T_ANOMALY)
         case 'Frequency':
             span_vis.add_type(type_name='org.lift.type.Frequency', feature_name='frequencyBand')
         case 'POS':
             span_vis.add_type(type_name='de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS',
                               feature_name='PosValue')
 
-
-    html = span_vis.visualise(cas)
+    html = span_vis.visualize(cas)
     st.html(html)
 
 with col2:
     d = {'values': all_feature_values}
-    df = pd.DataFrame(data=d, index=all_features)
+    df = pl.DataFrame(data=d, schema={'values': pl.Float64})
     st.dataframe(df)

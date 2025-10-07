@@ -5,7 +5,7 @@ from cassis import Cas
 from annotators import SE_AbstractnessAnnotator
 
 def test_abstractness_annotator():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
     cas.sofa_string = "Demokratie ist eher abstrakt. Leben ist konkret."
 

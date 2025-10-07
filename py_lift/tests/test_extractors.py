@@ -7,7 +7,7 @@ from dkpro import T_TOKEN, T_POS, T_LEMMA, T_SENT, T_FEATURE
 from annotators import SE_EasyWordAnnotator
 
 def test_ratio_extractors():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A small one."
 
@@ -40,7 +40,7 @@ def test_ratio_extractors():
     assert i == 1
 
 def test_easy_word_extractor():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
     cas.sofa_string = "This is a test. A small one."
 
@@ -84,7 +84,7 @@ def test_easy_word_extractor():
     assert i == 1
 
 def test_count_extractor():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
     cas.sofa_string = "test is a test. a small one."
 
@@ -118,7 +118,7 @@ def test_count_extractor():
     assert i == 2
 
 def test_count_extractor_feature_path():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     with open('data/hagen.txt.xmi', 'rb') as f:
         cas = load_cas_from_xmi(f, ts)
 
@@ -138,7 +138,7 @@ def test_count_extractor_custom_to_string():
     def _lemma_to_string(anno):
         return anno.get('value')
     
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     with open('data/hagen.txt.xmi', 'rb') as f:
         cas = load_cas_from_xmi(f, ts)
 

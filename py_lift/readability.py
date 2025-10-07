@@ -4,7 +4,7 @@ from textstat import *
 
 class FEL_ReadabilityScore:
     def __init__(self, language):
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.language = language
 
     def extract(self, cas: Cas) -> bool:

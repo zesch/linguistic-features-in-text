@@ -20,7 +20,7 @@ T_SENTENCE = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"
 T_FEATURE = "org.lift.type.FeatureAnnotationNumeric"
 
 
-ts = load_lift_typesystem("data/TypeSystem.xml")
+ts = load_lift_typesystem()
 
 
 # casfile = "data/k002_s04_cas.xmi_modded.xmi"

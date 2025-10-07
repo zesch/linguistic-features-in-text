@@ -10,7 +10,7 @@ def typesystem_xml():
     
 @pytest.fixture
 def typesystem():
-    return load_lift_typesystem("data/TypeSystem.xml")
+    return load_lift_typesystem()
 
 @pytest.fixture
 def tokens_en(typesystem):

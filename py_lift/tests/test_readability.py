@@ -4,7 +4,7 @@ from cassis import Cas
 from readability import FE_FleschIndex
 
 def test_readability():
-    ts = load_lift_typesystem('data/TypeSystem.xml')
+    ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
     cas.sofa_string = "Das ist ein etwas längerer Satz, es gibt Nebensätze und Kommata, sodass er möglichst lang wird. Ein zweiter Satz ist auch dabei, hurra!"
     FE_FleschIndex().extract(cas)

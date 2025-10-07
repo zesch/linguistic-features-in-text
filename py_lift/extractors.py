@@ -11,7 +11,7 @@ class FEL_AnnotationCounter:
             unique=False, 
             custom_to_string: Optional[Callable[[Any], str]] = None
     ):
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.type = type
         self.unique = unique
         self.feature_path = feature_path
@@ -69,7 +69,7 @@ class FEL_AnnotationCounter:
 class FEL_AnnotationRatio:
 
     def __init__(self, type_dividend, type_divisor):
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.dividend_type = type_dividend
         self.divisor_type = type_divisor
 

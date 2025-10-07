@@ -4,13 +4,17 @@ from util import load_lift_typesystem, read_tsv_to_dict
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
+from abc import ABC, abstractmethod
 
 # TODO switch to polars?
 import pandas as pd
 
 class SEL_BaseAnnotator():
     """Marker base class for all annotators."""
-    pass
+    
+    @abstractmethod
+    def process(self, cas: Cas) -> bool:
+        pass
 
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
@@ -23,7 +27,7 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
             )
         self.spell = SpellChecker(language=self.language)
             
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         
         self.A = self.ts.get_type(T_ANOMALY)
         self.S = self.ts.get_type(T_SUGGESTION)
@@ -66,7 +70,7 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator):
         with file_path.open("r", encoding="utf-8") as f:
             self.easy_words = [line.strip() for line in f]
 
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.EW = self.ts.get_type("org.lift.type.EasyWord")
 
     def process(self, cas: Cas) -> bool:
@@ -106,7 +110,7 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
         self.data_dict = read_tsv_to_dict(model_path, 'Word', 'AbstConc')        
 
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.AC = self.ts.get_type("org.lift.type.AbstractnessConcreteness")
 
     def process(self, cas: Cas) -> bool:
@@ -187,7 +191,7 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
             cefr_words[word] = word_dict
 
         self.evp_cefr_words = cefr_words
-        self.ts = load_lift_typesystem('data/TypeSystem.xml')
+        self.ts = load_lift_typesystem()
         self.evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
 
     def process(self, cas: Cas) -> bool:

@@ -3,10 +3,14 @@ import cassis
 import pathlib
 import csv
 import polars as pl
+import inspect
 from cassis import Cas
 from dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
 
-def load_lift_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
+def load_lift_typesystem() -> cassis.TypeSystem:
+    return load_typesystem('data/TypeSystem.xml')
+
+def load_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
     def load_typesystem_from_file(path):
         with open(path, 'rb') as f:
             return cassis.load_typesystem(f)
@@ -135,3 +139,11 @@ def get_all_subclasses(mymodule, MyBase):
         obj for name, obj in vars(mymodule).items()
         if isinstance(obj, type) and issubclass(obj, MyBase) and obj is not MyBase
     ]
+
+def get_constructor_params(cls):
+    sig = inspect.signature(cls.__init__)
+    params = [
+        param for name, param in sig.parameters.items()
+        if name != 'self'
+    ]
+    return params

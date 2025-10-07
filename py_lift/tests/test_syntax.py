@@ -13,7 +13,7 @@ from udapi.core.document import Document
 
 logger = logging.getLogger(__name__)
 
-ts = load_lift_typesystem("data/TypeSystem.xml")
+ts = load_lift_typesystem()
 
 casfile = "data/k002_s04_cas.xmi"  # sample file from OSNA corpus
 myview = "corr"  # learner layer
