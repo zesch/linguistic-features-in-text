@@ -72,14 +72,18 @@ except Exception as e:
 col1, col2 = st.columns(2)
 
 with col1:
-    select_type = st.selectbox('Select type to highlight', ['Frequency', 'Spelling', 'POS'])
+    select_type = st.selectbox('Select type to highlight', ['Abstractness', 'Frequency', 'Spelling', 'POS', 'Token'])
     span_vis = SpanVisualizer(ts)
     span_vis.selected_span_type = SpanVisualizer.UNDERLINE
     span_vis.allow_highlight_overlap = True
 
     match select_type:
+        case 'Abstracness':
+            span_vis.add_type(type_name='org.lift.type.AbstractnessConcreteness', feature_name='value')
         case 'Spelling':
             span_vis.add_type(T_ANOMALY)
+        case 'Token':
+            span_vis.add_type(T_TOKEN)
         case 'Frequency':
             span_vis.add_type(type_name='org.lift.type.Frequency', feature_name='frequencyBand')
         case 'POS':
