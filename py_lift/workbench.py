@@ -2,14 +2,18 @@ import streamlit as st
 import inspect
 from cassis import Cas
 from dkpro import T_ANOMALY
+from itertools import chain
 from preprocessing import Spacy_Preprocessor
 from util import get_all_subclasses, get_constructor_params, load_lift_typesystem
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 import annotators
-from readability import *
-from annotators import *
+import extractors
+import readability
+from annotators import SEL_BaseAnnotator
+from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
 from frequency import *
+from readability import FEL_ReadabilityScore
 
 st.set_page_config(layout='wide')
 st.title('LiFT Workbench')
@@ -20,10 +24,15 @@ ts = load_lift_typesystem()
 spacy = Spacy_Preprocessor(language='de')
 cas = spacy.run(text)
 
-cls = get_all_subclasses(annotators, SEL_BaseAnnotator)[0]
+classes_SEL = get_all_subclasses(annotators, SEL_BaseAnnotator)
+
+name_to_class = {cls.__name__: cls for cls in classes_SEL}
+selected_class_name = st.selectbox("Choose an SE", name_to_class.keys())
+selected_SE = name_to_class[selected_class_name]
+
 
 try:
-    params = get_constructor_params(cls)
+    params = get_constructor_params(selected_SE)
 
     user_inputs = {}
     for param in params:
@@ -34,19 +43,31 @@ try:
         else:  # Default to string
             user_inputs[param.name] = st.text_input(param.name)
 
-    if st.button("Instantiate"):
-        obj = cls(**user_inputs)
+    if st.button("Run SEs"):
+        obj = selected_SE(**user_inputs)
         if not obj.process(cas):
             st.error("Processing of {obj.__class__.__name__} failed.")
 except Exception as e:
     st.error(f"Error: {e}")
 
-all_features = []
-all_feature_values = []
-for anno in cas.select('FeatureAnnotationNumeric'):
-    if anno.name not in all_features:
-        all_features.append(anno.name)
-        all_feature_values.append(anno.value)
+classes_readability = get_all_subclasses(readability, FEL_ReadabilityScore)
+classes_counters = get_all_subclasses(extractors, FEL_AnnotationCounter)
+classes_ratios = get_all_subclasses(extractors, FEL_AnnotationRatio)
+
+name_to_FEs = {cls.__name__: cls for cls in chain(classes_readability, classes_counters, classes_ratios)}
+selected_FE_names = st.multiselect("Choose one or more FEs", name_to_FEs.keys())
+selected_FEs = [name_to_FEs[name] for name in selected_FE_names]
+
+# run all selected FEs
+try:
+    if st.button("Run FEs"):
+        for selected_FE in selected_FEs:
+            # TODO maybe need to be configured?
+            obj = selected_FE()
+            if not obj.extract(cas):
+                st.error("Processing of {obj.__class__.__name__} failed.")
+except Exception as e:
+    st.error(f"Error: {e}")
 
 col1, col2 = st.columns(2)
 
@@ -69,6 +90,6 @@ with col1:
     st.html(html)
 
 with col2:
-    d = {'values': all_feature_values}
-    df = pl.DataFrame(data=d, schema={'values': pl.Float64})
+    rows = [{'name': anno.name, 'value': anno.value} for anno in cas.select('FeatureAnnotationNumeric')]
+    df = pl.DataFrame(rows)
     st.dataframe(df)

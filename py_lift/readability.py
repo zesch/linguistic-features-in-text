@@ -1,6 +1,6 @@
 from cassis import Cas
 from util import load_lift_typesystem
-from textstat import *
+from textstat import textstat
 
 class FEL_ReadabilityScore:
     def __init__(self, language):

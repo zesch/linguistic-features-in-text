@@ -6,7 +6,9 @@ import polars as pl
 import inspect
 from cassis import Cas
 from dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
-
+from types import ModuleType
+from typing import Type, List
+ 
 def load_lift_typesystem() -> cassis.TypeSystem:
     return load_typesystem('data/TypeSystem.xml')
 
@@ -134,7 +136,7 @@ def assert_annotations(expected, annotations, key_attr, value_attr):
         assert key in actual, f"Missing annotation for '{key}'"
         assert actual[key] == value, f"For '{key}', expected '{value}' but got '{actual[key]}'"
 
-def get_all_subclasses(mymodule, MyBase):
+def get_all_subclasses(mymodule: ModuleType, MyBase: Type) -> List[Type]:
     return [
         obj for name, obj in vars(mymodule).items()
         if isinstance(obj, type) and issubclass(obj, MyBase) and obj is not MyBase
