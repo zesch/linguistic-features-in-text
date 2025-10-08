@@ -13,7 +13,7 @@ import readability
 from annotators import SEL_BaseAnnotator
 from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
 from frequency import *
-from readability import FEL_ReadabilityScore
+from readability import FEL_TextstatReadabilityScore
 
 st.set_page_config(layout='wide')
 st.title('LiFT Workbench')
@@ -42,7 +42,7 @@ try:
             user_inputs[param.name] = st.number_input(param.name, value=0.0)
         else:  # Default to string
             user_inputs[param.name] = st.text_input(param.name)
-
+    
     if st.button("Run SEs"):
         obj = selected_SE(**user_inputs)
         if not obj.process(cas):
@@ -50,7 +50,7 @@ try:
 except Exception as e:
     st.error(f"Error: {e}")
 
-classes_readability = get_all_subclasses(readability, FEL_ReadabilityScore)
+classes_readability = get_all_subclasses(readability, FEL_TextstatReadabilityScore)
 classes_counters = get_all_subclasses(extractors, FEL_AnnotationCounter)
 classes_ratios = get_all_subclasses(extractors, FEL_AnnotationRatio)
 
@@ -59,11 +59,12 @@ selected_FE_names = st.multiselect("Choose one or more FEs", name_to_FEs.keys())
 selected_FEs = [name_to_FEs[name] for name in selected_FE_names]
 
 # run all selected FEs
+fe_params = {'language': 'de'}
 try:
     if st.button("Run FEs"):
         for selected_FE in selected_FEs:
-            # TODO maybe need to be configured?
-            obj = selected_FE()
+            # TODO how to configure that in streamlit, assuming language parameter for now
+            obj = selected_FE(**fe_params)
             if not obj.extract(cas):
                 st.error("Processing of {obj.__class__.__name__} failed.")
 except Exception as e:
