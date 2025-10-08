@@ -1,8 +1,16 @@
 from cassis import Cas
 from util import load_lift_typesystem
 from typing import Callable, Any, Optional
+from abc import ABC, abstractmethod
 
-class FEL_AnnotationCounter:
+class FEL_BaseExtractor(ABC):
+    """Marker base class for all extractors."""
+    
+    @abstractmethod
+    def extract(self, cas: Cas) -> bool:
+        pass
+
+class FEL_AnnotationCounter(FEL_BaseExtractor):
     def __init__(
             self, 
             type, 
@@ -66,7 +74,7 @@ class FEL_AnnotationCounter:
         return True
 
 
-class FEL_AnnotationRatio:
+class FEL_AnnotationRatio(FEL_BaseExtractor):
 
     def __init__(self, type_dividend, type_divisor):
         self.ts = load_lift_typesystem()

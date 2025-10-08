@@ -1,8 +1,9 @@
 from cassis import Cas
 from util import load_lift_typesystem
 from textstat import textstat
+from extractors import FEL_BaseExtractor
 
-class FEL_ReadabilityScore:
+class FEL_ReadabilityScore(FEL_BaseExtractor):
     def __init__(self, language):
         self.ts = load_lift_typesystem()
         self.language = language

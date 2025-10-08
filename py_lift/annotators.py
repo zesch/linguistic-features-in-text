@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 # TODO switch to polars?
 import pandas as pd
 
-class SEL_BaseAnnotator():
+class SEL_BaseAnnotator(ABC):
     """Marker base class for all annotators."""
     
     @abstractmethod
