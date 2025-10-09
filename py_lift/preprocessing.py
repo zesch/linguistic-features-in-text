@@ -44,20 +44,31 @@ class Spacy_Preprocessor:
             cas_sentence = S(begin=begin, end=end)
             self.cas.add(cas_sentence)
 
-        token_with_annotations = []
+        token_annos = []
         for token in doc:
             cas_token = T(begin=token.idx, end=token.idx+len(token.text), id=token.i)
             self.cas.add(cas_token)
+            token_annos.append(cas_token)
 
-            cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.pos)
+            # TODO need to map from spacy pos tags to dkpro 
+            cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.tag_)
             self.cas.add(cas_pos)
-            token_with_annotations.append(cas_pos)
 
-        for tok in doc:
-            if tok.head == tok:
+        # need another loop to ensure that all tokens are already in the CAS
+        for token in doc:
+            if token.head == token:
                 continue
-            cas_dep = D(begin=tok.idx, end=tok.idx+len(tok.text), Governor=token_with_annotations[tok.head.i],
-                        Dependent=token_with_annotations[tok.i], DependencyType=tok.dep_,flavor='basic')
+
+            token_anno = token_annos[token.i]
+
+            cas_dep = D(
+                begin=token_anno.begin, 
+                end=token_anno.end, 
+                Governor=token_annos[token.head.i],
+                Dependent=token_annos[token.i], 
+                DependencyType=token.dep_,
+                flavor='basic'
+            )
             self.cas.add(cas_dep)
 
         return self.cas

@@ -9,8 +9,8 @@ def test_abstractness_annotator():
     cas = Cas(typesystem=ts)
     cas.sofa_string = "Demokratie ist eher abstrakt. Leben ist konkret."
 
-    tokens = ["Demokratie", "ist", "eher", "abstrakt", "." "Leben", "ist", "konkret", "."]
-    lemmas = ["Demokratie", "sein", "eher", "abstrakt", "." "Leben", "sein", "konkret", "."]
+    tokens = ["Demokratie", "ist", "eher", "abstrakt", ".", "Leben", "ist", "konkret", "."]
+    lemmas = ["Demokratie", "sein", "eher", "abstrakt", ".", "Leben", "sein", "konkret", "."]
     pos_tags = ["NN", "AUX", "ADV", "ADJ", "PUNCT", "NN", "AUX", "ADJ", "PUNCT"]
 
     cas = construct_cas(ts, tokens, lemmas, pos_tags)
