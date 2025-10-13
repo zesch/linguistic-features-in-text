@@ -1,6 +1,6 @@
 from cassis import Cas
 
-from util import load_lift_typesystem, read_tsv_to_dict
+from util import load_lift_typesystem, read_tsv_to_dict, supported_languages
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
@@ -16,12 +16,12 @@ class SEL_BaseAnnotator(ABC):
     def process(self, cas: Cas) -> bool:
         pass
 
+@supported_languages('en', 'es', 'fr', 'pt', 'de', 'it', 'ru', 'ar', 'eu', 'lv', 'nl')
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.language = language
-        supported_langs = ['en', 'es', 'fr', 'pt', 'de', 'it', 'ru', 'ar', 'eu', 'lv', 'nl']
-        if self.language not in supported_langs:
+        if self.language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
@@ -53,12 +53,12 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
         return True
 
 
+@supported_languages('en')
 class SE_EasyWordAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.language = language
-        supported_langs = ['en']
-        if self.language not in supported_langs:
+        if self.language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
@@ -84,12 +84,12 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator):
                 print("Found not so easy word: ", t_str)
         return True
 
+@supported_languages('de', 'en')
 class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.language = language
-        supported_langs = ['de', 'en']
-        if self.language not in supported_langs:
+        if self.language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
@@ -121,13 +121,13 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
                 cas.add(anno)
         return True
 
+@supported_languages('en')
 class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
     """ADD DOCUMENTATION."""
 
     def __init__(self, language):
         self.language = language
-        supported_langs = ['en']
-        if self.language not in supported_langs:
+        if self.language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )

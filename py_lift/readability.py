@@ -1,5 +1,5 @@
 from cassis import Cas
-from util import load_lift_typesystem
+from util import load_lift_typesystem, supported_languages
 from textstat import textstat
 from extractors import FEL_BaseExtractor
 from abc import abstractmethod
@@ -32,11 +32,10 @@ class FEL_TextstatReadabilityScore(FEL_BaseExtractor):
 
         return True
 
-
+@supported_languages('en', 'de', 'es', 'fr', 'it', 'nl', 'ru')
 class FE_TextstatFleschIndex(FEL_TextstatReadabilityScore):
     def __init__(self, language):
-        supported_langs = ['en', 'de', 'es', 'fr', 'it', 'nl', 'ru']
-        if language not in supported_langs:
+        if language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
@@ -48,10 +47,10 @@ class FE_TextstatFleschIndex(FEL_TextstatReadabilityScore):
     def score(self, text: str) -> float:
         return textstat.flesch_reading_ease(text)
 
+@supported_languages('en', 'pl')
 class FE_TextstatGunningFog(FEL_TextstatReadabilityScore):
     def __init__(self, language):
-        supported_langs = ['en', 'pl']
-        if language not in supported_langs:
+        if language not in self.supported_languages:
             raise ValueError(
                 f"{self.language} is not a supported language."
             )

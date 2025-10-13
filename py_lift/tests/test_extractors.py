@@ -33,7 +33,7 @@ def test_ratio_extractors():
 
     i = 0
     for feature in cas.select(T_FEATURE):
-        assert feature.get('name') == T_TOKEN + '_PER_' + T_SENT
+        assert feature.get('name') == 'Token_PER_Sentence'
         assert feature.value == 4.5
         i += 1
 
@@ -109,9 +109,9 @@ def test_count_extractor():
     
     i = 0
     for feature in cas.select(T_FEATURE):
-        if feature.get('name') == 'COUNT_UNIQUE_' + T_TOKEN:
+        if feature.get('name') == 'COUNT_UNIQUE_Token':
             assert feature.value == 6
-        elif feature.get('name') == 'COUNT_' + T_TOKEN:
+        elif feature.get('name') == 'COUNT_Token':
             assert feature.value == 9
         i += 1
 

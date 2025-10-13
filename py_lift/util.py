@@ -8,7 +8,18 @@ from cassis import Cas
 from dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
 from types import ModuleType
 from typing import Type, List
- 
+from lingua import LanguageDetectorBuilder
+
+def detect_language(text: str) -> str:
+    detector = LanguageDetectorBuilder.from_all_spoken_languages().build()
+    return str(detector.detect_language_of(text).iso_code_639_1.name).lower()
+
+def supported_languages(*languages):
+    def decorator(cls):
+        cls.supported_languages = languages
+        return cls
+    return decorator
+
 def load_lift_typesystem() -> cassis.TypeSystem:
     return load_typesystem('data/TypeSystem.xml')
 
