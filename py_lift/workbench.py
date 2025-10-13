@@ -11,7 +11,7 @@ import annotators
 import extractors
 import readability
 from annotators import SEL_BaseAnnotator
-from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
+from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
 from frequency import *
 from readability import FEL_TextstatReadabilityScore
 
@@ -25,6 +25,8 @@ spacy = Spacy_Preprocessor(language='de')
 cas = spacy.run(text)
 
 classes_SEL = get_all_subclasses(annotators, SEL_BaseAnnotator)
+#print('All subclasses')
+#print(classes_SEL)
 
 #col_a, col_b = st.columns(2)
 
@@ -37,6 +39,8 @@ with st.sidebar:
 
     try:
         params = get_constructor_params(selected_SE)
+        #print('params')
+        #print(params)
 
         user_inputs = {}
         for param in params:
@@ -50,9 +54,11 @@ with st.sidebar:
         select_type = st.selectbox('Select type to highlight',
                                    ['Abstractness', 'Frequency', 'Spelling', 'POS', 'Token'])
         if st.button("Run SEs"):
-            obj = selected_SE(**user_inputs)
+            for s in name_to_class:
+                obj = selected_SE(**user_inputs)
             if not obj.process(cas):
                 st.error("Processing of {obj.__class__.__name__} failed.")
+
     except Exception as e:
         st.error(f"Error: {e}")
 
@@ -62,14 +68,15 @@ with st.sidebar:
     classes_readability = get_all_subclasses(readability, FEL_TextstatReadabilityScore)
     classes_counters = get_all_subclasses(extractors, FEL_AnnotationCounter)
     classes_ratios = get_all_subclasses(extractors, FEL_AnnotationRatio)
+    classes_abstractness = get_all_subclasses(extractors, FEL_Abstractness_min_max_avg)
 
-    name_to_FEs = {cls.__name__: cls for cls in chain(classes_readability, classes_counters, classes_ratios)}
+    name_to_FEs = {cls.__name__: cls for cls in chain(classes_readability, classes_counters, classes_ratios, classes_abstractness)}
     selected_FE_names = st.multiselect("Choose one or more FEs", name_to_FEs.keys())
     selected_FEs = [name_to_FEs[name] for name in selected_FE_names]
 
 
     # run all selected FEs
-    #fe_params = {'language': 'de'}
+    fe_params = {'language': 'de'}
     fe_params = {}
     try:
         if st.button("Run FEs"):
@@ -90,8 +97,9 @@ with col1:
     span_vis.allow_highlight_overlap = True
 
     match select_type:
-        case 'Abstracness':
+        case 'Abstractness':
             span_vis.add_type(type_name='org.lift.type.AbstractnessConcreteness', feature_name='value')
+            print('abst')
         case 'Spelling':
             span_vis.add_type(T_ANOMALY)
         case 'Token':
@@ -101,6 +109,7 @@ with col1:
         case 'POS':
             span_vis.add_type(type_name='de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS',
                               feature_name='PosValue')
+
 
     html = span_vis.visualize(cas)
     st.html(html)

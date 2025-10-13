@@ -1,7 +1,7 @@
 import spacy
 import unicodedata
 from cassis import Cas
-from dkpro import T_TOKEN, T_SENT, T_POS, T_DEP
+from dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
 from util import load_lift_typesystem
 
 class Spacy_Preprocessor:
@@ -37,6 +37,7 @@ class Spacy_Preprocessor:
         S = self.ts.get_type(T_SENT)
         P = self.ts.get_type(T_POS)
         D = self.ts.get_type(T_DEP)
+        L = self.ts.get_type(T_LEMMA)
 
         for sent in doc.sents:
             begin = doc[sent.start-1].idx
@@ -49,6 +50,10 @@ class Spacy_Preprocessor:
             cas_token = T(begin=token.idx, end=token.idx+len(token.text), id=token.i)
             self.cas.add(cas_token)
             token_annos.append(cas_token)
+
+            #
+            cas_lemma = L(begin=token.idx, end=token.idx+len(token.text), value=token.lemma_)
+            self.cas.add(cas_lemma)
 
             # TODO need to map from spacy pos tags to dkpro 
             cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.tag_)

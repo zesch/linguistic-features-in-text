@@ -10,6 +10,68 @@ class FEL_BaseExtractor(ABC):
     def extract(self, cas: Cas) -> bool:
         pass
 
+class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
+    def __init__(self):
+        self.ts = load_lift_typesystem()
+        self.type = 'org.lift.type.AbstractnessConcreteness'
+
+    def count_and_collect(self, cas, type):
+        size = 0
+        vals = []
+        # geht nicht rein
+        print(type)
+        for anno in cas.select(type):
+            print('heloooooooo')
+            size += 1
+            vals.append(anno.value)
+
+        return [size, vals]
+
+
+    def extract(self, cas: Cas) -> bool:
+        count = self.count_and_collect(cas, self.type)[0]
+        print(count)
+        vals = self.count_and_collect(cas, self.type)[1]
+        print(vals)
+
+        min_val = -1
+        max_val = -1
+        added_vals = 0
+
+        for val in vals:
+            added_vals += val
+
+            if min_val == -1:
+                min_val = val
+            else:
+                if val < min_val:
+                    min_val = val
+
+            if max_val == -1:
+                max_val = val
+            else:
+                if val > max_val:
+                    max_val = val
+
+        avg = added_vals/count
+        # write feature value in CAS
+        T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
+
+        F = self.ts.get_type(T_FEATURE)
+        feature = F(name='Abstractness_AVG', value=avg, begin=0, end=0)
+        cas.add(feature)
+
+        F = self.ts.get_type(T_FEATURE)
+        feature = F(name='Abstractness_MIN', value=min_val, begin=0, end=0)
+        cas.add(feature)
+
+        F = self.ts.get_type(T_FEATURE)
+        feature = F(name='Abstractness_MAX', value=max_val, begin=0, end=0)
+        cas.add(feature)
+
+        return True
+
+
 class FEL_AnnotationCounter(FEL_BaseExtractor):
     def __init__(
             self, 
@@ -124,5 +186,7 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
     def __init__(self):
         super().__init__('EasyWord',
                          'Token')
-
+class FE_Abstractness_Stats(FEL_Abstractness_min_max_avg):
+    def __init__(self):
+        super().__init__()
 
