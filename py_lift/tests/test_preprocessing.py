@@ -7,12 +7,9 @@ from dkpro import T_TOKEN, T_POS, T_DEP, T_SENT
 
 def test_spacy_preprocessing():
     ts = load_lift_typesystem()
-    cas = Cas(typesystem=ts)
-    cas.sofa_string = "Demokratie ist eher abstrakt. Leben ist konkret."
-
-
+    text = "Demokratie ist eher abstrakt. Leben ist konkret."
     spacy = Spacy_Preprocessor(language='de')
-    cas = spacy.run(cas.sofa_string)
+    cas = spacy.run(text)
 
     gold_tokens = ["Demokratie", "ist", "eher", "abstrakt", ".", "Leben", "ist", "konkret", "."]
     gold_lemmas = ["Demokratie", "sein", "eher", "abstrakt", ".", "Leben", "sein", "konkret", "."]

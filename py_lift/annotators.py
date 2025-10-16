@@ -25,7 +25,7 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
-        self.spell = SpellChecker(language=self.language)
+        self.spell = SpellChecker(language=self.language, case_sensitive=True)
             
         self.ts = load_lift_typesystem()
         
