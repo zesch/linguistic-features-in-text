@@ -1,7 +1,5 @@
 import pytest
-from util import load_lift_typesystem
-from cassis import Cas
-from frequency import SE_TokenZipfFrequency
+from annotators.frequency import SE_TokenZipfFrequency
 from dkpro import T_TOKEN
 from lift_fixtures import *
 

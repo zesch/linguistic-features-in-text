@@ -1,5 +1,5 @@
 import pytest
-from annotators import SE_SpellErrorAnnotator
+from annotators.misc import SE_SpellErrorAnnotator
 from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
 from readability import FE_TextstatFleschIndex
 from lift_fixtures import *

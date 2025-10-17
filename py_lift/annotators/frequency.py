@@ -2,8 +2,9 @@ from cassis import Cas
 from util import load_lift_typesystem
 from wordfreq import zipf_frequency
 from dkpro import T_TOKEN
+from annotators.api import SEL_BaseAnnotator
 
-class SE_TokenZipfFrequency:
+class SE_TokenZipfFrequency(SEL_BaseAnnotator):
 
     def __init__(self, language):
         self.ts = load_lift_typesystem()

@@ -7,12 +7,12 @@ from preprocessing import Spacy_Preprocessor
 from util import get_all_subclasses, get_constructor_params, load_lift_typesystem
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
-import annotators
+import annotators.misc as misc
 import extractors
 import readability
-from annotators import SEL_BaseAnnotator
+from annotators.misc import SEL_BaseAnnotator
 from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
-from frequency import *
+from annotators.frequency import *
 from readability import FEL_TextstatReadabilityScore
 
 st.set_page_config(layout='wide')
@@ -24,7 +24,7 @@ ts = load_lift_typesystem()
 spacy = Spacy_Preprocessor(language='de')
 cas = spacy.run(text)
 
-classes_SEL = get_all_subclasses(annotators, SEL_BaseAnnotator)
+classes_SEL = get_all_subclasses(misc, SEL_BaseAnnotator)
 #print('All subclasses')
 #print(classes_SEL)
 

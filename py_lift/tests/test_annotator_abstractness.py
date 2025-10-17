@@ -2,7 +2,7 @@
 import pytest
 from util import load_lift_typesystem, construct_cas, assert_annotations
 from cassis import Cas
-from annotators import SE_AbstractnessAnnotator
+from annotators.misc import SE_AbstractnessAnnotator
 
 def test_abstractness_annotator():
     ts = load_lift_typesystem()

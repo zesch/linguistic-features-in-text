@@ -1,7 +1,7 @@
 
 import pytest
 from preprocessing import Spacy_Preprocessor
-from annotators import SE_SpellErrorAnnotator
+from annotators.misc import SE_SpellErrorAnnotator
 from dkpro import T_ANOMALY
 
 def test_spelling_annotator():

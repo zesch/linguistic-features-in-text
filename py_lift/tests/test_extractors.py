@@ -4,7 +4,7 @@ from cassis import Cas, load_cas_from_xmi
 from extractors import FE_TokensPerSentence, FEL_AnnotationCounter, FE_EasyWordRatio
 from lift_fixtures import *
 from dkpro import T_TOKEN, T_POS, T_LEMMA, T_SENT, T_FEATURE
-from annotators import SE_EasyWordAnnotator
+from annotators.misc import SE_EasyWordAnnotator
 
 def test_ratio_extractors():
     ts = load_lift_typesystem()

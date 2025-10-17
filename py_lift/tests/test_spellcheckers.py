@@ -1,5 +1,5 @@
 import pytest
-from annotators import SE_SpellErrorAnnotator
+from annotators.misc import SE_SpellErrorAnnotator
 from dkpro import T_ANOMALY
 from lift_fixtures import *
 
