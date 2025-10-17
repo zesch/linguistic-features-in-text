@@ -12,7 +12,9 @@ class Spacy_Preprocessor:
         if language == "en":
             self.nlp = spacy.load("en_core_web_md")
         elif language == "de":
-            self.nlp = spacy.load("de_core_news_sm")
+            self.nlp = spacy.load("de_core_news_lg")
+        elif language == "fr":
+            self.nlp = spacy.load("fr_core_news_sm")
         else:
             raise ValueError(f"Language '{language}' not supported in Spacy_Preprocessor")
         

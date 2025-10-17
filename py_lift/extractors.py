@@ -18,10 +18,8 @@ class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
     def count_and_collect(self, cas, type):
         size = 0
         vals = []
-        # geht nicht rein
-        print(type)
+
         for anno in cas.select(type):
-            print('heloooooooo')
             size += 1
             vals.append(anno.value)
 
@@ -39,19 +37,19 @@ class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
         added_vals = 0
 
         for val in vals:
-            added_vals += val
+            added_vals += float(val)
 
             if min_val == -1:
-                min_val = val
+                min_val = float(val)
             else:
-                if val < min_val:
-                    min_val = val
+                if float(val) < min_val:
+                    min_val = float(val)
 
             if max_val == -1:
-                max_val = val
+                max_val = float(val)
             else:
-                if val > max_val:
-                    max_val = val
+                if float(val) > max_val:
+                    max_val = float(val)
 
         avg = added_vals/count
         # write feature value in CAS
@@ -59,14 +57,17 @@ class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_AVG', value=avg, begin=0, end=0)
+        print(feature)
         cas.add(feature)
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_MIN', value=min_val, begin=0, end=0)
+        print(feature)
         cas.add(feature)
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_MAX', value=max_val, begin=0, end=0)
+        print(feature)
         cas.add(feature)
 
         return True

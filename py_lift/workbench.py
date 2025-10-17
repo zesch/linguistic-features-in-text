@@ -8,6 +8,7 @@ from util import get_all_subclasses, get_constructor_params, load_lift_typesyste
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 import annotators.misc as misc
+import annotators.frequency as frequency
 import extractors
 import readability
 from annotators.misc import SEL_BaseAnnotator
@@ -25,6 +26,7 @@ spacy = Spacy_Preprocessor(language='de')
 cas = spacy.run(text)
 
 classes_SEL = get_all_subclasses(misc, SEL_BaseAnnotator)
+classes_freq = get_all_subclasses(frequency, SEL_BaseAnnotator)
 #print('All subclasses')
 #print(classes_SEL)
 
@@ -33,7 +35,7 @@ classes_SEL = get_all_subclasses(misc, SEL_BaseAnnotator)
 with st.sidebar:
 #with col_a:
 
-    name_to_class = {cls.__name__: cls for cls in classes_SEL}
+    name_to_class = {cls.__name__: cls for cls in chain(classes_SEL, classes_freq)}
     selected_class_name = st.selectbox("Choose an SE", name_to_class.keys())
     selected_SE = name_to_class[selected_class_name]
 
@@ -56,6 +58,7 @@ with st.sidebar:
         if st.button("Run SEs"):
             for s in name_to_class:
                 obj = selected_SE(**user_inputs)
+                st.session_state['cas'] = cas
             if not obj.process(cas):
                 st.error("Processing of {obj.__class__.__name__} failed.")
 
@@ -64,6 +67,8 @@ with st.sidebar:
 
 
 #with col_b:
+if "cas" in st.session_state:
+    my_cas = st.session_state["cas"]
 
     classes_readability = get_all_subclasses(readability, FEL_TextstatReadabilityScore)
     classes_counters = get_all_subclasses(extractors, FEL_AnnotationCounter)
@@ -83,7 +88,7 @@ with st.sidebar:
             for selected_FE in selected_FEs:
                 # TODO how to configure that in streamlit, assuming language parameter for now
                 obj = selected_FE(**fe_params)
-                if not obj.extract(cas):
+                if not obj.extract(my_cas):
                     st.error("Processing of {obj.__class__.__name__} failed.")
     except Exception as e:
         st.error(f"Error: {e}")
@@ -111,10 +116,10 @@ with col1:
                               feature_name='PosValue')
 
 
-    html = span_vis.visualize(cas)
+    html = span_vis.visualize(my_cas)
     st.html(html)
 
 with col2:
-    rows = [{'name': anno.name, 'value': anno.value} for anno in cas.select('FeatureAnnotationNumeric')]
+    rows = [{'name': anno.name, 'value': anno.value} for anno in my_cas.select('FeatureAnnotationNumeric')]
     df = pl.DataFrame(rows)
     st.dataframe(df)
