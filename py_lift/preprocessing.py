@@ -14,7 +14,9 @@ class Spacy_Preprocessor:
         elif language == "de":
             self.nlp = spacy.load("de_core_news_lg")
         elif language == "fr":
-            self.nlp = spacy.load("fr_core_news_sm")
+            self.nlp = spacy.load("fr_core_news_lg")
+        elif language == "tr":
+            self.nlp = spacy.load("tr_core_news_md")
         else:
             raise ValueError(f"Language '{language}' not supported in Spacy_Preprocessor")
         
@@ -49,17 +51,27 @@ class Spacy_Preprocessor:
 
         token_annos = []
         for token in doc:
-            cas_token = T(begin=token.idx, end=token.idx+len(token.text), id=token.i)
-            self.cas.add(cas_token)
-            token_annos.append(cas_token)
-
-            #
+            # TODO need to map from spacy pos tags to dkpro 
+            cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.tag_)
+            print(cas_pos)
+            self.cas.add(cas_pos)
+            
             cas_lemma = L(begin=token.idx, end=token.idx+len(token.text), value=token.lemma_)
             self.cas.add(cas_lemma)
 
-            # TODO need to map from spacy pos tags to dkpro 
-            cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.tag_)
-            self.cas.add(cas_pos)
+            cas_token = T(
+                begin=token.idx, 
+                end=token.idx+len(token.text), 
+                id=token.i,
+                pos=cas_pos,
+                lemma=cas_lemma
+                )
+            self.cas.add(cas_token)
+            token_annos.append(cas_token)
+
+
+
+    
 
         # need another loop to ensure that all tokens are already in the CAS
         for token in doc:

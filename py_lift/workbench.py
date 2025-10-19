@@ -1,17 +1,17 @@
 import streamlit as st
 import inspect
 from cassis import Cas
-from dkpro import T_ANOMALY
+from dkpro import T_ANOMALY, T_POS
 from itertools import chain
 from preprocessing import Spacy_Preprocessor
-from util import get_all_subclasses, get_constructor_params, load_lift_typesystem
+from util import get_all_subclasses, get_constructor_params, load_lift_typesystem, detect_language
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 import annotators.misc as misc
 import annotators.frequency as frequency
 import extractors
 import readability
-from annotators.misc import SEL_BaseAnnotator
+from annotators.api import SEL_BaseAnnotator
 from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
 from annotators.frequency import *
 from readability import FEL_TextstatReadabilityScore
@@ -20,9 +20,11 @@ st.set_page_config(layout='wide')
 st.title('LiFT Workbench')
 
 text = st.text_area('Enter text', value="Das ist ein einfacher Beispielsatz. Hier ist ein zweiter Satz mit einem Fehler: einfcher.")    
+language_detected = detect_language(text)
+st.write(f'Detected language: {language_detected}')
 
 ts = load_lift_typesystem()
-spacy = Spacy_Preprocessor(language='de')
+spacy = Spacy_Preprocessor(language=language_detected)
 cas = spacy.run(text)
 
 classes_SEL = get_all_subclasses(misc, SEL_BaseAnnotator)
@@ -54,7 +56,7 @@ with st.sidebar:
                 user_inputs[param.name] = st.text_input(param.name)
 
         select_type = st.selectbox('Select type to highlight',
-                                   ['Abstractness', 'Frequency', 'Spelling', 'POS', 'Token'])
+                                   ['Abstractness', 'Frequency', 'Spelling', 'POS', 'Token'], index=3)
         if st.button("Run SEs"):
             for s in name_to_class:
                 obj = selected_SE(**user_inputs)
@@ -112,8 +114,7 @@ with col1:
         case 'Frequency':
             span_vis.add_type(type_name='org.lift.type.Frequency', feature_name='frequencyBand')
         case 'POS':
-            span_vis.add_type(type_name='de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS',
-                              feature_name='PosValue')
+            span_vis.add_type(type_name=T_POS, feature_name='PosValue')
 
 
     html = span_vis.visualize(my_cas)

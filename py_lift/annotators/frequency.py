@@ -1,9 +1,55 @@
 from cassis import Cas
-from util import load_lift_typesystem
+from util import load_lift_typesystem, supported_languages
 from wordfreq import zipf_frequency
 from dkpro import T_TOKEN
 from annotators.api import SEL_BaseAnnotator
 
+
+@supported_languages(
+'ar',
+'bn',
+'bs',
+'bg',
+'ca',
+'zh',
+'hr',
+'cs',
+'da',
+'nl',
+'en',
+'fi',
+'fr',
+'de',
+'el',
+'he',
+'hi',
+'hu',
+'is',
+'id',
+'it',
+'ja',
+'ko',
+'lv',
+'lt',
+'mk',
+'ms',
+'nb',
+'fa',
+'pl',
+'pt',
+'ro',
+'ru',
+'sk',
+'sl',
+'sr',
+'es',
+'sv',
+'fi',
+'ta',
+'tr',
+'uk',
+'ur',
+'vi')
 class SE_TokenZipfFrequency(SEL_BaseAnnotator):
 
     def __init__(self, language):
@@ -14,7 +60,10 @@ class SE_TokenZipfFrequency(SEL_BaseAnnotator):
         F = self.ts.get_type("org.lift.type.Frequency")
 
         for token in cas.select(T_TOKEN):
-            freq= zipf_frequency(token.get_covered_text(), self.language)
+            if token.pos.PosValue in ['PUNCT', 'SYM']:
+                continue
+
+            freq = zipf_frequency(token.get_covered_text(), self.language)
             if 2 > freq > 0:
                 fb = 'f1'
             elif 3 > freq >= 2:

@@ -49,3 +49,9 @@ def test_spacy_preprocessing():
         #assert dep.get('Governor') is not None
     for i in range(len(found_dep)):
         assert found_dep[i] == [gold_dep[i][0], gold_dep[i][1], gold_dep[i][3]]
+
+def test_spacy_tr():
+    ts = load_lift_typesystem()
+    text = "Okulda Türkçe öğrendim ama çok kötü konuşuyorum."
+    spacy = Spacy_Preprocessor(language='tr')
+    cas = spacy.run(text)
