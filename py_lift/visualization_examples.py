@@ -1,6 +1,6 @@
 import streamlit as st
 from cassis import Cas
-from dkpro import T_ANOMALY, T_POS
+from dkpro import T_ANOMALY, T_POS, T_TOKEN
 from preprocessing import Spacy_Preprocessor
 from util import load_lift_typesystem, detect_language
 import polars as pl
@@ -14,7 +14,7 @@ def get_preprocessed_cas(text: str, language: str) -> Cas:
     spacy = Spacy_Preprocessor(language=language)
     return spacy.run(text)
 
-def vis_tr_pos(cas: Cas):
+def vis_pos(cas: Cas):
     span_vis = SpanVisualizer(ts)
     span_vis.selected_span_type = SpanVisualizer.HIGHLIGHT
     span_vis.add_type(
@@ -25,25 +25,25 @@ def vis_tr_pos(cas: Cas):
     html = span_vis.visualize(cas)
     st.html(html)
 
-def vis_de_finite_verbs(cas: Cas):
+def vis_finite_verbs(cas: Cas, span_type = SpanVisualizer.UNDERLINE):
     span_vis = SpanVisualizer(ts)
-    span_vis.selected_span_type = SpanVisualizer.UNDERLINE
-    span_vis.add_type(T_ANOMALY, default_label="SpellError", color="#F4C7C3")
-    span_vis.add_type("org.lift.type.Structure", default_label="FiniteVerb", color="#C3F4C9")
+    span_vis.selected_span_type = span_type
+    span_vis.add_type(T_ANOMALY, label="SpellError", color="#F4C7C3")
+    span_vis.add_type("org.lift.type.Structure", label="FiniteVerb", color="#C3F4C9")
 
     html = span_vis.visualize(cas)
     st.html(html)
 
-def vis_fr_frequency(cas: Cas):
+def vis_frequency(cas: Cas):
     span_vis = SpanVisualizer(ts)
     span_vis.selected_span_type = SpanVisualizer.HIGHLIGHT
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f1", color="#F60707")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f2", color="#F87171")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f3", color="#F99090")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f4", color="#F9B0B0")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f5", color="#F8C2C2")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f6", color="#F8E2E2")
-    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f7", color="#F7F3F3")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f1", label = "1", color="#F60707")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f2", label = "2", color="#F87171")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f3", label = "3", color="#F99090")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f4", label = "4", color="#F9B0B0")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f5", label = "5", color="#F8C2C2")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f6", label = "6", color="#F8E2E2")
+    span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="f7", label = "7", color="#F7F3F3")
     span_vis.add_feature("org.lift.type.Frequency", feature="frequencyBand", value="oov", color="#868FF0")
 
     html = span_vis.visualize(cas)
@@ -59,7 +59,7 @@ tr_example = st.text_area('Enter text', value="Okulda Türkçe öğrendim ama ç
 language_detected = detect_language(tr_example)
 st.write(f'Detected language: {language_detected}')
 tr_cas = get_preprocessed_cas(text=tr_example, language=language_detected)
-vis_tr_pos(tr_cas)
+vis_pos(tr_cas)
 
 
 ## German finite verb example with spelling errors
@@ -68,7 +68,7 @@ de_example = "Das Aufkommen des Buchdruckes fürte zu einer Umstrukturierung der
 de_cas = get_preprocessed_cas(text=de_example, language='de')
 SE_FiniteVerbAnnotator('de').process(de_cas)
 SE_SpellErrorAnnotator('de').process(de_cas)
-vis_de_finite_verbs(de_cas)
+vis_finite_verbs(de_cas)
 
 fr_example = """
 La première émission de lumière par un semi-conducteur date de 1907 et est découverte par Henry Round, ingénieur chez Marconi. 
@@ -77,4 +77,14 @@ le carbure de silicium alors utilisé comme semi-conducteur ayant de piètres pr
 """
 fr_cas = get_preprocessed_cas(text=fr_example, language='fr')
 SE_TokenZipfFrequency('fr').process(fr_cas)
-vis_fr_frequency(fr_cas)
+vis_frequency(fr_cas)
+
+
+sl_example = """
+Vsi ljudje se rodijo svobodni ter imajo enako dostojanstvo in pravice. 
+Dana sta jim razum in vest, in bi morali drug z drugim ravnati v duhu bratstva.
+"""
+sl_cas = get_preprocessed_cas(text=sl_example, language='sl')
+
+SE_FiniteVerbAnnotator('sl').process(sl_cas)
+vis_finite_verbs(sl_cas, span_type=SpanVisualizer.HIGHLIGHT)

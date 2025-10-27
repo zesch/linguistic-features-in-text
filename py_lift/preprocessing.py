@@ -15,6 +15,8 @@ class Spacy_Preprocessor:
             self.nlp = spacy.load("de_core_news_lg")
         elif language == "fr":
             self.nlp = spacy.load("fr_core_news_lg")
+        elif language == "sl":
+            self.nlp = spacy.load("sl_core_news_sm")
         elif language == "tr":
             self.nlp = spacy.load("tr_core_news_md")
         else:
@@ -53,7 +55,6 @@ class Spacy_Preprocessor:
         for token in doc:
             # TODO need to map from spacy pos tags to dkpro 
             cas_pos = P(begin=token.idx, end=token.idx+len(token.text), PosValue=token.tag_)
-            print(cas_pos)
             self.cas.add(cas_pos)
             
             cas_lemma = L(begin=token.idx, end=token.idx+len(token.text), value=token.lemma_)

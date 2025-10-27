@@ -16,7 +16,7 @@ class SEL_ListReader(ABC):
         with open(self.filename, 'r', encoding='utf-8') as f:
             return {line.strip() for line in f if line.strip()}
         
-@supported_languages('de', 'en')
+@supported_languages('de', 'en', 'sl')
 class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
     STRUCTURE_NAME = "FiniteVerb"
@@ -31,6 +31,7 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         lang_to_file = {
             'en': '../shared_resources/resources/finite_verb_postags/finite_verb_postags_en_ptb.txt',
             'de': '../shared_resources/resources/finite_verb_postags/finite_verb_postags_de_stts.txt',
+            'sl': '../shared_resources/resources/finite_verb_postags/sl_MULText-East_finite_verb_postags.txt',
         }
         try:
             return lang_to_file[language]
