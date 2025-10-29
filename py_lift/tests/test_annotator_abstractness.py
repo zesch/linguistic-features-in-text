@@ -6,8 +6,6 @@ from annotators.misc import SE_AbstractnessAnnotator
 
 def test_abstractness_annotator():
     ts = load_lift_typesystem()
-    cas = Cas(typesystem=ts)
-    cas.sofa_string = "Demokratie ist eher abstrakt. Leben ist konkret."
 
     tokens = ["Demokratie", "ist", "eher", "abstrakt", ".", "Leben", "ist", "konkret", "."]
     lemmas = ["Demokratie", "sein", "eher", "abstrakt", ".", "Leben", "sein", "konkret", "."]

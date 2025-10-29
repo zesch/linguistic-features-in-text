@@ -5,9 +5,9 @@ from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
 from annotators.api import SEL_BaseAnnotator
+from pathlib import Path
 
-# TODO switch to polars?
-import pandas as pd
+import polars as pl
 
 @supported_languages('en', 'es', 'fr', 'pt', 'de', 'it', 'ru', 'ar', 'eu', 'lv', 'nl')
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
@@ -45,37 +45,6 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
         return True
 
-
-@supported_languages('en')
-class SE_EasyWordAnnotator(SEL_BaseAnnotator):
-
-    def __init__(self, language):
-        self.language = language
-        if self.language not in self.supported_languages:
-            raise ValueError(
-                f"{self.language} is not a supported language."
-            )
-        from pathlib import Path
-
-        file_path = Path(__file__).parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
-
-        with file_path.open("r", encoding="utf-8") as f:
-            self.easy_words = [line.strip() for line in f]
-
-        self.ts = load_lift_typesystem()
-        self.EW = self.ts.get_type("org.lift.type.EasyWord")
-
-    def process(self, cas: Cas) -> bool:
-        for lemma in cas.select(T_LEMMA):
-            t_str = lemma.value
-            if t_str in self.easy_words:
-                easy_word = self.EW(begin=lemma.get('begin'), end=lemma.get('end'))
-                cas.add(easy_word)
-                print("Found easy word: ", t_str)
-            else:
-                print("Found not so easy word: ", t_str)
-        return True
-
 @supported_languages('de', 'en')
 class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
@@ -85,7 +54,6 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
-        from pathlib import Path
 
         # file_path = Path(
         #     __file__).parent.parent / "shared_resources" / "resources" / "abstractness" / self.language / "ratings_lrec16_koeper_ssiw.txt"
@@ -123,14 +91,12 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
             raise ValueError(
                 f"{self.language} is not a supported language."
             )
-        from pathlib import Path
 
         file_path = Path(
             __file__).parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"
 
-        df = pd.read_csv(file_path)
-        df.columns = ['word', 'pos', 'level']
-        df = df.drop_duplicates(subset=['word', 'pos'], keep='first')
+        df = pl.read_csv(file_path)
+        df = df.unique(subset=['word', 'pos'])
 
         self.pos_tag_map = {
 
@@ -208,9 +174,5 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
                 else:
                     cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
                     cas.add(cefr_word)
-
-                print("Found evp cefr word: ", t_str)
-            else:
-                print("Found not so evp cefr word: ", t_str)
 
         return True

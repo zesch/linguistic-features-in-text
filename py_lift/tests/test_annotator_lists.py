@@ -1,8 +1,9 @@
 
 import pytest
 from util import load_lift_typesystem, construct_cas, assert_annotations
+from lift_fixtures import *
 from cassis import Cas
-from annotators.lists import SE_FiniteVerbAnnotator
+from annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator
 
 def test_finite_verbs_annotator():
     ts = load_lift_typesystem()
@@ -30,3 +31,14 @@ def test_finite_verbs_annotator():
         value_attr="name"
     )
     
+def test_easy_words_annotator(cas_en_simple):
+
+    SE_EasyWordAnnotator("en").process(cas_en_simple)
+
+    assert len(cas_en_simple.select("org.lift.type.EasyWord")) == 2
+
+def test_easy_words_annotator_unsupported_language():
+    with pytest.raises(ValueError) as excinfo:
+        SE_EasyWordAnnotator("de")
+    
+    assert "de is not a supported language." in str(excinfo.value)
