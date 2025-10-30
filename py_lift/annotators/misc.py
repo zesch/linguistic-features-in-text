@@ -1,6 +1,7 @@
 from cassis import Cas
 
-from util import load_lift_typesystem, read_tsv_to_dict, supported_languages
+from decorators import supported_languages
+from util import load_lift_typesystem, read_tsv_to_dict
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
@@ -13,15 +14,9 @@ import polars as pl
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
-        self.language = language
-        if self.language not in self.supported_languages:
-            raise ValueError(
-                f"{self.language} is not a supported language."
-            )
+        super().__init__(language)
         self.spell = SpellChecker(language=self.language, case_sensitive=True)
-            
-        self.ts = load_lift_typesystem()
-        
+                
         self.A = self.ts.get_type(T_ANOMALY)
         self.S = self.ts.get_type(T_SUGGESTION)
         self.FSArray = self.ts.get_type(TYPE_NAME_FS_ARRAY)
@@ -49,11 +44,7 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
     def __init__(self, language):
-        self.language = language
-        if self.language not in self.supported_languages:
-            raise ValueError(
-                f"{self.language} is not a supported language."
-            )
+        super().__init__(language)
 
         # file_path = Path(
         #     __file__).parent.parent / "shared_resources" / "resources" / "abstractness" / self.language / "ratings_lrec16_koeper_ssiw.txt"
@@ -86,11 +77,7 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
     """ADD DOCUMENTATION."""
 
     def __init__(self, language):
-        self.language = language
-        if self.language not in self.supported_languages:
-            raise ValueError(
-                f"{self.language} is not a supported language."
-            )
+        super().__init__(language)
 
         file_path = Path(
             __file__).parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"

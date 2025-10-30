@@ -1,4 +1,5 @@
 from cassis import Cas
+from dkpro import T_FEATURE
 from util import load_lift_typesystem
 from typing import Callable, Any, Optional
 from abc import ABC, abstractmethod
@@ -6,13 +7,16 @@ from abc import ABC, abstractmethod
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
     
+    def __init__(self):
+        self.ts = load_lift_typesystem()
+    
     @abstractmethod
     def extract(self, cas: Cas) -> bool:
         pass
 
 class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
     def __init__(self):
-        self.ts = load_lift_typesystem()
+        super().__init__()
         self.type = 'org.lift.type.AbstractnessConcreteness'
 
     def count_and_collect(self, cas, type):
@@ -52,20 +56,16 @@ class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
                     max_val = float(val)
 
         avg = added_vals/count
-        # write feature value in CAS
-        T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_AVG', value=avg, begin=0, end=0)
         print(feature)
         cas.add(feature)
 
-        F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_MIN', value=min_val, begin=0, end=0)
         print(feature)
         cas.add(feature)
 
-        F = self.ts.get_type(T_FEATURE)
         feature = F(name='Abstractness_MAX', value=max_val, begin=0, end=0)
         print(feature)
         cas.add(feature)
@@ -82,7 +82,7 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
             unique=False, 
             custom_to_string: Optional[Callable[[Any], str]] = None
     ):
-        self.ts = load_lift_typesystem()
+        super().__init__()
         self.type = type
         self.unique = unique
         self.feature_path = feature_path
@@ -127,9 +127,6 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
         if self.feature_path != '':
             name = name + '_' + self.feature_path + '_' + '_'.join(self.allowed_feature_values)
 
-        # write feature value in CAS
-        T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
-
         F = self.ts.get_type(T_FEATURE)
         feature = F(name=name, value=count, begin=0, end=0)
         cas.add(feature)
@@ -140,7 +137,7 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
 class FEL_AnnotationRatio(FEL_BaseExtractor):
 
     def __init__(self, type_dividend, type_divisor):
-        self.ts = load_lift_typesystem()
+        super().__init__()
         self.dividend_type = type_dividend
         self.divisor_type = type_divisor
 
@@ -158,9 +155,6 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         ratio = count_dividend / count_divisor
 
         name = self.dividend_type + '_PER_' + self.divisor_type
-
-        # write feature value in CAS
-        T_FEATURE = 'org.lift.type.FeatureAnnotationNumeric'
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name=name, value=ratio, begin=0, end=0)
@@ -182,7 +176,6 @@ class FE_TokensPerSentence(FEL_AnnotationRatio):
         super().__init__('Token',
                          'Sentence')
 
-
 class FE_EasyWordRatio(FEL_AnnotationRatio):
     def __init__(self):
         super().__init__('EasyWord',
@@ -190,4 +183,3 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
 class FE_Abstractness_Stats(FEL_Abstractness_min_max_avg):
     def __init__(self):
         super().__init__()
-

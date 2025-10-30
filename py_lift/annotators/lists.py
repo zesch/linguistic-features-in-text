@@ -1,6 +1,5 @@
 from cassis import Cas
-
-from util import load_lift_typesystem, supported_languages
+from decorators import supported_languages
 from dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA
 from abc import ABC
 from annotators.api import SEL_BaseAnnotator
@@ -26,10 +25,10 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
     STRUCTURE_NAME = "FiniteVerb"
 
     def __init__(self, language):
-        self.language = language
         filename = self._get_filename_for_language(language)
         SEL_ListReader.__init__(self, filename)
-        self.S = load_lift_typesystem().get_type(T_STRUCTURE)
+        SEL_BaseAnnotator.__init__(self, language)
+        self.S = self.ts.get_type(T_STRUCTURE)
 
     def _get_filename_for_language(self, language):
         lang_to_file = {
@@ -60,9 +59,9 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
     def __init__(self, language):
-        self.language = language
         filename = Path(__file__).parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
         SEL_ListReader.__init__(self, filename)
+        SEL_BaseAnnotator.__init__(self, language)
 
         # TODO language check should be in base class to avoid code duplication
         if self.language not in self.supported_languages:
@@ -70,7 +69,7 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
                 f"{self.language} is not a supported language."
             )
 
-        self.EW = load_lift_typesystem().get_type("org.lift.type.EasyWord")
+        self.EW = self.ts.get_type("org.lift.type.EasyWord")
 
     def process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
