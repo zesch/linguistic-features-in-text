@@ -86,7 +86,7 @@ def read_tsv_to_dict(filename, key_column, value_column):
             result[key] = value
     return result
 
-def construct_cas(ts, tokens, lemmas, pos_tags):
+def construct_cas(ts, tokens, lemmas, pos_tags) -> Cas:
     text = ' '.join(tokens)
 
     cas = cassis.Cas(typesystem=ts)

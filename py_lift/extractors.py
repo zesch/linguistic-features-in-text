@@ -14,69 +14,11 @@ class FEL_BaseExtractor(ABC):
     def extract(self, cas: Cas) -> bool:
         pass
 
-class FEL_Abstractness_min_max_avg(FEL_BaseExtractor):
-    def __init__(self):
-        super().__init__()
-        self.type = 'org.lift.type.AbstractnessConcreteness'
-
-    def count_and_collect(self, cas, type):
-        size = 0
-        vals = []
-
-        for anno in cas.select(type):
-            size += 1
-            vals.append(anno.value)
-
-        return [size, vals]
-
-
-    def extract(self, cas: Cas) -> bool:
-        count = self.count_and_collect(cas, self.type)[0]
-        print(count)
-        vals = self.count_and_collect(cas, self.type)[1]
-        print(vals)
-
-        min_val = -1
-        max_val = -1
-        added_vals = 0
-
-        for val in vals:
-            added_vals += float(val)
-
-            if min_val == -1:
-                min_val = float(val)
-            else:
-                if float(val) < min_val:
-                    min_val = float(val)
-
-            if max_val == -1:
-                max_val = float(val)
-            else:
-                if float(val) > max_val:
-                    max_val = float(val)
-
-        avg = added_vals/count
-
-        F = self.ts.get_type(T_FEATURE)
-        feature = F(name='Abstractness_AVG', value=avg, begin=0, end=0)
-        print(feature)
-        cas.add(feature)
-
-        feature = F(name='Abstractness_MIN', value=min_val, begin=0, end=0)
-        print(feature)
-        cas.add(feature)
-
-        feature = F(name='Abstractness_MAX', value=max_val, begin=0, end=0)
-        print(feature)
-        cas.add(feature)
-
-        return True
-
-
+# TODO rename type to annotation_type to avoid conflict with built-in type()
 class FEL_AnnotationCounter(FEL_BaseExtractor):
     def __init__(
             self, 
-            type, 
+            type: str, 
             feature_path='', 
             allowed_feature_values = [], 
             unique=False, 
@@ -97,9 +39,9 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
         feature = anno.get(self.feature_path)
         return feature if feature is not None else ''
         
-    def count(self, cas, type):
+    def count(self, cas):
         elements = {}
-        for anno in cas.select(type):
+        for anno in cas.select(self.type):
             if self.feature_path != '':
                 anno_value = self._get_feature_value(anno)
 
@@ -117,7 +59,7 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
             return sum(elements.values())
 
     def extract(self, cas: Cas) -> bool:
-        count = self.count(cas, self.type)
+        count = self.count(cas)
         
         name = self.type + '_COUNT'
 
@@ -162,6 +104,43 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
 
         return True
 
+class FEL_Min_Max_Mean(FEL_BaseExtractor):
+    def __init__(self, annotation_type: str, feature_path: str):
+        super().__init__()
+        self.annotation_type = annotation_type
+        self.feature_path = feature_path 
+
+    def _get_feature_value(self, anno):
+        feature = anno.get(self.feature_path)
+        return feature if feature is not None else ''
+
+    def collect_values(self, cas):
+        """Collects all values at the feature path of the given annotation as floats from the CAS."""
+        return [float(self._get_feature_value(anno)) for anno in cas.select(self.annotation_type)]
+
+    def extract(self, cas):
+        vals = self.collect_values(cas)
+
+        if not vals:
+            min_val = max_val = mean = None 
+            print("No values found for annotation: " + self.annotation_type)
+        else:
+            min_val = min(vals)
+            max_val = max(vals)
+            mean = sum(vals) / len(vals)
+
+        F = self.ts.get_type(T_FEATURE)
+        f_mean = F(name=self.annotation_type + '_mean', value=mean, begin=0, end=0)
+        cas.add(f_mean)
+
+        f_min = F(name=self.annotation_type + '_min', value=min_val, begin=0, end=0)
+        cas.add(f_min)
+
+        f_max = F(name=self.annotation_type + '_max', value=max_val, begin=0, end=0)
+        cas.add(f_max)
+
+        return True
+    
 class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
     def __init__(self):
         super().__init__('SpellingAnomaly')
@@ -180,6 +159,7 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
     def __init__(self):
         super().__init__('EasyWord',
                          'Token')
-class FE_Abstractness_Stats(FEL_Abstractness_min_max_avg):
+
+class FE_AbstractnessStats(FEL_Min_Max_Mean):
     def __init__(self):
-        super().__init__()
+        super().__init__('org.lift.type.AbstractnessConcreteness', 'value')

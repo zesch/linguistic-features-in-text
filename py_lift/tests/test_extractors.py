@@ -1,22 +1,38 @@
 import pytest
-from util import load_lift_typesystem
+from util import load_lift_typesystem, construct_cas
 from cassis import load_cas_from_xmi
-from extractors import FE_TokensPerSentence, FEL_AnnotationCounter, FE_EasyWordRatio
+from extractors import FE_EasyWordRatio, FE_AbstractnessStats
 from lift_fixtures import *
-from dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
+from dkpro import T_FEATURE
 from annotators.lists import SE_EasyWordAnnotator
+from annotators.misc import SE_AbstractnessAnnotator
 
-def test_ratio_extractors(cas_en_simple):
-
-    FE_TokensPerSentence().extract(cas_en_simple)
+def test_abstractness_extractor():
+    ts = load_lift_typesystem()
+    gold_tokens = ["Demokratie", "ist", "eher", "abstrakt", ".", "Leben", "ist", "konkret", "."]
+    gold_lemmas = ["Demokratie", "sein", "eher", "abstrakt", ".", "Leben", "sein", "konkret", "."]
+    gold_pos = ["NN", "VAFIN", "ADV", "ADJD", "$.", "NN", "VAFIN", "ADJD", "$."]    
+    cas = construct_cas(ts, gold_tokens, gold_lemmas, gold_pos)
+    
+    SE_AbstractnessAnnotator("de").process(cas)
+    FE_AbstractnessStats().extract(cas)
 
     i = 0
-    for feature in cas_en_simple.select(T_FEATURE):
-        assert feature.get('name') == 'Token_PER_Sentence'
-        assert feature.value == 4.5
-        i += 1
+    for feature in cas.select(T_FEATURE):
+        print(feature)
+        if feature.get('name') == 'org.lift.type.AbstractnessConcreteness_mean':
+            assert pytest.approx(feature.value) == 3.3868571428571426
+            i += 1
+        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_min':
+            assert pytest.approx(feature.value) == 2.502
+            i += 1
+        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_max':
+            assert pytest.approx(feature.value) == 4.036
+            i += 1
+        else :
+            pytest.fail('Unexpected feature: ' + str(feature.get('name')))
 
-    assert i == 1
+    assert i == 3
 
 def test_easy_word_extractor(cas_en_simple):
     SE_EasyWordAnnotator("en").process(cas_en_simple)
@@ -29,54 +45,3 @@ def test_easy_word_extractor(cas_en_simple):
         i += 1
 
     assert i == 1
-
-def test_count_extractor(cas_en_simple):
-    FEL_AnnotationCounter(T_TOKEN).extract(cas_en_simple)
-    FEL_AnnotationCounter(T_TOKEN, unique=True).extract(cas_en_simple)
-    
-    i = 0
-    for feature in cas_en_simple.select(T_FEATURE):
-        if feature.get('name') == 'COUNT_UNIQUE_Token':
-            assert feature.value == 6
-        elif feature.get('name') == 'COUNT_Token':
-            assert feature.value == 9
-        i += 1
-
-    assert i == 2
-
-def test_count_extractor_feature_path():
-    ts = load_lift_typesystem()
-    with open('data/hagen.txt.xmi', 'rb') as f:
-        cas = load_cas_from_xmi(f, ts)
-
-    counter_unique = FEL_AnnotationCounter(
-        T_POS, 
-        unique=True, 
-        feature_path='PosValue', 
-        allowed_feature_values=['NN','ADV']
-    )
-    counter_unique.extract(cas)
-    
-    for feature in cas.select(T_FEATURE):
-        if feature.get('name') == T_POS + 'COUNT_UNIQUE_PosValue_NN_ADV':
-            assert feature.value == 33
-
-def test_count_extractor_custom_to_string():
-    def _lemma_to_string(anno):
-        return anno.get('value')
-    
-    ts = load_lift_typesystem()
-    with open('data/hagen.txt.xmi', 'rb') as f:
-        cas = load_cas_from_xmi(f, ts)
-
-    counter_unique = FEL_AnnotationCounter(
-        T_LEMMA, 
-        unique=True, 
-        custom_to_string=_lemma_to_string
-    )
-
-    counter_unique.extract(cas)
-    
-    for feature in cas.select(T_FEATURE):
-        if feature.get('name') == T_LEMMA + '_COUNT_UNIQUE':
-            assert feature.value == 101
