@@ -1,9 +1,9 @@
 from cassis import Cas
-from decorators import supported_languages
-from util import load_lift_typesystem
+from py_lift.decorators import supported_languages
+from py_lift.util import load_lift_typesystem
 from wordfreq import zipf_frequency
-from dkpro import T_TOKEN
-from annotators.api import SEL_BaseAnnotator
+from py_lift.dkpro import T_TOKEN
+from py_lift.annotators.api import SEL_BaseAnnotator
 
 
 @supported_languages(

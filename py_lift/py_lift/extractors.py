@@ -1,6 +1,6 @@
 from cassis import Cas
-from dkpro import T_FEATURE
-from util import load_lift_typesystem
+from py_lift.dkpro import T_FEATURE
+from py_lift.util import load_lift_typesystem
 from typing import Callable, Any, Optional
 from abc import ABC, abstractmethod
 

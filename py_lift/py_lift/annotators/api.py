@@ -1,6 +1,6 @@
 from cassis import Cas
 from abc import ABC, abstractmethod
-from util import load_lift_typesystem
+from py_lift.util import load_lift_typesystem
 
 class SEL_BaseAnnotator(ABC):
     """Marker base class for all annotators."""

@@ -1,8 +1,8 @@
 from cassis import Cas
-from decorators import supported_languages
-from dkpro import T_FEATURE
+from py_lift.decorators import supported_languages
+from py_lift.dkpro import T_FEATURE
 from textstat import textstat
-from extractors import FEL_BaseExtractor
+from py_lift.extractors import FEL_BaseExtractor
 from abc import abstractmethod
 
 class FEL_ReadabilityScore(FEL_BaseExtractor):

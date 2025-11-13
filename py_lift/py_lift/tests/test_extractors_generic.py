@@ -33,7 +33,7 @@ def test_count_extractor(cas_en_simple):
 
 def test_count_extractor_feature_path():
     ts = load_lift_typesystem()
-    with open('data/hagen.txt.xmi', 'rb') as f:
+    with open('py_lift/data/hagen.txt.xmi', 'rb') as f:
         cas = load_cas_from_xmi(f, ts)
 
     counter_unique = FEL_AnnotationCounter(
@@ -53,7 +53,7 @@ def test_count_extractor_custom_to_string():
         return anno.get('value')
     
     ts = load_lift_typesystem()
-    with open('data/hagen.txt.xmi', 'rb') as f:
+    with open('py_lift/data/hagen.txt.xmi', 'rb') as f:
         cas = load_cas_from_xmi(f, ts)
 
     counter_unique = FEL_AnnotationCounter(

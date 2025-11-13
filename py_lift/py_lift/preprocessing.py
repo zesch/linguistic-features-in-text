@@ -1,8 +1,8 @@
 import spacy
 import unicodedata
 from cassis import Cas
-from dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
-from util import load_lift_typesystem
+from py_lift.dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
+from py_lift.util import load_lift_typesystem
 
 class Spacy_Preprocessor:
     # TODO really work with small models only?

@@ -1,8 +1,8 @@
 from cassis import Cas
-from decorators import supported_languages
-from dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA
+from py_lift.decorators import supported_languages
+from py_lift.dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA
 from abc import ABC
-from annotators.api import SEL_BaseAnnotator
+from py_lift.annotators.api import SEL_BaseAnnotator
 from pathlib import Path
 from typing import Union, Set
 
@@ -59,7 +59,7 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
     def __init__(self, language):
-        filename = Path(__file__).parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
+        filename = Path(__file__).parent.parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
         SEL_ListReader.__init__(self, filename)
         SEL_BaseAnnotator.__init__(self, language)
 

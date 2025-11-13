@@ -3,11 +3,11 @@ from udapi.core.node import Node
 import pprint as pp
 from udapi.core.document import Document
 import re
-from utils.conllu import cas_to_str
+from py_lift.utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
-from dkpro import *
-from util import read_list
+from py_lift.dkpro import *
+from py_lift.util import read_list
 import statistics as stats
 from deprecated import deprecated
 
@@ -110,7 +110,7 @@ class FE_CasToTree:
             syntagset = "ud"
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "substituting_pronouns"
@@ -119,7 +119,7 @@ class FE_CasToTree:
         self.substituting_pronouns = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "attributive_pronouns"
@@ -128,7 +128,7 @@ class FE_CasToTree:
         self.attributive_pronouns = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "junktors"
@@ -139,7 +139,7 @@ class FE_CasToTree:
         self.junktor_form, self.junktor_rel = re.split("\t", js[0])
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "expletives"
@@ -152,7 +152,7 @@ class FE_CasToTree:
         self.expletive_rels = re.split(r"\s*,\s*", expletive_rel_list)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "finite_verb_postags"
@@ -161,7 +161,7 @@ class FE_CasToTree:
         self.finite_verb_tags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "verb_postags"
@@ -170,7 +170,7 @@ class FE_CasToTree:
         self.verb_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "modal_verb_postags"
@@ -179,7 +179,7 @@ class FE_CasToTree:
         self.modal_verb_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "modal_verb_postags"
@@ -188,7 +188,7 @@ class FE_CasToTree:
         self.finite_modal_verb_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "verb_postags"
@@ -197,7 +197,7 @@ class FE_CasToTree:
         self.nonfinite_verb_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "conjunctions"
@@ -206,7 +206,7 @@ class FE_CasToTree:
         self.default_conjunction = read_list(file_path)[0]
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "tiger_syntax"
@@ -215,7 +215,7 @@ class FE_CasToTree:
         self.subject_labels = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "tiger_syntax"
@@ -224,7 +224,7 @@ class FE_CasToTree:
         self.conjunction_labels = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "personal_pronouns"
@@ -233,7 +233,7 @@ class FE_CasToTree:
         self.personal_and_reflexive_pronouns = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "adpositions"
@@ -242,7 +242,7 @@ class FE_CasToTree:
         self.adposition_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "adpositions"
@@ -251,7 +251,7 @@ class FE_CasToTree:
         self.preposition_postags = read_list(file_path)
 
         file_path = (
-            Path(__file__).parent.parent
+            Path(__file__).parent.parent.parent
             / "shared_resources"
             / "resources"
             / "adpositions"

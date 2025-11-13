@@ -3,9 +3,9 @@ import sys
 import re
 import json
 import ast
-from util import load_lift_typesystem
+from py_lift.util import load_lift_typesystem
 from cassis import Cas, load_cas_from_xmi
-from syntax import FE_CasToTree  # FE_TokensPerSentence
+from py_lift.syntax import FE_CasToTree  # FE_TokensPerSentence
 import udapi
 import pyconll
 import os

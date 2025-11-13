@@ -4,10 +4,9 @@ version = "0.1.0"
 description = ""
 authors = []
 readme = "README.md"
-package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.11, <3.12"
+python = ">=3.11,<3.14"
 dkpro-cassis = "^0.10.1"
 pytest = "^7.4.3"
 pyspellchecker = "^0.8.1"
@@ -31,13 +30,14 @@ de-core-news-lg = {url = 'https://github.com/explosion/spacy-models/releases/dow
 en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl" }
 fr-core-news-lg = {url = "https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl" }
 sl-core-news-sm = {url = "https://github.com/explosion/spacy-models/releases/download/sl_core_news_sm-3.8.0/sl_core_news_sm-3.8.0-py3-none-any.whl" } 
+# tr-core-news-md = {url = "https://huggingface.co/turkish-nlp-suite/tr_core_news_md/resolve/main/tr_core_news_md-1.0-py3-none-any.whl" }
 tr-core-news-md = {path = "lib/tr_core_news_md-1.0-py3-none-any.whl" }
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "."
+  "py_lift"
 ]

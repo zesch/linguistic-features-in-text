@@ -1,11 +1,11 @@
 from cassis import Cas
 
-from decorators import supported_languages
-from util import load_lift_typesystem, read_tsv_to_dict
+from py_lift.decorators import supported_languages
+from py_lift.util import load_lift_typesystem, read_tsv_to_dict
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
-from dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
-from annotators.api import SEL_BaseAnnotator
+from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
+from py_lift.annotators.api import SEL_BaseAnnotator
 from pathlib import Path
 
 import polars as pl
@@ -80,7 +80,7 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
         super().__init__(language)
 
         file_path = Path(
-            __file__).parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"
+            __file__).parent.parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"
 
         df = pl.read_csv(file_path)
         df = df.unique(subset=['word', 'pos'])

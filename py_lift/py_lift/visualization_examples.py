@@ -1,13 +1,13 @@
 import streamlit as st
 from cassis import Cas
-from dkpro import T_ANOMALY, T_POS, T_TOKEN
-from preprocessing import Spacy_Preprocessor
-from util import load_lift_typesystem, detect_language
+from py_lift.dkpro import T_ANOMALY, T_POS, T_TOKEN
+from py_lift.preprocessing import Spacy_Preprocessor
+from py_lift.util import load_lift_typesystem, detect_language
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
-from annotators.frequency import SE_TokenZipfFrequency
-from annotators.misc import SE_SpellErrorAnnotator
-from annotators.lists import SE_FiniteVerbAnnotator
+from py_lift.annotators.frequency import SE_TokenZipfFrequency
+from py_lift.annotators.misc import SE_SpellErrorAnnotator
+from py_lift.annotators.lists import SE_FiniteVerbAnnotator
 
 
 def get_preprocessed_cas(text: str, language: str) -> Cas:

@@ -5,17 +5,22 @@ import csv
 import polars as pl
 import inspect
 from cassis import Cas
-from dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
+from py_lift.dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
 from types import ModuleType
 from typing import Type, List
 from lingua import LanguageDetectorBuilder
+from importlib.resources import files
 
 def detect_language(text: str) -> str:
     detector = LanguageDetectorBuilder.from_all_spoken_languages().build()
     return str(detector.detect_language_of(text).iso_code_639_1.name).lower()
 
+# def load_lift_typesystem() -> cassis.TypeSystem:
+#     return load_typesystem('py_lift/data/TypeSystem.xml')
+
 def load_lift_typesystem() -> cassis.TypeSystem:
-    return load_typesystem('data/TypeSystem.xml')
+    with (files("py_lift.data") / "TypeSystem.xml").open("rb") as f:
+        return cassis.load_typesystem(f)
 
 def load_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
     def load_typesystem_from_file(path):

@@ -15,9 +15,9 @@ logger = logging.getLogger(__name__)
 
 ts = load_lift_typesystem()
 
-casfile = "data/k002_s04_cas.xmi"  # sample file from OSNA corpus
+casfile = "py_lift/data/k002_s04_cas.xmi"  # sample file from OSNA corpus
 myview = "corr"  # learner layer
-conllufile = "data/k002_s04_corr_offsets.conllu"  # conllu file from OSNA corpus, with annotations in metadata fields of sentences
+conllufile = "py_lift/data/k002_s04_corr_offsets.conllu"  # conllu file from OSNA corpus, with annotations in metadata fields of sentences
 
 
 UD_SYNTAX_TEST_STRING = """# text = Solltest Du dann auf einmal kalte Füße bekommen, dann gnade Dir Gott.

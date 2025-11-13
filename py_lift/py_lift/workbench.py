@@ -1,20 +1,20 @@
 import streamlit as st
 import inspect
 from cassis import Cas
-from dkpro import T_ANOMALY, T_POS
+from py_lift.dkpro import T_ANOMALY, T_POS
 from itertools import chain
-from preprocessing import Spacy_Preprocessor
-from util import get_all_subclasses, get_constructor_params, load_lift_typesystem, detect_language
+from py_lift.preprocessing import Spacy_Preprocessor
+from py_lift.util import get_all_subclasses, get_constructor_params, load_lift_typesystem, detect_language
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
-import annotators.misc as misc
-import annotators.frequency as frequency
-import extractors
-import readability
-from annotators.api import SEL_BaseAnnotator
-from extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
-from annotators.frequency import *
-from readability import FEL_TextstatReadabilityScore
+import py_lift.annotators.misc as misc
+import py_lift.annotators.frequency as frequency
+import py_lift.extractors
+import py_lift.readability
+from py_lift.annotators.api import SEL_BaseAnnotator
+from py_lift.extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
+from py_lift.annotators.frequency import *
+from py_lift.readability import FEL_TextstatReadabilityScore
 
 st.set_page_config(layout='wide')
 st.title('LiFT Workbench')
