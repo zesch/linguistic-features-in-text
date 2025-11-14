@@ -104,7 +104,39 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
 
         return True
 
+class FEL_Length(FEL_BaseExtractor):
+    def __init__(self, annotation_type: str):
+        super().__init__()
+        self.annotation_type = annotation_type
+
+    def extract(self, cas: Cas) -> bool:
+        lengths = [anno.end - anno.begin for anno in cas.select(self.annotation_type)]
+
+        if not lengths:
+            min_val = max_val = mean = None 
+            print("No values found for annotation: " + self.annotation_type)
+        else:
+            min_val = min(lengths)
+            max_val = max(lengths)
+            mean = sum(lengths) / len(lengths)
+
+        F = self.ts.get_type(T_FEATURE)
+        f_mean = F(name=self.annotation_type + '_length_mean', value=mean, begin=0, end=0)
+        cas.add(f_mean)
+
+        f_min = F(name=self.annotation_type + '_length_min', value=min_val, begin=0, end=0)
+        cas.add(f_min)
+
+        f_max = F(name=self.annotation_type + '_length_max', value=max_val, begin=0, end=0)
+        cas.add(f_max)
+
+        return True
+
 class FEL_Min_Max_Mean(FEL_BaseExtractor):
+    """Calculates min, max, and mean of numeric feature values of the given annotation type.
+    An example would be abstractness scores for each token. 
+    """
+    
     def __init__(self, annotation_type: str, feature_path: str):
         super().__init__()
         self.annotation_type = annotation_type

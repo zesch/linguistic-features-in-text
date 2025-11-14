@@ -1,7 +1,7 @@
 import pytest
-from annotators.misc import SE_SpellErrorAnnotator
-from dkpro import T_ANOMALY
-from lift_fixtures import *
+from py_lift.annotators.misc import SE_SpellErrorAnnotator
+from py_lift.dkpro import T_ANOMALY
+from py_lift.tests.lift_fixtures import *
 
 def test_extractors(cas_en_simple_with_errors):
     SE_SpellErrorAnnotator("en").process(cas_en_simple_with_errors)

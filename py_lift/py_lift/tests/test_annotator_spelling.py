@@ -1,8 +1,8 @@
 
 import pytest
-from preprocessing import Spacy_Preprocessor
-from annotators.misc import SE_SpellErrorAnnotator
-from dkpro import T_ANOMALY
+from py_lift.preprocessing import Spacy_Preprocessor
+from py_lift.annotators.misc import SE_SpellErrorAnnotator
+from py_lift.dkpro import T_ANOMALY
 
 def test_spelling_annotator():
     text = "Das iste einex Biespeil fürr Texxt mit viehle Feler."

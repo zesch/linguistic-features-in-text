@@ -1,11 +1,27 @@
 import pytest
-from util import load_lift_typesystem
+from py_lift.util import load_lift_typesystem
 from cassis import load_cas_from_xmi
-from extractors import FE_TokensPerSentence, FEL_AnnotationCounter
-from lift_fixtures import *
-from dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
+from py_lift.extractors import FE_TokensPerSentence, FEL_AnnotationCounter, FEL_Length
+from py_lift.tests.lift_fixtures import *
+from py_lift.dkpro import T_TOKEN, T_POS, T_LEMMA, T_FEATURE
 
-def test_ratio_extractors(cas_en_simple):
+def test_length_extractors(cas_en_simple):
+
+    FEL_Length(T_TOKEN).extract(cas_en_simple)
+
+    i = 0
+    for feature in cas_en_simple.select(T_FEATURE):
+        if feature.get('name') == 'TOKEN_length_mean':
+            assert feature.value == 3.5
+        elif feature.get('name') == 'TOKEN_length_min':
+            assert feature.value == 2
+        elif feature.get('name') == 'TOKEN_length_max':
+            assert feature.value == 6
+        i += 1
+
+    assert i == 3
+
+def test_ratio_extractor(cas_en_simple):
 
     FE_TokensPerSentence().extract(cas_en_simple)
 

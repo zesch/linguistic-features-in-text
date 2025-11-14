@@ -1,7 +1,7 @@
 import pytest
-from util import load_lift_typesystem, construct_cas
-from annotators.misc import SE_EvpCefrAnnotator
-from dkpro import T_FEATURE
+from py_lift.util import load_lift_typesystem, construct_cas
+from py_lift.annotators.misc import SE_EvpCefrAnnotator
+from py_lift.dkpro import T_FEATURE
 
 def test_evp_cefr_annotator():
     ts = load_lift_typesystem()

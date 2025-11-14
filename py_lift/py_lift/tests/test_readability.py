@@ -1,8 +1,8 @@
 import pytest
-from lift_fixtures import *
-from util import load_lift_typesystem
+from py_lift.tests.lift_fixtures import *
+from py_lift.util import load_lift_typesystem
 from cassis import Cas
-from readability import *
+from py_lift.readability import *
 
 def test_readability():
     ts = load_lift_typesystem()

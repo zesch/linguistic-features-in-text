@@ -1,9 +1,9 @@
 
 import pytest
-from util import load_lift_typesystem, construct_cas, assert_annotations
-from lift_fixtures import *
+from py_lift.util import load_lift_typesystem, construct_cas, assert_annotations
+from py_lift.tests.lift_fixtures import *
 from cassis import Cas
-from annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator
+from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator
 
 def test_finite_verbs_annotator():
     ts = load_lift_typesystem()

@@ -1,7 +1,7 @@
 import pytest
 from cassis import Cas
-from util import load_lift_typesystem
-from dkpro import T_TOKEN, T_SENT, T_LEMMA, T_POS
+from py_lift.util import load_lift_typesystem
+from py_lift.dkpro import T_TOKEN, T_SENT, T_LEMMA, T_POS
 
 @pytest.fixture
 def typesystem_xml():

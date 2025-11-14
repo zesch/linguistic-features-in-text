@@ -1,11 +1,11 @@
 import pytest
-from util import load_lift_typesystem, construct_cas
+from py_lift.util import load_lift_typesystem, construct_cas
 from cassis import load_cas_from_xmi
-from extractors import FE_EasyWordRatio, FE_AbstractnessStats
-from lift_fixtures import *
-from dkpro import T_FEATURE
-from annotators.lists import SE_EasyWordAnnotator
-from annotators.misc import SE_AbstractnessAnnotator
+from py_lift.extractors import FE_EasyWordRatio, FE_AbstractnessStats
+from py_lift.tests.lift_fixtures import *
+from py_lift.dkpro import T_FEATURE
+from py_lift.annotators.lists import SE_EasyWordAnnotator
+from py_lift.annotators.misc import SE_AbstractnessAnnotator
 
 def test_abstractness_extractor():
     ts = load_lift_typesystem()

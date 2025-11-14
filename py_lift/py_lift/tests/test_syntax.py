@@ -2,10 +2,10 @@ import pytest
 import re
 import ast
 import sys
-from dkpro import T_FEATURE
-from util import load_lift_typesystem
+from py_lift.dkpro import T_FEATURE
+from py_lift.util import load_lift_typesystem
 from cassis import load_cas_from_xmi
-from syntax import FE_CasToTree
+from py_lift.syntax import FE_CasToTree
 from pyconll.load import load_from_file
 import logging
 import statistics as stats

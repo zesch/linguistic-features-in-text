@@ -1,6 +1,6 @@
 import pytest
-from dkpro import T_TOKEN, T_SENT, T_POS, T_DEP
-from preprocessing import *
+from py_lift.dkpro import T_TOKEN, T_SENT, T_POS, T_DEP
+from py_lift.preprocessing import *
 
 def test_spacy_prepro_to_cas():
     text = 'This is a test. A small one.'

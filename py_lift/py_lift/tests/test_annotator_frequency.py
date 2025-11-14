@@ -1,7 +1,7 @@
 import pytest
-from annotators.frequency import SE_TokenZipfFrequency
-from dkpro import T_TOKEN
-from lift_fixtures import *
+from py_lift.annotators.frequency import SE_TokenZipfFrequency
+from py_lift.dkpro import T_TOKEN
+from py_lift.tests.lift_fixtures import *
 
 def test_frequency(cas_en_simple):
     SE_TokenZipfFrequency("en").process(cas_en_simple)
