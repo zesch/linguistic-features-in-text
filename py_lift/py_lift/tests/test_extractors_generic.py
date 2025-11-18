@@ -33,6 +33,24 @@ def test_ratio_extractor(cas_en_simple):
 
     assert i == 1
 
+def test_ratio_exception(cas_no_annotations):
+
+    extractor = FE_TokensPerSentence()
+    extractor.strict = True  
+    with pytest.raises(ZeroDivisionError):
+        extractor.extract(cas_no_annotations)
+
+    extractor.strict = False
+    extractor.extract(cas_no_annotations)
+    
+    i = 0
+    for feature in cas_no_annotations.select(T_FEATURE):
+        assert feature.get('name') == 'Token_PER_Sentence'
+        assert feature.value == 0
+        i += 1
+
+    assert i == 1
+
 def test_count_extractor(cas_en_simple):
     FEL_AnnotationCounter(T_TOKEN).extract(cas_en_simple)
     FEL_AnnotationCounter(T_TOKEN, unique=True).extract(cas_en_simple)

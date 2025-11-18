@@ -6,7 +6,12 @@ from abc import ABC, abstractmethod
 
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
-    
+
+    # whether to raise exceptions on errors (e.g., division by zero)
+    # by default, errors are silently handled (e.g., ratio set to 0)
+    # but strict mode can be useful for debugging
+    strict: bool = False 
+
     def __init__(self):
         self.ts = load_lift_typesystem()
     
@@ -14,18 +19,17 @@ class FEL_BaseExtractor(ABC):
     def extract(self, cas: Cas) -> bool:
         pass
 
-# TODO rename type to annotation_type to avoid conflict with built-in type()
 class FEL_AnnotationCounter(FEL_BaseExtractor):
     def __init__(
             self, 
-            type: str, 
+            _type: str, 
             feature_path='', 
             allowed_feature_values = [], 
             unique=False, 
             custom_to_string: Optional[Callable[[Any], str]] = None
     ):
         super().__init__()
-        self.type = type
+        self.type = _type
         self.unique = unique
         self.feature_path = feature_path
         self.allowed_feature_values = allowed_feature_values
@@ -93,10 +97,16 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         count_dividend = self.count(cas, self.dividend_type)
         count_divisor = self.count(cas, self.divisor_type)
 
-        # TODO catch division by zero
-        ratio = count_dividend / count_divisor
-
         name = self.dividend_type + '_PER_' + self.divisor_type
+
+        if (count_divisor == 0):
+            if (self.strict):
+                raise ZeroDivisionError(f"Division by zero when calculating ratio {name}.")
+            
+            ratio = 0
+        else:
+            ratio = count_dividend / count_divisor
+
 
         F = self.ts.get_type(T_FEATURE)
         feature = F(name=name, value=ratio, begin=0, end=0)
