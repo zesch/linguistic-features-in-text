@@ -3,6 +3,7 @@ from py_lift.dkpro import T_FEATURE
 from py_lift.util import load_lift_typesystem
 from typing import Callable, Any, Optional
 from abc import ABC, abstractmethod
+from collections import Counter
 
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
@@ -20,98 +21,114 @@ class FEL_BaseExtractor(ABC):
         pass
 
 class FEL_AnnotationCounter(FEL_BaseExtractor):
+    """Counts annotations of a specific type.
+    For unique counts, a custom function can be provided to convert
+    an annotation to a string representation.
+    By default, the covered text is used."""
+    
     def __init__(
-            self, 
-            _type: str, 
-            feature_path='', 
-            allowed_feature_values = [], 
-            unique=False, 
-            custom_to_string: Optional[Callable[[Any], str]] = None
+        self, 
+        _type: str, 
+        unique: bool = False, 
+        custom_to_string: Optional[Callable[[Any], str]] = None
     ):
         super().__init__()
         self.type = _type
         self.unique = unique
-        self.feature_path = feature_path
-        self.allowed_feature_values = allowed_feature_values
-
-        if custom_to_string is not None:
-            self.to_string = custom_to_string
-        else:
-            self.to_string = lambda x: x.get_covered_text() if x is not None else ''
-
-    def _get_feature_value(self, anno):
-        feature = anno.get(self.feature_path)
-        return feature if feature is not None else ''
+        self.to_string = custom_to_string or (
+            lambda x: x.get_covered_text() if x is not None else ''
+        )
+    
+    def count(self, cas: Cas) -> int:
+        if not self.unique:
+            return sum(1 for _ in cas.select(self.type))
         
-    def count(self, cas):
-        elements = {}
-        for anno in cas.select(self.type):
-            if self.feature_path != '':
-                anno_value = self._get_feature_value(anno)
-
-                if anno_value in self.allowed_feature_values:
-                    str_repr = self.to_string(anno)
-                    elements[str_repr] = elements.get(str_repr, 0) + 1
-            else:    
-                str_repr = anno.get_covered_text()
-                elements[str_repr] = elements.get(str_repr, 0) + 1
-        
-        if self.unique:
-            print(elements)
-            return len(elements.keys())
-        else: 
-            return sum(elements.values())
-
+        # Count unique string representations
+        unique_values = {self.to_string(anno) for anno in cas.select(self.type)}
+        print(unique_values)
+        return len(unique_values)
+    
     def extract(self, cas: Cas) -> bool:
         count = self.count(cas)
-        
-        name = self.type + '_COUNT'
-
+        name = f"{self.type}_COUNT"
         if self.unique:
-            name = name + '_UNIQUE'
-
-        if self.feature_path != '':
-            name = name + '_' + self.feature_path + '_' + '_'.join(self.allowed_feature_values)
-
+            name += "_UNIQUE"
+        
         F = self.ts.get_type(T_FEATURE)
         feature = F(name=name, value=count, begin=0, end=0)
         cas.add(feature)
 
         return True
 
+class FEL_FeatureValueCounter(FEL_BaseExtractor):
+    """Counts occurrences of specific feature values."""
+    
+    def __init__(
+        self, 
+        _type: str, 
+        feature_path: str, 
+        feature_values: Optional[list] = None
+    ):
+        super().__init__()
+        self.type = _type
+        self.feature_path = feature_path
+        self.allowed_feature_values = feature_values or []
+    
+    def _get_feature_value(self, anno):
+        """Get feature value from annotation."""
+        feature = anno.get(self.feature_path)
+        return feature if feature is not None else ''
+    
+    def count(self, cas) -> int:
+        """Count annotations with specific feature values."""
+        count = 0
+        for anno in cas.select(self.type):
+            feature_value = self._get_feature_value(anno)
+            
+            if not self.allowed_feature_values:
+                count += 1
+            elif feature_value in self.allowed_feature_values:
+                count += 1
+        
+        return count
+    
+    def extract(self, cas: Cas) -> bool:
+        count = self.count(cas)
+        
+        name = f"{self.type}_FEATURECOUNT_{self.feature_path}"
+        if self.allowed_feature_values:
+            name += "_" + "_".join(self.allowed_feature_values)
+        
+        F = self.ts.get_type(T_FEATURE)
+        feature = F(name=name, value=count, begin=0, end=0)
+        cas.add(feature)
+        
+        return True
 
 class FEL_AnnotationRatio(FEL_BaseExtractor):
-
-    def __init__(self, type_dividend, type_divisor):
+    """Computes ratio between two annotation counts."""
+    
+    def __init__(self, counter_dividend: FEL_AnnotationCounter, counter_divisor: FEL_AnnotationCounter):
         super().__init__()
-        self.dividend_type = type_dividend
-        self.divisor_type = type_divisor
-
-    def count(self, cas, type):
-        size = 0
-        for anno in cas.select(type):
-            size += 1
-        return size
-
+        self.counter_dividend = counter_dividend
+        self.counter_divisor = counter_divisor
+    
     def extract(self, cas: Cas) -> bool:
-        count_dividend = self.count(cas, self.dividend_type)
-        count_divisor = self.count(cas, self.divisor_type)
-
-        name = self.dividend_type + '_PER_' + self.divisor_type
-
-        if (count_divisor == 0):
-            if (self.strict):
+        count_dividend = self.counter_dividend.count(cas)
+        count_divisor = self.counter_divisor.count(cas)
+        
+        name = f"{self.counter_dividend.type}_PER_{self.counter_divisor.type}"
+        
+        if count_divisor == 0:
+            if self.strict:
                 raise ZeroDivisionError(f"Division by zero when calculating ratio {name}.")
-            
-            ratio = 0
+            ratio = 0.0
         else:
             ratio = count_dividend / count_divisor
-
-
+        
         F = self.ts.get_type(T_FEATURE)
         feature = F(name=name, value=ratio, begin=0, end=0)
         cas.add(feature)
-
         return True
 
 class FEL_Length(FEL_BaseExtractor):
@@ -125,6 +142,8 @@ class FEL_Length(FEL_BaseExtractor):
         if not lengths:
             min_val = max_val = mean = None 
             print("No values found for annotation: " + self.annotation_type)
+            if (self.strict):
+                raise ValueError(f"No annotations found for type {self.annotation_type} when calculating lengths.")
         else:
             min_val = min(lengths)
             max_val = max(lengths)
@@ -166,6 +185,8 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
         if not vals:
             min_val = max_val = mean = None 
             print("No values found for annotation: " + self.annotation_type)
+            if (self.strict):
+                raise ValueError(f"No annotations found for type {self.annotation_type} when calculating min/max/mean.")    
         else:
             min_val = min(vals)
             max_val = max(vals)
@@ -189,18 +210,24 @@ class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('NC',
-                         'Sentence')
+        super().__init__(
+            FEL_AnnotationCounter('NC'),
+            FEL_AnnotationCounter('Sentence')
+        )
         
 class FE_TokensPerSentence(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('Token',
-                         'Sentence')
+        super().__init__(
+            FEL_AnnotationCounter('Token'),
+            FEL_AnnotationCounter('Sentence')
+        )
 
 class FE_EasyWordRatio(FEL_AnnotationRatio):
     def __init__(self):
-        super().__init__('EasyWord',
-                         'Token')
+        super().__init__(
+            FEL_AnnotationCounter('EasyWord'),
+            FEL_AnnotationCounter('Token')
+        )
 
 class FE_AbstractnessStats(FEL_Min_Max_Mean):
     def __init__(self):
