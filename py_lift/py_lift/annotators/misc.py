@@ -7,6 +7,7 @@ from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
 from py_lift.annotators.api import SEL_BaseAnnotator
 from pathlib import Path
+from typing import Union
 
 import polars as pl
 
@@ -137,7 +138,7 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
 
         self.evp_cefr_words = cefr_words
         self.ts = load_lift_typesystem()
-        self.evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
+        self.T_evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
 
     def process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
@@ -152,14 +153,57 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
                     our_pos_value = self.pos_tag_map[pos_value]
 
                     if our_pos_value in word_dict.keys():
-                        cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
+                        cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
                         cas.add(cefr_word)
                     else:
                         # Take pos with lowest level
-                        cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
+                        cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
                         cas.add(cefr_word)
                 else:
-                    cefr_word = self.evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
+                    cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
                     cas.add(cefr_word)
+
+        return True
+    
+@supported_languages('de')
+class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
+    """ Takes fine grained POS tags and maps them to coarse grained ones based on a mapping file.
+    Add the coarse grained POS tag as new annotation type.
+    Remove the old POS tag anotation.
+    """
+
+    def __init__(self, language, mapping: str, remove_old: bool = True):
+        super().__init__(language)
+        self.pmap = self.read_pos_mapping(mapping)
+        self.remove_old = remove_old
+
+    def read_pos_mapping(self, mapping) -> dict:
+        pmap = {}
+        filename = Path(__file__).parent.parent / "data" / "pos_maps" / f"{mapping}.map"
+        with open(filename, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                if '=' in line:
+                    key, value = line.split('=', 1)
+                    pmap[key.strip()] = value.strip()
+        return pmap
+
+    def process(self, cas: Cas) -> bool:
+
+        for pos in cas.select(T_POS):
+            fine_tag = pos.get('PosValue')
+
+            # if fine_tag not in self.pos_mapping, default to '*'
+            if self.pmap[fine_tag] is None:
+                fine_tag = "*"
+
+            coarse_tag = self.pmap.get(fine_tag)
+            T = cas.typesystem.get_type(self.pmap['__META_TYPE_BASE__'] + coarse_tag)
+            anno = T(begin=pos.begin, end=pos.end, PosValue=fine_tag)
+            cas.add(anno)
+            if self.remove_old:
+                cas.remove(pos)
 
         return True

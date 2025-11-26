@@ -12,8 +12,7 @@ def test_finite_verbs_annotator():
 
     tokens = ["Ich", "bin", "ein", "Beispiel", "und", "sehe", "gut", "aus", "."]
     lemmas = ["Ich", "sein", "ein", "Beispiel", "und", "sehen", "gut", "aus", "."]
-    # TODO correct POS tags
-    pos_tags = ["NN", "VAFIN", "DET", "NN", "CC", "VVFIN", "ADJ", "PTK", "PUNCT"]
+    pos_tags = ["PPER", "VAFIN", "ART", "NN", "KON", "VVFIN", "ADJD", "PTKVZ", "$."]
 
     cas = construct_cas(ts, tokens, lemmas, pos_tags)
 
