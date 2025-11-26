@@ -34,7 +34,7 @@ def test_easy_words_annotator(cas_en_simple):
 
     SE_EasyWordAnnotator("en").process(cas_en_simple)
 
-    assert len(cas_en_simple.select("org.lift.type.EasyWord")) == 2
+    assert len(cas_en_simple.select("org.lift.type.EasyWord")) == 7
 
 def test_easy_words_annotator_unsupported_language():
     with pytest.raises(ValueError) as excinfo:

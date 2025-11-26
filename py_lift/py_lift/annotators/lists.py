@@ -63,17 +63,12 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         SEL_ListReader.__init__(self, filename)
         SEL_BaseAnnotator.__init__(self, language)
 
-        # TODO language check should be in base class to avoid code duplication
-        if self.language not in self.supported_languages:
-            raise ValueError(
-                f"{self.language} is not a supported language."
-            )
-
         self.EW = self.ts.get_type("org.lift.type.EasyWord")
 
     def process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
             l_str = lemma.value
+            # TODO punctuation currently counted as not easy word
             if l_str in self.read_list():
                 easy_word = self.EW(begin=lemma.get('begin'), end=lemma.get('end'))
                 cas.add(easy_word)

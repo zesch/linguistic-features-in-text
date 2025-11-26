@@ -46,9 +46,7 @@ class Spacy_Preprocessor:
         L = self.ts.get_type(T_LEMMA)
 
         for sent in doc.sents:
-            begin = doc[sent.start-1].idx
-            end = begin + len(doc[sent.end-1].text)
-            cas_sentence = S(begin=begin, end=end)
+            cas_sentence = S(begin=sent.start_char, end=sent.end_char)
             self.cas.add(cas_sentence)
 
         token_annos = []

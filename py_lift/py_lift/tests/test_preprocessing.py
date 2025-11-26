@@ -14,7 +14,7 @@ def test_spacy_preprocessing():
     gold_tokens = ["Demokratie", "ist", "eher", "abstrakt", ".", "Leben", "ist", "konkret", "."]
     gold_lemmas = ["Demokratie", "sein", "eher", "abstrakt", ".", "Leben", "sein", "konkret", "."]
     gold_pos = ["NN", "VAFIN", "ADV", "ADJD", "$.", "NN", "VAFIN", "ADJD", "$."]
-    gold_sentences = [[28, 29], [47, 48]]
+    gold_sentences = [[0, 29], [30, 48]]
     gold_tok_index = [[0, 10], [11, 14], [15, 19], [20, 28], [28, 29], [30, 35], [36, 39], [40, 47], [47, 48]]
     gold_dep = [[gold_tokens[1], gold_tokens[0], 'nsubj', 'basic'],
                 [gold_tokens[3], gold_tokens[2], 'cop', 'basic'],
@@ -55,3 +55,58 @@ def test_spacy_tr():
     text = "Okulda Türkçe öğrendim ama çok kötü konuşuyorum."
     spacy = Spacy_Preprocessor(language='tr')
     cas = spacy.run(text)
+
+def test_spacy_prepro_en():
+    text = 'This is a test. A small one.'
+    ts = load_lift_typesystem()
+    spacy = Spacy_Preprocessor(language='en')
+    cas = spacy.run(text)
+
+    expected_token = [[0,4], [5,7], [8,9], [10,14], [14,15], [16,17], [18,23], [24,27], [27,28]]
+    expected_sentences = [[0,15], [16,28]]
+    expected_pos = [
+        ['DT', 0, 4],
+        ['VBZ', 5, 7],
+        ['DT', 8, 9],
+        ['NN', 10, 14],
+        ['.', 14, 15],
+        ['DT', 16, 17],
+        ['JJ', 18, 23],
+        ['NN', 24, 27],
+        ['.', 27, 28]]
+    expected_dependencies = [
+        ['is', 'This', 'nsubj', 'basic'],
+        ['test', 'a', 'det', 'basic'],
+        ['is', 'test','attr','basic'],
+        ['is', '.', 'punct', 'basic'],
+        ['one', 'A', 'det', 'basic'],
+        ['one', 'small', 'amod', 'basic'],
+        ['one', '.', 'punct', 'basic']]
+    actual_token = []
+    actual_sentences = []
+    actual_pos = []
+    actual_dependencies = []
+
+    for token in cas.select(T_TOKEN):
+        actual_token.append([token.begin, token.end])
+    for sent in cas.select(T_SENT):
+        actual_sentences.append([sent.begin, sent.end])
+    for pos in cas.select(T_POS):
+        actual_pos.append([pos.PosValue, pos.begin, pos.end])
+    for dep in cas.select(T_DEP):
+        print(dep)
+        actual_dependencies.append([dep.Governor.get_covered_text(), dep.Dependent.get_covered_text(), dep.DependencyType, dep.flavor])
+
+    assert len(expected_token) == len(actual_token)
+    assert len(expected_sentences) == len(actual_sentences)
+    assert len(expected_pos) == len(actual_pos)
+    assert len(expected_dependencies) == len(actual_dependencies)
+
+    for i in range(len(actual_token)):
+        assert expected_token[i] == actual_token[i]
+    for i in range(len(actual_sentences)):
+        assert expected_sentences[i] == actual_sentences[i]
+    for i in range(len(actual_pos)):
+        assert expected_pos[i] == actual_pos[i]
+    for i in range(len(actual_dependencies)):
+        assert expected_dependencies[i] == actual_dependencies[i]
