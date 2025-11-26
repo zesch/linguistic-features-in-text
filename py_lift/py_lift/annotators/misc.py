@@ -196,7 +196,9 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
             fine_tag = pos.get('PosValue')
 
             # if fine_tag not in self.pos_mapping, default to '*'
-            if self.pmap[fine_tag] is None:
+            if fine_tag not in self.pmap:
+                # TODO proper logging?
+                print(f"Warning: fine grained POS tag '{fine_tag}' not found in mapping. Using '*' as coarse tag.")
                 fine_tag = "*"
 
             coarse_tag = self.pmap.get(fine_tag)
