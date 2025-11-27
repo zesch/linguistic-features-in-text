@@ -159,3 +159,39 @@ def get_constructor_params(cls):
         if name != 'self'
     ]
     return params
+
+def print_features(cas, sort_by='name'):
+    """
+    Print all features from CAS in a readable format.
+    
+    Args:
+        cas: The CAS object
+        feature_type: The feature type to retrieve
+        sort_by: 'name' or 'value' for sorting
+    """
+    F = load_lift_typesystem().get_type(T_FEATURE)
+    features = list(cas.select(F))
+    
+    if not features:
+        print("No features found.")
+        return
+    
+    # Sort features
+    if sort_by == 'value':
+        features.sort(key=lambda f: f.value, reverse=True)
+    else:
+        features.sort(key=lambda f: f.name)
+    
+    # Print header
+    print("\n" + "=" * 60)
+    print(f"Features (sorted by {sort_by})")
+    print("=" * 60)
+    print(f"{'Name':<40} {'Value':>10}")
+    print("-" * 60)
+    
+    # Print features
+    for feature in features:
+        print(f"{feature.name:<40} {feature.value:>10}")
+    
+    print("-" * 60)
+    print(f"Total: {len(features)} features\n")

@@ -60,8 +60,9 @@ class SE_TokenZipfFrequency(SEL_BaseAnnotator):
         F = self.ts.get_type("org.lift.type.Frequency")
 
         for token in cas.select(T_TOKEN):
-            if token.pos.PosValue in ['PUNCT', 'SYM']:
-                continue
+            # TODO removed for now. This is language dependent and token.pos might not be set - need to check
+            # if token.pos.PosValue in ['PUNCT', 'SYM']:
+            #     continue
 
             freq = zipf_frequency(token.get_covered_text(), self.language)
             if 2 > freq > 0:
