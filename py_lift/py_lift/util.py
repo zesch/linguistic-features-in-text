@@ -64,17 +64,6 @@ def resolve_annotation(annotation_path: str, feature_seperator='/') -> typing.Tu
 
     return type_path, feature_path
 
-def df_features(cas: Cas) -> pl.DataFrame:
-    features = []
-
-    for anno in cas.select(T_FEATURE):
-        features.append({
-            'name': anno.get('name'),
-            'value': anno.get('value')
-        })
-
-    return pl.DataFrame(features)
-
 
 def read_list(file_path: pathlib.Path) -> typing.List[str]:
     with file_path.open("r", encoding="utf-8") as f:
@@ -160,14 +149,26 @@ def get_constructor_params(cls):
     ]
     return params
 
-def print_features(cas, sort_by='name'):
+def df_features(cas: Cas) -> pl.DataFrame:
+    features = []
+
+    for anno in cas.select(T_FEATURE):
+        features.append({
+            'name': anno.get('name'),
+            'value': anno.get('value')
+        })
+
+    return pl.DataFrame(features)
+
+def print_features(cas, sort_by='name', abbreviate=True, float_decimals=4):
     """
     Print all features from CAS in a readable format.
     
     Args:
         cas: The CAS object
-        feature_type: The feature type to retrieve
         sort_by: 'name' or 'value' for sorting
+        abbreviate: Whether to abbreviate long package-style names
+        float_decimals: Number of decimal places to show for float values
     """
     F = load_lift_typesystem().get_type(T_FEATURE)
     features = list(cas.select(F))
@@ -182,16 +183,70 @@ def print_features(cas, sort_by='name'):
     else:
         features.sort(key=lambda f: f.name)
     
+    # Calculate max name length for proper alignment
+    max_name_len = max(len(abbreviate_package_name(f.name) if abbreviate else f.name) 
+                       for f in features)
+    name_width = max(max_name_len, 30)  # At least 30 chars
+    total_width = name_width + 20
+    
     # Print header
-    print("\n" + "=" * 60)
+    print("\n" + "=" * total_width)
     print(f"Features (sorted by {sort_by})")
-    print("=" * 60)
-    print(f"{'Name':<40} {'Value':>10}")
-    print("-" * 60)
+    print("=" * total_width)
+    print(f"{'Name':<{name_width}} {'Value':>15}")
+    print("-" * total_width)
     
     # Print features
     for feature in features:
-        print(f"{feature.name:<40} {feature.value:>10}")
+        display_name = abbreviate_package_name(feature.name) if abbreviate else feature.name
+        
+        # Format value based on type
+        if isinstance(feature.value, float):
+            print(f"{display_name:<{name_width}} {feature.value:>15.{float_decimals}f}")
+        elif isinstance(feature.value, int):
+            print(f"{display_name:<{name_width}} {feature.value:>15d}")
+        else:
+            print(f"{display_name:<{name_width}} {str(feature.value):>15}")
     
-    print("-" * 60)
+    print("-" * total_width)
     print(f"Total: {len(features)} features\n")
+
+def abbreviate_package_name(name: str) -> str:
+    """
+    Abbreviate Java-style package names while keeping important parts readable.
+    Always keeps the last part full, and keeps parts that look like class names.
+    
+    Example:
+        de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_ADJ_PER_de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token
+        -> d.t.u.d.c.a.l.t.p.POS_ADJ_PER_d.t.u.d.c.a.s.t.Token
+    """
+    parts = name.split('.')
+    
+    if len(parts) <= 2:
+        return name  # Already short enough
+    
+    abbreviated = []
+    for i, part in enumerate(parts):
+        # Always keep the last part full
+        if i == len(parts) - 1:
+            abbreviated.append(part)
+        # Keep the part full if it:
+        # - Contains uppercase letters (but not just first letter)
+        # - Contains underscores
+        # - Contains digits
+        # - Is very short (already abbreviated)
+        elif (len(part) <= 1 or 
+              '_' in part or 
+              any(c.isupper() for c in part[1:]) or
+              any(c.isdigit() for c in part)):
+            abbreviated.append(part)
+        else:
+            abbreviated.append(part[0])
+    
+    return '.'.join(abbreviated)
+
+def format_value(value, decimals=4):
+    """Format a value, showing fewer decimals for floats."""
+    if isinstance(value, float):
+        return f"{value:.{decimals}f}"
+    return str(value)
