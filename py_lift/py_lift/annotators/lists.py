@@ -1,23 +1,53 @@
 from cassis import Cas
 from py_lift.decorators import supported_languages
 from py_lift.dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA
-from abc import ABC
 from py_lift.annotators.api import SEL_BaseAnnotator
 from pathlib import Path
 from typing import Union, Set
+import gzip
+import zipfile
 
-class SEL_ListReader(ABC):
-    """Abstract class for reading lists."""
-
+class SEL_ListReader:
+    """Reader for text lists from plain text, gzip, or zip files."""
+    
     def __init__(self, filename: Union[str, Path]):
-        self.filename: Path = Path(filename)
-
+        self.filename = Path(filename)
+        if not self.filename.exists():
+            raise FileNotFoundError(f"File not found: {self.filename}")
+    
     def read_list(self) -> Set[str]:
         """
-        Reads lines from a txt file and returns as a set (stripped of whitespace).
+        Reads lines from a text file and returns as a set (stripped of whitespace).
+        Supports .txt, .gz, and .zip files.
         """
+        suffix = self.filename.suffix.lower()
+        
+        if suffix == '.gz':
+            return self._read_gzip()
+        elif suffix == '.zip':
+            return self._read_zip()
+        else:
+            return self._read_plain()
+    
+    def _read_plain(self) -> Set[str]:
         with self.filename.open('r', encoding='utf-8') as f:
             return {line.strip() for line in f if line.strip()}
+    
+    def _read_gzip(self) -> Set[str]:
+        with gzip.open(self.filename, 'rt', encoding='utf-8') as f:
+            return {line.strip() for line in f if line.strip()}
+    
+    def _read_zip(self) -> Set[str]:
+        with zipfile.ZipFile(self.filename) as zf:
+            namelist = zf.namelist()
+            if not namelist:
+                raise ValueError(f"Zip file is empty: {self.filename}")
+            
+            # Read first text-like file
+            name = namelist[0]
+            with zf.open(name) as f:
+                lines = (line.decode('utf-8').strip() for line in f)
+                return {line for line in lines if line}
         
 @supported_languages('de', 'en', 'sl')
 class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):

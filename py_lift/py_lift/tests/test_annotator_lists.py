@@ -1,9 +1,10 @@
 
 import pytest
+from pathlib import Path
 from py_lift.util import load_lift_typesystem, construct_cas, assert_annotations
 from py_lift.tests.lift_fixtures import *
 from cassis import Cas
-from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator
+from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator, SEL_ListReader
 
 def test_finite_verbs_annotator():
     ts = load_lift_typesystem()
@@ -41,3 +42,16 @@ def test_easy_words_annotator_unsupported_language():
         SE_EasyWordAnnotator("de")
     
     assert "de is not a supported language." in str(excinfo.value)
+
+def test_list_reader():
+    dict_txt = Path(__file__).parent / "data" / "dict_de.txt"
+    dict_zip = Path(__file__).parent / "data" / "dict_de.zip"
+    dict_gz = Path(__file__).parent / "data" / "dict_de.gz"
+
+    reader_txt = SEL_ListReader(dict_txt)
+    reader_zip = SEL_ListReader(dict_zip)
+    reader_gz = SEL_ListReader(dict_gz)
+
+    assert reader_txt.read_list() == {'Test', 'ist', 'ein', 'Das'}
+    assert reader_zip.read_list() == {'Test', 'ist', 'ein', 'Das'}
+    assert reader_gz.read_list() == {'Test', 'ist', 'ein', 'Das'}
