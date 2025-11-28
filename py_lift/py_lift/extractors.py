@@ -150,7 +150,7 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         
         if count_divisor == 0:
             if self.strict:
-                raise ZeroDivisionError(f"Division by zero when calculating ratio {name}.")
+                raise ZeroDivisionError(f"Division by zero when calculating ratio {self.feature_name()}.")
             ratio = 0.0
         else:
             ratio = count_dividend / count_divisor

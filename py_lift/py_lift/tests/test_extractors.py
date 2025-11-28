@@ -40,7 +40,7 @@ def test_easy_word_extractor(cas_en_simple):
 
     i = 0
     for feature in cas_en_simple.select(T_FEATURE):
-        assert feature.get('name') == 'EasyWord_PER_Token'
+        assert feature.get('name') == 'EasyWord_COUNT_PER_Token_COUNT'
         assert feature.value == 7/9
         i += 1
 

@@ -27,7 +27,7 @@ def test_ratio_extractor(cas_en_simple):
 
     i = 0
     for feature in cas_en_simple.select(T_FEATURE):
-        assert feature.get('name') == 'Token_PER_Sentence'
+        assert feature.get('name') == 'Token_COUNT_PER_Sentence_COUNT'
         assert feature.value == 4.5
         i += 1
 
@@ -45,7 +45,7 @@ def test_ratio_exception(cas_no_annotations):
     
     i = 0
     for feature in cas_no_annotations.select(T_FEATURE):
-        assert feature.get('name') == 'Token_PER_Sentence'
+        assert feature.get('name') == 'Token_COUNT_PER_Sentence_COUNT'
         assert feature.value == 0
         i += 1
 
