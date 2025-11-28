@@ -1,11 +1,12 @@
 from cassis import Cas
 from py_lift.decorators import supported_languages
-from py_lift.dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA
+from py_lift.dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA, T_SENT
 from py_lift.annotators.api import SEL_BaseAnnotator
 from pathlib import Path
 from typing import Union, Set
 import gzip
 import zipfile
+from py_lift.util import is_digits_or_punct, contains_punct_except_apostrophe
 
 class SEL_ListReader:
     """Reader for text lists from plain text, gzip, or zip files."""
@@ -105,4 +106,65 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
                 print("Found easy word: ", l_str)
             else:
                 print("Found not so easy word: ", l_str)
+        return True
+
+
+@supported_languages('de')
+class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
+
+    STRUCTURE_NAME = "OOV_Token"
+
+    def __init__(self, language):
+        SEL_ListReader.__init__(self, self._get_path_for_language(language))
+        SEL_BaseAnnotator.__init__(self, language)
+        self.S = self.ts.get_type(T_STRUCTURE)
+
+    def _get_path_for_language(self, language) -> Path:
+        lang_to_path = {
+            'de': Path(__file__).parent.parent.parent.parent / "shared_resources" / "resources" / "lift_resources_lists" / "lift_resources_lists" / "full_form" / "hunspell_dict_de.txt.zip"
+        }
+        try:
+            return lang_to_path[language]
+        except KeyError:
+            raise ValueError(f"No list file defined for language '{language}'.")
+
+    def _uppercase_at_sentence_start(self, token, cas):
+        """Check if token is at the beginning of a sentence and starts with uppercase."""
+        for sentence in cas.select(T_SENT):
+            if token.begin == sentence.begin:
+                return token.get_covered_text().isupper()
+        return False
+
+    def process(self, cas: Cas) -> bool:
+
+        # store all sentence start offsets to speed up checks
+        sentence_starts = {sentence.begin for sentence in cas.select(T_SENT)}
+
+        known_tokens = self.read_list()
+        for token in cas.select(T_TOKEN):
+            token_text = token.get_covered_text()
+            
+            # single letter tokens are not considered OOV
+            if len(token_text) < 2:
+                continue
+
+            # tokens only containing digits or punctuation are not considered OOV
+            if is_digits_or_punct(token_text):
+                continue
+
+            # tokens containing punctuation (except apostrophes) are not considered OOV
+            if contains_punct_except_apostrophe(token_text):
+                continue
+
+            # lowercase token if it is at the beginning of a sentence
+            if token.begin in sentence_starts and token_text[:1].isupper():
+                if token_text in known_tokens:
+                    continue # do not lower case known tokens
+                token_text = token_text.lower()                
+
+            if token_text not in known_tokens:
+                print(token.get_covered_text())
+                feature = self.S(name=self.STRUCTURE_NAME, begin=token.begin, end=token.end)
+                cas.add(feature)
+
         return True
