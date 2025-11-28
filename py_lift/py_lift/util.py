@@ -4,6 +4,8 @@ import pathlib
 import csv
 import polars as pl
 import inspect
+import re
+import string
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
 from types import ModuleType
@@ -250,3 +252,20 @@ def format_value(value, decimals=4):
     if isinstance(value, float):
         return f"{value:.{decimals}f}"
     return str(value)
+
+
+# Match only digits and common punctuation
+_PATTERN_DIGITS_AND_PUNCT = re.compile(r'^[\d!-/:-@\[-`{-~]+$')
+
+def is_digits_or_punct(s: str) -> bool:
+    """Check if string contains only digits and punctuation."""
+    return bool(_PATTERN_DIGITS_AND_PUNCT.match(s))
+
+punct = string.punctuation.replace("'", "")
+# Escape all special characters for use in a regex character class
+escaped_punct = re.escape(punct)
+_PATTERN_PUNCT_NO_APOSTROPHE = re.compile(f"[{escaped_punct}]")
+
+def contains_punct_except_apostrophe(s: str) -> bool:
+    """Check if string contains at least one punctuation character except apostrophe."""
+    return bool(_PATTERN_PUNCT_NO_APOSTROPHE.search(s))
