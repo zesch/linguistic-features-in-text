@@ -1,9 +1,9 @@
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE
 from py_lift.util import load_lift_typesystem
-from typing import Callable, Any, Optional
+from typing import Callable, Any, Optional, Union, List
 from abc import ABC, abstractmethod
-from collections import Counter
+
 
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
@@ -15,12 +15,23 @@ class FEL_BaseExtractor(ABC):
 
     def __init__(self):
         self.ts = load_lift_typesystem()
-    
+
     @abstractmethod
     def extract(self, cas: Cas) -> bool:
         pass
 
-class FEL_AnnotationCounter(FEL_BaseExtractor):
+class FEL_BaseCounter(ABC):
+    """Marker base class for all counters."""
+    
+    @abstractmethod
+    def count(self, cas: Cas) -> int:
+        pass
+
+    @abstractmethod
+    def feature_name(self) -> str:
+        pass
+
+class FEL_AnnotationCounter(FEL_BaseExtractor, FEL_BaseCounter):
     """Counts annotations of a specific type.
     For unique counts, a custom function can be provided to convert
     an annotation to a string representation.
@@ -39,6 +50,12 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
             lambda x: x.get_covered_text() if x is not None else ''
         )
     
+    def feature_name(self) -> str:
+        name = f"{self.type}_COUNT"
+        if self.unique:
+            name += "_UNIQUE"
+        return name
+        
     def count(self, cas: Cas) -> int:
         if not self.unique:
             return sum(1 for _ in cas.select(self.type))
@@ -46,33 +63,47 @@ class FEL_AnnotationCounter(FEL_BaseExtractor):
         # Count unique string representations
         unique_values = {self.to_string(anno) for anno in cas.select(self.type)}
         print(unique_values)
+
         return len(unique_values)
     
     def extract(self, cas: Cas) -> bool:
         count = self.count(cas)
-        name = f"{self.type}_COUNT"
-        if self.unique:
-            name += "_UNIQUE"
         
         F = self.ts.get_type(T_FEATURE)
-        feature = F(name=name, value=count, begin=0, end=0)
+        feature = F(name=self.feature_name(), value=count, begin=0, end=0)
         cas.add(feature)
 
         return True
 
-class FEL_FeatureValueCounter(FEL_BaseExtractor):
+class FEL_FeatureValueCounter(FEL_BaseExtractor, FEL_BaseCounter):
     """Counts occurrences of specific feature values."""
     
+    allowed_feature_values: List[str]
+
     def __init__(
         self, 
         _type: str, 
         feature_path: str, 
-        feature_values: Optional[list] = None
+        feature_values: Optional[Union[str, List[str]]] = None
     ):
         super().__init__()
         self.type = _type
         self.feature_path = feature_path
-        self.allowed_feature_values = feature_values or []
+
+        if feature_values is None:
+            self.allowed_feature_values = []
+        elif isinstance(feature_values, str):
+            self.allowed_feature_values = [feature_values]
+        else:
+            # TODO TBD do we want shallow copy here?
+            self.allowed_feature_values = list(feature_values)
+
+    def feature_name(self) -> str:
+        name = f"{self.type}"
+        if self.allowed_feature_values:
+            name += "_" + "_".join(self.allowed_feature_values)
+        name += "_FEATURECOUNT"
+        return name
     
     def _get_feature_value(self, anno):
         """Get feature value from annotation."""
@@ -95,12 +126,8 @@ class FEL_FeatureValueCounter(FEL_BaseExtractor):
     def extract(self, cas: Cas) -> bool:
         count = self.count(cas)
         
-        name = f"{self.type}_FEATURECOUNT_{self.feature_path}"
-        if self.allowed_feature_values:
-            name += "_" + "_".join(self.allowed_feature_values)
-        
         F = self.ts.get_type(T_FEATURE)
-        feature = F(name=name, value=count, begin=0, end=0)
+        feature = F(name=self.feature_name(), value=count, begin=0, end=0)
         cas.add(feature)
         
         return True
@@ -108,16 +135,18 @@ class FEL_FeatureValueCounter(FEL_BaseExtractor):
 class FEL_AnnotationRatio(FEL_BaseExtractor):
     """Computes ratio between two annotation counts."""
     
-    def __init__(self, counter_dividend: FEL_AnnotationCounter, counter_divisor: FEL_AnnotationCounter):
+    def __init__(self, counter_dividend: FEL_BaseCounter, counter_divisor: FEL_BaseCounter):
         super().__init__()
         self.counter_dividend = counter_dividend
         self.counter_divisor = counter_divisor
+
+    def feature_name(self) -> str:
+        name = f"{self.counter_dividend.feature_name()}_PER_{self.counter_divisor.feature_name()}"
+        return name        
     
     def extract(self, cas: Cas) -> bool:
         count_dividend = self.counter_dividend.count(cas)
         count_divisor = self.counter_divisor.count(cas)
-        
-        name = f"{self.counter_dividend.type}_PER_{self.counter_divisor.type}"
         
         if count_divisor == 0:
             if self.strict:
@@ -127,8 +156,9 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
             ratio = count_dividend / count_divisor
         
         F = self.ts.get_type(T_FEATURE)
-        feature = F(name=name, value=ratio, begin=0, end=0)
+        feature = F(name=self.feature_name(), value=ratio, begin=0, end=0)
         cas.add(feature)
+
         return True
 
 class FEL_Length(FEL_BaseExtractor):
