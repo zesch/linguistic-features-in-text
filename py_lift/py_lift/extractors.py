@@ -253,7 +253,7 @@ class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
         )
         
 class FE_TokensPerSentence(FEL_AnnotationRatio):
-    def __init__(self, ts):
+    def __init__(self, ts=None):
         super().__init__(
             FEL_AnnotationCounter('Token', ts=ts),
             FEL_AnnotationCounter('Sentence', ts=ts),

@@ -35,7 +35,7 @@ def test_textstat(cas_en_simple):
     FE_TextstatSmogIndex('en').extract(cas_en_simple)
     FE_TextstatSpacheReadability('en').extract(cas_en_simple)
     FE_TextstatSzigrisztPazos('es').extract(cas_en_simple)
-    FE_TextstatWienerSachtextformel_1('de').extract(cas_en_simple)
+    FE_TextstatWienerSachtextformel_1().extract(cas_en_simple)
 
 def test_unsupported_language_extractor(): 
     with pytest.raises(ValueError) as excinfo:
