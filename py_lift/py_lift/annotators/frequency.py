@@ -53,8 +53,8 @@ from py_lift.annotators.api import SEL_BaseAnnotator
 'vi')
 class SE_TokenZipfFrequency(SEL_BaseAnnotator):
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language, ts=None):
+        super().__init__(language, ts)
 
     def process(self, cas: Cas) -> bool:
         F = self.ts.get_type("org.lift.type.Frequency")

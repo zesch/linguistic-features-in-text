@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Union, Set
 import gzip
 import zipfile
+import io
 from py_lift.util import is_digits_or_punct, contains_punct_except_apostrophe
 
 class SEL_ListReader:
@@ -38,6 +39,16 @@ class SEL_ListReader:
         with gzip.open(self.filename, 'rt', encoding='utf-8') as f:
             return {line.strip() for line in f if line.strip()}
     
+    # def _read_zip(self) -> Set[str]:
+    #     with zipfile.ZipFile(self.filename) as zf:
+    #         namelist = zf.namelist()
+    #         if not namelist:
+    #             raise ValueError(f"Zip file is empty: {self.filename}")
+            
+    #         name = namelist[0]
+    #         with zf.open(name) as f:
+    #             lines = (line.decode('utf-8').strip() for line in f)
+    #             return {line for line in lines if line}
     def _read_zip(self) -> Set[str]:
         with zipfile.ZipFile(self.filename) as zf:
             namelist = zf.namelist()
@@ -47,18 +58,18 @@ class SEL_ListReader:
             # Read first text-like file
             name = namelist[0]
             with zf.open(name) as f:
-                lines = (line.decode('utf-8').strip() for line in f)
-                return {line for line in lines if line}
-        
+                with io.TextIOWrapper(f, encoding='utf-8') as text_file:
+                    return {stripped for raw in text_file if (stripped := raw.strip())}
+
 @supported_languages('de', 'en', 'sl')
 class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
     STRUCTURE_NAME = "FiniteVerb"
 
-    def __init__(self, language):
+    def __init__(self, language, ts=None):
         filename = self._get_filename_for_language(language)
         SEL_ListReader.__init__(self, filename)
-        SEL_BaseAnnotator.__init__(self, language)
+        SEL_BaseAnnotator.__init__(self, language, ts)
         self.S = self.ts.get_type(T_STRUCTURE)
 
     def _get_filename_for_language(self, language):
@@ -89,10 +100,10 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 @supported_languages('en')
 class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
-    def __init__(self, language):
+    def __init__(self, language, ts=None):
         filename = Path(__file__).parent.parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
         SEL_ListReader.__init__(self, filename)
-        SEL_BaseAnnotator.__init__(self, language)
+        SEL_BaseAnnotator.__init__(self, language, ts)
 
         self.EW = self.ts.get_type("org.lift.type.EasyWord")
 
@@ -114,9 +125,9 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
 
     STRUCTURE_NAME = "OOV_Token"
 
-    def __init__(self, language):
+    def __init__(self, language, ts=None):
         SEL_ListReader.__init__(self, self._get_path_for_language(language))
-        SEL_BaseAnnotator.__init__(self, language)
+        SEL_BaseAnnotator.__init__(self, language, ts)
         self.S = self.ts.get_type(T_STRUCTURE)
 
     def _get_path_for_language(self, language) -> Path:

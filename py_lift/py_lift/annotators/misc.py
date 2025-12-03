@@ -14,8 +14,8 @@ import polars as pl
 @supported_languages('en', 'es', 'fr', 'pt', 'de', 'it', 'ru', 'ar', 'eu', 'lv', 'nl')
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language, ts=None):
+        super().__init__(language, ts)
         self.spell = SpellChecker(language=self.language, case_sensitive=True)
                 
         self.A = self.ts.get_type(T_ANOMALY)
@@ -44,8 +44,8 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 @supported_languages('de', 'en')
 class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language, ts=None):
+        super().__init__(language, ts)
 
         # file_path = Path(
         #     __file__).parent.parent / "shared_resources" / "resources" / "abstractness" / self.language / "ratings_lrec16_koeper_ssiw.txt"
@@ -75,10 +75,10 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
 @supported_languages('en')
 class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
-    """ADD DOCUMENTATION."""
+    """TODO ADD DOCUMENTATION."""
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language, ts=None):
+        super().__init__(language, ts)
 
         file_path = Path(
             __file__).parent.parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"
@@ -172,8 +172,8 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
     Remove the old POS tag anotation.
     """
 
-    def __init__(self, language, mapping: str, remove_old: bool = True):
-        super().__init__(language)
+    def __init__(self, language, mapping: str, remove_old: bool = True, ts=None):
+        super().__init__(language, ts)
         self.pmap = self.read_pos_mapping(mapping)
         self.remove_old = remove_old
 
@@ -209,3 +209,62 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
                 cas.remove(pos)
 
         return True
+
+# class SE_RWSE_Annotator(SEL_BaseAnnotator):
+
+#     def __init__(self, model, magnitude: int = 10):
+#         super().__init__(language)
+#         self.pmap = self.read_pos_mapping(mapping)
+#         self.remove_old = remove_old
+#         self.checker = 
+    
+#     def create_rwse_annotations(self, cas: Cas, ts, magnitude: int = 10) -> bool:
+#         """
+#         Checks all tokens in all sentences of the CAS object,
+#         suggests corrections using fill-mask if necessary,
+#         and adds RWSE annotations to the CAS.
+#         """
+#         # Ensure RWSE type exists
+#         try:
+#             RWSE = ts.get_type(T_RWSE)
+#         except TypeNotFoundError:
+#             print("RWSE type not found. Creating...")
+#             ts.create_type(T_RWSE)
+#             RWSE = ts.get_type(T_RWSE)
+
+#         # Iterate over sentences
+#         for sentence in cas.select(T_SENTENCE):
+#             tokens = list(cas.select_covered(T_TOKEN, sentence))
+#             for i, token in enumerate(tokens):
+#                 token_str = token.get_covered_text()
+#                 text_str = cas.sofa_string
+
+#                 begin = tokens[i].begin
+#                 end = tokens[i].end
+
+#                 prefix = text_str[:begin]
+#                 suffix = text_str[end:]
+
+#                 # Ensure proper spacing around mask token
+#                 masked_sentence = f"{prefix.rstrip()} {MASK_TOKEN} {suffix.lstrip()}"
+
+#                 # Get correction suggestion (assumes check returns tuple or None)
+#                 results = self.check(token_str, masked_sentence=masked_sentence, magnitude=magnitude)
+#                 result = self.evaluate(token_str, results, magnitude)
+#                 if result is None:
+#                     continue  # No suggestion available
+
+#                 correct, certainty = result
+
+#                 # If correction suggested (case-insensitive comparison)
+#                 if token_str.lower() != correct.lower():
+#                     # Create new RWSE annotation
+#                     anno = RWSE(
+#                         begin=token.begin,
+#                         end=token.end,
+#                         suggestion=correct,
+#                         certainty=certainty
+#                     )
+#                     cas.add_annotation(anno)
+
+#         return True

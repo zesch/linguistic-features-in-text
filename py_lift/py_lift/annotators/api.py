@@ -7,9 +7,12 @@ class SEL_BaseAnnotator(ABC):
     
     supported_languages = set()  # to be defined in subclasses
     
-    def __init__(self, language):
+    def __init__(self, language, ts=None):
         self.language = language
-        self.ts = load_lift_typesystem()
+        if (ts is not None):
+            self.ts = ts
+        else:
+            self.ts = load_lift_typesystem()
         if hasattr(self, 'supported_languages'):
             if self.language not in self.supported_languages:
                 raise ValueError(

@@ -4,7 +4,7 @@ from py_lift.util import load_lift_typesystem
 from typing import Callable, Any, Optional, Union, List
 from abc import ABC, abstractmethod
 
-
+# TODO there must be a better way than to add ts as a parameter everywhere
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
 
@@ -13,8 +13,12 @@ class FEL_BaseExtractor(ABC):
     # but strict mode can be useful for debugging
     strict: bool = False 
 
-    def __init__(self):
-        self.ts = load_lift_typesystem()
+    def __init__(self, ts=None):
+        if (ts is not None):
+            self.ts = ts
+        else:
+            print(f"{self.__class__.__name__}: loading default typesystem")
+            self.ts = load_lift_typesystem()
 
     @abstractmethod
     def extract(self, cas: Cas) -> bool:
@@ -41,9 +45,10 @@ class FEL_AnnotationCounter(FEL_BaseExtractor, FEL_BaseCounter):
         self, 
         _type: str, 
         unique: bool = False, 
-        custom_to_string: Optional[Callable[[Any], str]] = None
+        custom_to_string: Optional[Callable[[Any], str]] = None,
+        ts=None
     ):
-        super().__init__()
+        super().__init__(ts)
         self.type = _type
         self.unique = unique
         self.to_string = custom_to_string or (
@@ -84,9 +89,10 @@ class FEL_FeatureValueCounter(FEL_BaseExtractor, FEL_BaseCounter):
         self, 
         _type: str, 
         feature_path: str, 
-        feature_values: Optional[Union[str, List[str]]] = None
+        feature_values: Optional[Union[str, List[str]]] = None,
+        ts=None
     ):
-        super().__init__()
+        super().__init__(ts)
         self.type = _type
         self.feature_path = feature_path
 
@@ -135,8 +141,8 @@ class FEL_FeatureValueCounter(FEL_BaseExtractor, FEL_BaseCounter):
 class FEL_AnnotationRatio(FEL_BaseExtractor):
     """Computes ratio between two annotation counts."""
     
-    def __init__(self, counter_dividend: FEL_BaseCounter, counter_divisor: FEL_BaseCounter):
-        super().__init__()
+    def __init__(self, counter_dividend: FEL_BaseCounter, counter_divisor: FEL_BaseCounter, ts=None):
+        super().__init__(ts)
         self.counter_dividend = counter_dividend
         self.counter_divisor = counter_divisor
 
@@ -162,8 +168,8 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         return True
 
 class FEL_Length(FEL_BaseExtractor):
-    def __init__(self, annotation_type: str):
-        super().__init__()
+    def __init__(self, annotation_type: str, ts=None):
+        super().__init__(ts)
         self.annotation_type = annotation_type
 
     def extract(self, cas: Cas) -> bool:
@@ -196,8 +202,8 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
     An example would be abstractness scores for each token. 
     """
     
-    def __init__(self, annotation_type: str, feature_path: str):
-        super().__init__()
+    def __init__(self, annotation_type: str, feature_path: str, ts=None):
+        super().__init__(ts)
         self.annotation_type = annotation_type
         self.feature_path = feature_path 
 
@@ -235,30 +241,33 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
         return True
     
 class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
-    def __init__(self):
-        super().__init__('SpellingAnomaly')
+    def __init__(self, ts=None):
+        super().__init__('SpellingAnomaly', ts=ts)
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
-    def __init__(self):
+    def __init__(self, ts=None):
         super().__init__(
-            FEL_AnnotationCounter('NC'),
-            FEL_AnnotationCounter('Sentence')
+            FEL_AnnotationCounter('NC', ts=ts),
+            FEL_AnnotationCounter('Sentence', ts=ts),
+            ts=ts
         )
         
 class FE_TokensPerSentence(FEL_AnnotationRatio):
-    def __init__(self):
+    def __init__(self, ts):
         super().__init__(
-            FEL_AnnotationCounter('Token'),
-            FEL_AnnotationCounter('Sentence')
+            FEL_AnnotationCounter('Token', ts=ts),
+            FEL_AnnotationCounter('Sentence', ts=ts),
+            ts=ts
         )
 
 class FE_EasyWordRatio(FEL_AnnotationRatio):
-    def __init__(self):
+    def __init__(self, ts=None):
         super().__init__(
-            FEL_AnnotationCounter('EasyWord'),
-            FEL_AnnotationCounter('Token')
+            FEL_AnnotationCounter('EasyWord', ts=ts),
+            FEL_AnnotationCounter('Token', ts=ts),
+            ts=ts
         )
 
 class FE_AbstractnessStats(FEL_Min_Max_Mean):
-    def __init__(self):
-        super().__init__('org.lift.type.AbstractnessConcreteness', 'value')
+    def __init__(self, ts=None):
+        super().__init__('org.lift.type.AbstractnessConcreteness', 'value', ts=ts)
