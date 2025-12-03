@@ -83,6 +83,8 @@ PRELAT=POS_PRON
 PRELS=POS_PRON
 # PRF	reflexives Personalpronomen	sich, einander, dich, mir
 PRF=POS_PRON
+# PROP  Pronominaladverbien damit
+PROP=POS_ADV
 # PTKA	Partikel bei Adjektiv oder Adverb	am [schönsten], zu [schnell]
 PTKA=POS_X
 # PTKANT	Antwortpartikel	ja, nein, danke, bitte
