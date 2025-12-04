@@ -3,6 +3,7 @@ T_DEP          = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Depen
 T_LEMMA        = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Lemma"
 T_MORPH        = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.morph.Morpheme"
 T_POS          = "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS"
+T_RWSE         = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.RWSE'
 T_SENT         = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence"
 T_SUGGESTION   = 'de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.SuggestedAction'
 T_TOKEN        = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"

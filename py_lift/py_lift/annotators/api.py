@@ -14,7 +14,8 @@ class SEL_BaseAnnotator(ABC):
         else:
             self.ts = load_lift_typesystem()
         if hasattr(self, 'supported_languages'):
-            if self.language not in self.supported_languages:
+            # empty means "supports all languages or languages are configured via model parameter etc."
+            if self.supported_languages and self.language not in self.supported_languages:
                 raise ValueError(
                     f"{self.language} is not a supported language."
                 )

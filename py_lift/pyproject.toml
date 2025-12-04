@@ -27,6 +27,7 @@ Deprecated = "^1.2.18"
 lift-resources-lists = {url = "https://pypi.cats.fernuni-hagen.de/packages/lift_resources_lists-0.1.0-py3-none-any.whl#sha256=12e49b03546a434753b2fc637cc0e57dd0b44bb4a44303b6a2a94897b791f3c1" }
 streamlit = "^1.50.0"
 spacy = "^3.8.7"
+rwse-checker = "^0.0.3"
 de-core-news-lg = {url = 'https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl'}
 en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl" }
 fr-core-news-lg = {url = "https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl" }

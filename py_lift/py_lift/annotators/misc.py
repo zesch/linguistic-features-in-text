@@ -1,13 +1,15 @@
 from cassis import Cas
+from cassis.typesystem import TypeNotFoundError
 
 from py_lift.decorators import supported_languages
 from py_lift.util import load_lift_typesystem, read_tsv_to_dict
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
-from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS
+from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS, T_RWSE, T_SENT
 from py_lift.annotators.api import SEL_BaseAnnotator
+from rwse_checker import rwse
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 import polars as pl
 
@@ -210,61 +212,66 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
 
         return True
 
-# class SE_RWSE_Annotator(SEL_BaseAnnotator):
-
-#     def __init__(self, model, magnitude: int = 10):
-#         super().__init__(language)
-#         self.pmap = self.read_pos_mapping(mapping)
-#         self.remove_old = remove_old
-#         self.checker = 
+class SE_RWSE_Annotator(SEL_BaseAnnotator):
+    """
+        Checks all tokens in all sentences of the CAS object,
+        suggests corrections using fill-mask if necessary,
+        and adds RWSE annotations to the CAS.
+    """
     
-#     def create_rwse_annotations(self, cas: Cas, ts, magnitude: int = 10) -> bool:
-#         """
-#         Checks all tokens in all sentences of the CAS object,
-#         suggests corrections using fill-mask if necessary,
-#         and adds RWSE annotations to the CAS.
-#         """
-#         # Ensure RWSE type exists
-#         try:
-#             RWSE = ts.get_type(T_RWSE)
-#         except TypeNotFoundError:
-#             print("RWSE type not found. Creating...")
-#             ts.create_type(T_RWSE)
-#             RWSE = ts.get_type(T_RWSE)
+    def __init__(self, model_name, confusion_sets: Union[str, Path, List[List[str]]], magnitude: int = 10, ts=None):
+        super().__init__(ts)
+        self.checker = rwse.RWSE_Checker(
+            confusion_sets=confusion_sets, 
+            model_name=model_name,
+        )
+        self.magnitude = magnitude
+    
+    def process(self, cas: Cas) -> bool:
+        # Ensure RWSE type exists
+        try:
+            RWSE = self.ts.get_type(T_RWSE)
+        except TypeNotFoundError:
+            print("RWSE type not found. Creating...")
+            self.ts.create_type(T_RWSE)
+            RWSE = self.ts.get_type(T_RWSE)
 
-#         # Iterate over sentences
-#         for sentence in cas.select(T_SENTENCE):
-#             tokens = list(cas.select_covered(T_TOKEN, sentence))
-#             for i, token in enumerate(tokens):
-#                 token_str = token.get_covered_text()
-#                 text_str = cas.sofa_string
+        # Iterate over sentences
+        for sentence in cas.select(T_SENT):
+            tokens = list(cas.select_covered(T_TOKEN, sentence))
+            for i, token in enumerate(tokens):
+                token_str = token.get_covered_text()
+                if (self.checker.in_confusion_sets(token_str)):
+                    text_str = cas.sofa_string
 
-#                 begin = tokens[i].begin
-#                 end = tokens[i].end
+                    begin = tokens[i].begin
+                    end = tokens[i].end
 
-#                 prefix = text_str[:begin]
-#                 suffix = text_str[end:]
+                    prefix = text_str[:begin]
+                    suffix = text_str[end:]
 
-#                 # Ensure proper spacing around mask token
-#                 masked_sentence = f"{prefix.rstrip()} {MASK_TOKEN} {suffix.lstrip()}"
+                    # Ensure proper spacing around mask token
+                    masked_sentence = f"{prefix.rstrip()} {rwse.MASK} {suffix.lstrip()}"
 
-#                 # Get correction suggestion (assumes check returns tuple or None)
-#                 results = self.check(token_str, masked_sentence=masked_sentence, magnitude=magnitude)
-#                 result = self.evaluate(token_str, results, magnitude)
-#                 if result is None:
-#                     continue  # No suggestion available
+                    # Get correction suggestion (assumes check returns tuple or None)
+                    print(masked_sentence)
+                    results = self.checker.check(token_str, masked_sentence)
+                    for result in results:
+                        print(result)
+                    
+                    corrected, certainty = self.checker.correct(token_str, masked_sentence, self.magnitude)
 
-#                 correct, certainty = result
+                    print(corrected, certainty)
 
-#                 # If correction suggested (case-insensitive comparison)
-#                 if token_str.lower() != correct.lower():
-#                     # Create new RWSE annotation
-#                     anno = RWSE(
-#                         begin=token.begin,
-#                         end=token.end,
-#                         suggestion=correct,
-#                         certainty=certainty
-#                     )
-#                     cas.add_annotation(anno)
+                    # if correction suggested (case-insensitive comparison)
+                    if token_str.lower() != corrected.lower():
+                        # create new RWSE annotation
+                        anno = RWSE(
+                            begin=token.begin,
+                            end=token.end,
+                            suggestion=corrected,
+                            certainty=certainty
+                        )
+                        cas.add_annotation(anno)
 
-#         return True
+        return True

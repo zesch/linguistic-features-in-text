@@ -6,8 +6,9 @@ class FE_FreqBandRatios(FEL_BaseExtractor):
     """Extractor that computes the ratio of frequency bands per token. 
     Assumes that 'org.lift.type.Frequency' structure annotations are present in the CAS."""
     
-    def __init__(self, ts=None):
+    def __init__(self, ts=None, verbose=False):
         super().__init__(ts)
+        self.verbose = verbose
     
     def extract(self, cas: Cas) -> bool:
         F = self.ts.get_type("FeatureAnnotationNumeric")
@@ -41,7 +42,8 @@ class FE_FreqBandRatios(FEL_BaseExtractor):
             feature = F(name=feature_name, value=ratio, begin=0, end=0)
             cas.add(feature)
 
-        self._print_distribution(band_counts, total)
+        if (self.verbose):
+            self._print_distribution(band_counts, total)
         
         return True
 

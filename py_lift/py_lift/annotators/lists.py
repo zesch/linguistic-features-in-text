@@ -1,4 +1,5 @@
 from cassis import Cas
+from collections import Counter
 from py_lift.decorators import supported_languages
 from py_lift.dkpro import T_TOKEN, T_POS, T_STRUCTURE, T_LEMMA, T_SENT
 from py_lift.annotators.api import SEL_BaseAnnotator
@@ -124,12 +125,16 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
 
     STRUCTURE_NAME = "OOV_Token"
+    global_oov_counter = Counter()
 
-    def __init__(self, language, ts=None):
+    def __init__(self, language, case_sensitive = False, ts=None, verbose = False, extra_known_tokens=None):
         SEL_ListReader.__init__(self, self._get_path_for_language(language))
         SEL_BaseAnnotator.__init__(self, language, ts)
         self.S = self.ts.get_type(T_STRUCTURE)
-
+        self.verbose = verbose
+        self.case_sensitive = case_sensitive
+        self.extra_known_tokens = set(extra_known_tokens) if extra_known_tokens else set()
+        
     def _get_path_for_language(self, language) -> Path:
         lang_to_path = {
             'de': Path(__file__).parent.parent.parent.parent / "shared_resources" / "resources" / "lift_resources_lists" / "lift_resources_lists" / "full_form" / "hunspell_dict_de.txt.zip"
@@ -151,30 +156,38 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
         # store all sentence start offsets to speed up checks
         sentence_starts = {sentence.begin for sentence in cas.select(T_SENT)}
 
-        known_tokens = self.read_list()
+        known_tokens = self.read_list() | self.extra_known_tokens
+        
+        if not self.case_sensitive:
+            known_tokens = {token.lower() for token in known_tokens}
+
         for token in cas.select(T_TOKEN):
             token_text = token.get_covered_text()
-            
+            check_token = token_text if self.case_sensitive else token_text.lower()
+
             # single letter tokens are not considered OOV
-            if len(token_text) < 2:
+            if len(check_token) < 2:
                 continue
 
             # tokens only containing digits or punctuation are not considered OOV
-            if is_digits_or_punct(token_text):
+            if is_digits_or_punct(check_token):
                 continue
 
             # tokens containing punctuation (except apostrophes) are not considered OOV
-            if contains_punct_except_apostrophe(token_text):
+            if contains_punct_except_apostrophe(check_token):
                 continue
 
-            # lowercase token if it is at the beginning of a sentence
-            if token.begin in sentence_starts and token_text[:1].isupper():
-                if token_text in known_tokens:
-                    continue # do not lower case known tokens
-                token_text = token_text.lower()                
+            if self.case_sensitive:
+                # lowercase token if it is at the beginning of a sentence
+                if token.begin in sentence_starts and token_text[:1].isupper():
+                    if token_text in known_tokens:
+                        continue # do not lower case known tokens
+                    token_text = token_text.lower()                
 
-            if token_text not in known_tokens:
-                print(token.get_covered_text())
+            if check_token not in known_tokens:
+                if (self.verbose):
+                    print(check_token)
+                SE_OOV_Annotator.global_oov_counter[check_token] += 1
                 feature = self.S(name=self.STRUCTURE_NAME, begin=token.begin, end=token.end)
                 cas.add(feature)
 
