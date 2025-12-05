@@ -219,22 +219,17 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
         and adds RWSE annotations to the CAS.
     """
     
-    def __init__(self, model_name, confusion_sets: Union[str, Path, List[List[str]]], magnitude: int = 10, ts=None):
+    def __init__(self, model_name, confusion_sets: Union[str, Path, List[List[str]]], magnitude: int = 10, case_sensitive=False, ts=None):
         super().__init__(ts)
         self.checker = rwse.RWSE_Checker(
             confusion_sets=confusion_sets, 
             model_name=model_name,
+            case_sensitive=case_sensitive
         )
         self.magnitude = magnitude
     
     def process(self, cas: Cas) -> bool:
-        # Ensure RWSE type exists
-        try:
-            RWSE = self.ts.get_type(T_RWSE)
-        except TypeNotFoundError:
-            print("RWSE type not found. Creating...")
-            self.ts.create_type(T_RWSE)
-            RWSE = self.ts.get_type(T_RWSE)
+        RWSE = self.ts.get_type(T_RWSE)
 
         # Iterate over sentences
         for sentence in cas.select(T_SENT):
@@ -253,15 +248,7 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
                     # Ensure proper spacing around mask token
                     masked_sentence = f"{prefix.rstrip()} {rwse.MASK} {suffix.lstrip()}"
 
-                    # Get correction suggestion (assumes check returns tuple or None)
-                    print(masked_sentence)
-                    results = self.checker.check(token_str, masked_sentence)
-                    for result in results:
-                        print(result)
-                    
-                    corrected, certainty = self.checker.correct(token_str, masked_sentence, self.magnitude)
-
-                    print(corrected, certainty)
+                    corrected, certainty, _ = self.checker.correct(token_str, masked_sentence, self.magnitude)
 
                     # if correction suggested (case-insensitive comparison)
                     if token_str.lower() != corrected.lower():
@@ -272,6 +259,6 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
                             suggestion=corrected,
                             certainty=certainty
                         )
-                        cas.add_annotation(anno)
+                        cas.add(anno)
 
         return True

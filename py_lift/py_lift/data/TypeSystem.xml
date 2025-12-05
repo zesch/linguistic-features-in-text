@@ -62,7 +62,23 @@ Usually in [0,1].</description>
       </features>
     </typeDescription>
 
-
+        <typeDescription>
+            <name>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.RWSE</name>
+            <description/>
+            <supertypeName>de.tudarmstadt.ukp.dkpro.core.api.anomaly.type.Anomaly</supertypeName>
+            <features>
+                <featureDescription>
+                    <name>suggestion</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                <featureDescription>
+                    <name>certainty</name>
+                    <description/>
+                    <rangeTypeName>uima.cas.Float</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
 
 
 
