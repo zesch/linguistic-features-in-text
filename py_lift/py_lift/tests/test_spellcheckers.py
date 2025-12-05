@@ -34,7 +34,7 @@ def test_rwse():
     cas = construct_cas(ts, tokens, lemmas, pos_tags)
     
     S = ts.get_type(T_SENT)
-    cas.add_annotation(S(begin=0, end=len(cas.sofa_string)))
+    cas.add(S(begin=0, end=len(cas.sofa_string)))
 
     confusion_sets = [["Beispiel","Besenstiel"],["gut","glut"]]
     SE_RWSE_Annotator(model_name="bert-base-multilingual-uncased", confusion_sets=confusion_sets).process(cas)

@@ -34,7 +34,6 @@ en-core-web-md = {url = "https://github.com/explosion/spacy-models/releases/down
 fr-core-news-lg = {url = "https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.8.0/fr_core_news_lg-3.8.0-py3-none-any.whl" }
 sl-core-news-sm = {url = "https://github.com/explosion/spacy-models/releases/download/sl_core_news_sm-3.8.0/sl_core_news_sm-3.8.0-py3-none-any.whl" } 
 tr-core-news-md = {url = "https://pypi.cats.fernuni-hagen.de/packages/tr_core_news_md-1.0-py3-none-any.whl" }
-# tr-core-news-md = {path = "lib/tr_core_news_md-1.0-py3-none-any.whl" }
 
 [[tool.poetry.source]]
 name = "catalpa-pypi"

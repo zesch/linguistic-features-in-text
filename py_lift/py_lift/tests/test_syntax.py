@@ -104,7 +104,7 @@ def test_multi_sentence_results():
             stored_vals[numfeat.get("name")] = numfeat.get("value")
 
         fe2cas.annotate(cas, "de")
-        cas.to_xmi("modified.xmi")
+        #cas.to_xmi("modified.xmi")
 
     # process the manual annos in the conllu file
     goldconllu = load_from_file(conllufile)
