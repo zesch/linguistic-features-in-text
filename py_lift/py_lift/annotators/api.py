@@ -5,7 +5,7 @@ from py_lift.util import load_lift_typesystem
 class SEL_BaseAnnotator(ABC):
     """Marker base class for all annotators."""
     
-    supported_languages = set()  # to be defined in subclasses
+    supported_languages: set[str] = set()  # to be defined in subclasses via decorator
     
     def __init__(self, language, ts=None):
         self.language = language

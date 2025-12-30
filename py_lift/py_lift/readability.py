@@ -4,13 +4,13 @@ from py_lift.dkpro import T_FEATURE
 from textstat import textstat
 from py_lift.extractors import FEL_BaseExtractor
 from abc import abstractmethod
+from typing import Callable
 
 class FEL_ReadabilityScore(FEL_BaseExtractor):
-    supported_languages = set()
+    supported_languages: set[str] = set()
     
-    def __init__(self, language, ts=None):
-        super().__init__(ts)
-        self.language = language
+    def __init__(self, language):
+        self.language: str = language
         if hasattr(self, 'supported_languages'):
             if self.language not in self.supported_languages:
                 raise ValueError(
@@ -30,7 +30,7 @@ class FEL_ReadabilityScore(FEL_BaseExtractor):
 
         feature_name = self.name() + '_' + self.language
 
-        F = self.ts.get_type(T_FEATURE)
+        F = cas.typesystem.get_type(T_FEATURE)
         feature = F(name=feature_name, value=readability_score, begin=0, end=0)
         cas.add(feature)
 
@@ -39,8 +39,8 @@ class FEL_ReadabilityScore(FEL_BaseExtractor):
 class FEL_TextstatReadabilityScore(FEL_ReadabilityScore):
     def __init__(self, language, score_func, name, **kwargs):
         super().__init__(language, **kwargs)
-        self._score_func = score_func
-        self._name = name
+        self._score_func: Callable[..., float] = score_func
+        self._name: str = name
 
     def name(self):
         return self._name
@@ -50,12 +50,11 @@ class FEL_TextstatReadabilityScore(FEL_ReadabilityScore):
 
 @supported_languages('en', 'de', 'es', 'fr', 'it', 'nl', 'ru')
 class FE_TextstatFleschIndex(FEL_TextstatReadabilityScore):
-    def __init__(self, language, ts=None):
+    def __init__(self, language):
         super().__init__(
             language,
             textstat.flesch_reading_ease,
             'Readability_Score_FleschKincaid',
-            ts=ts
         )
 
 @supported_languages('en', 'pl')
