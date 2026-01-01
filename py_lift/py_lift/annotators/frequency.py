@@ -1,5 +1,5 @@
 from cassis import Cas
-from py_lift.decorators import supported_languages
+from py_lift.decorators import supported_languages, requires_types
 from py_lift.util import load_lift_typesystem
 from wordfreq import zipf_frequency
 from py_lift.dkpro import T_TOKEN
@@ -51,13 +51,15 @@ from py_lift.annotators.api import SEL_BaseAnnotator
 'uk',
 'ur',
 'vi')
+@requires_types("org.lift.type.Frequency")
 class SE_TokenZipfFrequency(SEL_BaseAnnotator):
 
-    def __init__(self, language, ts=None):
-        super().__init__(language, ts)
+    def __init__(self, language):
+        super().__init__(language)
 
-    def process(self, cas: Cas) -> bool:
-        F = self.ts.get_type("org.lift.type.Frequency")
+    def _process(self, cas: Cas) -> bool:
+        
+        F = self.get_type("org.lift.type.Frequency")
 
         for token in cas.select(T_TOKEN):
             # TODO removed for now. This is language dependent and token.pos might not be set - need to check

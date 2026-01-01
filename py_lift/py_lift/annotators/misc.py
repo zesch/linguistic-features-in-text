@@ -1,8 +1,11 @@
+from prompt_toolkit.layout import D
+import polars as pl
+import logging
 from cassis import Cas
 from cassis.typesystem import TypeNotFoundError
 
 from py_lift.decorators import supported_languages
-from py_lift.util import load_lift_typesystem, read_tsv_to_dict
+from py_lift.util import load_lift_typesystem, read_tsv_to_dict, require_same_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS, T_RWSE, T_SENT
@@ -11,20 +14,21 @@ from rwse_checker import rwse
 from pathlib import Path
 from typing import Union, List
 
-import polars as pl
+logger = logging.getLogger(__name__)
 
 @supported_languages('en', 'es', 'fr', 'pt', 'de', 'it', 'ru', 'ar', 'eu', 'lv', 'nl')
 class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 
-    def __init__(self, language, ts=None):
-        super().__init__(language, ts)
+    def __init__(self, language):
+        super().__init__(language)
         self.spell = SpellChecker(language=self.language, case_sensitive=True)
                 
-        self.A = self.ts.get_type(T_ANOMALY)
-        self.S = self.ts.get_type(T_SUGGESTION)
-        self.FSArray = self.ts.get_type(TYPE_NAME_FS_ARRAY)
+        self.A = self.get_type(T_ANOMALY)
+        self.S = self.get_type(T_SUGGESTION)
+        self.FSArray = self.get_type(TYPE_NAME_FS_ARRAY)
 
-    def process(self, cas: Cas) -> bool: 
+    def _process(self, cas: Cas) -> bool:
+        
         for token in cas.select(T_TOKEN):
             t_str = token.get_covered_text()
             if t_str in self.spell.unknown([t_str]):
@@ -46,8 +50,8 @@ class SE_SpellErrorAnnotator(SEL_BaseAnnotator):
 @supported_languages('de', 'en')
 class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
-    def __init__(self, language, ts=None):
-        super().__init__(language, ts)
+    def __init__(self, language):
+        super().__init__(language)
 
         # file_path = Path(
         #     __file__).parent.parent / "shared_resources" / "resources" / "abstractness" / self.language / "ratings_lrec16_koeper_ssiw.txt"
@@ -64,10 +68,9 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 
         self.data_dict = read_tsv_to_dict(model_path, 'Word', 'AbstConc')        
 
-        self.ts = load_lift_typesystem()
-        self.AC = self.ts.get_type("org.lift.type.AbstractnessConcreteness")
+        self.AC = self.get_type("org.lift.type.AbstractnessConcreteness")
 
-    def process(self, cas: Cas) -> bool:
+    def _process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
             l_str = lemma.value
             if l_str in self.data_dict:
@@ -79,8 +82,8 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
 class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
     """TODO ADD DOCUMENTATION."""
 
-    def __init__(self, language, ts=None):
-        super().__init__(language, ts)
+    def __init__(self, language):
+        super().__init__(language)
 
         file_path = Path(
             __file__).parent.parent.parent.parent / "shared_resources" / "resources" / "evp" / "EVP.csv"
@@ -128,44 +131,48 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
             "WRB": "adverb"
         }
 
-        # TODO: Move pos info to keys of dictionary?
-        #self.cefr_words = {(word, pos): level for word, pos, level in zip(df['word'], df['pos'], df['level'])}
-
-        cefr_words = {}
+        cefr_words: dict[str, dict[str, str]] = {}
         for word, pos, level in zip(df['word'], df['pos'], df['level']):
+            w = str(word)
+            p = str(pos)
+            lv = str(level)
+            d = cefr_words.get(w, {})
+            d[p] = lv
+            cefr_words[w] = d
 
-            word_dict = cefr_words.get(word, {})
-            word_dict[pos] = level
-            cefr_words[word] = word_dict
-
-        self.evp_cefr_words = cefr_words
-        self.ts = load_lift_typesystem()
+        self.evp_cefr_words: dict[str, dict[str, str]] = cefr_words
+        self.cefr_order: dict[str, int] = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}
         self.T_evp_cefr = self.ts.get_type("org.lift.type.EvpCefr")
 
-    def process(self, cas: Cas) -> bool:
+    def cefr_rank(self, level: str) -> int:
+        return self.cefr_order.get(level, 999)
+
+    def _process(self, cas: Cas) -> bool:
+        changed = False
         for lemma in cas.select(T_LEMMA):
-            t_str = lemma.value
+            t_str = str(lemma.value)
+            word_dict = self.evp_cefr_words.get(t_str)
+            if not word_dict:
+                continue
 
-            if t_str in self.evp_cefr_words.keys():
-                if len(self.evp_cefr_words[t_str]) > 1:
-                    word_dict = self.evp_cefr_words[t_str]
+            t_pos = next(iter(cas.select_covered(T_POS, lemma)), None)
+            our_pos_value = None
+            if t_pos is not None:
+                pos_value = getattr(t_pos, "PosValue", None)
+                our_pos_value = self.pos_tag_map.get(pos_value)
 
-                    t_pos = cas.select_covered(type_=T_POS, covering_annotation=lemma)[0]
-                    pos_value = t_pos.PosValue
-                    our_pos_value = self.pos_tag_map[pos_value]
+            if our_pos_value and our_pos_value in word_dict:
+                pos = our_pos_value
+                level = word_dict[pos]
+            else:
+                # Choose the “lowest” level by CEFR order
+                pos, level = min(word_dict.items(), key=lambda kv: self.cefr_rank(kv[1]))
 
-                    if our_pos_value in word_dict.keys():
-                        cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=word_dict[our_pos_value], pos=our_pos_value)
-                        cas.add(cefr_word)
-                    else:
-                        # Take pos with lowest level
-                        cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=min(word_dict.values()), pos=min(word_dict, key=word_dict.get))
-                        cas.add(cefr_word)
-                else:
-                    cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=list(self.evp_cefr_words[t_str].values())[0], pos=list(self.evp_cefr_words[t_str].keys())[0])
-                    cas.add(cefr_word)
+            cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=level, pos=pos)
+            cas.add(cefr_word)
+            changed = True
 
-        return True
+        return changed
     
 @supported_languages('de')
 class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
@@ -174,8 +181,8 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
     Remove the old POS tag anotation.
     """
 
-    def __init__(self, language, mapping: str, remove_old: bool = True, ts=None):
-        super().__init__(language, ts)
+    def __init__(self, language, mapping: str, remove_old: bool = True):
+        super().__init__(language)
         self.pmap = self.read_pos_mapping(mapping)
         self.remove_old = remove_old
 
@@ -192,7 +199,7 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
                     pmap[key.strip()] = value.strip()
         return pmap
 
-    def process(self, cas: Cas) -> bool:
+    def _process(self, cas: Cas) -> bool:
 
         for pos in cas.select(T_POS):
             fine_tag = pos.get('PosValue')
@@ -218,18 +225,18 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
         suggests corrections using fill-mask if necessary,
         and adds RWSE annotations to the CAS.
     """
-    
-    def __init__(self, model_name, confusion_sets: Union[str, Path, List[List[str]]], magnitude: int = 10, case_sensitive=False, ts=None):
-        super().__init__(ts)
+
+    def __init__(self, language: str, model_name: str, confusion_sets: Union[str, Path, List[List[str]]], magnitude: int = 10, case_sensitive=False):
+        super().__init__(language=None)
         self.checker = rwse.RWSE_Checker(
             confusion_sets=confusion_sets, 
             model_name=model_name,
             case_sensitive=case_sensitive
         )
         self.magnitude = magnitude
-    
-    def process(self, cas: Cas) -> bool:
-        RWSE = self.ts.get_type(T_RWSE)
+
+    def _process(self, cas: Cas) -> bool:
+        RWSE = self.get_type(T_RWSE)
 
         # Iterate over sentences
         for sentence in cas.select(T_SENT):

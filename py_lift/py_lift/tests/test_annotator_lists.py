@@ -1,8 +1,10 @@
 
 import pytest
 from pathlib import Path
+from py_lift.annotators.api import UnsupportedLanguageError
 from py_lift.preprocessing import Spacy_Preprocessor
-from py_lift.util import load_lift_typesystem, construct_cas, assert_annotations
+from py_lift.util import load_lift_typesystem
+from py_lift.tests.util import construct_cas, assert_annotations
 from py_lift.tests.lift_fixtures import *
 from cassis import Cas
 from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator, SEL_ListReader, SE_OOV_Annotator
@@ -39,10 +41,10 @@ def test_easy_words_annotator(cas_en_simple):
     assert len(cas_en_simple.select("org.lift.type.EasyWord")) == 7
 
 def test_easy_words_annotator_unsupported_language():
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(UnsupportedLanguageError) as excinfo:
         SE_EasyWordAnnotator("de")
     
-    assert "de is not a supported language." in str(excinfo.value)
+    assert " language 'de' is not supported" in str(excinfo.value)
 
 def test_list_reader():
     dict_txt = Path(__file__).parent / "data" / "dict_de.txt"

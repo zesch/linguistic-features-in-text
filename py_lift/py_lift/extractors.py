@@ -1,7 +1,7 @@
 import logging
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE
-from py_lift.util import load_lift_typesystem
+from py_lift.util import get_lift_typesystem
 from typing import Callable, Any, Optional, Union, List
 from abc import ABC, abstractmethod
 
@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
+
+    @property
+    def ts(self):
+        return get_lift_typesystem()
 
     def __init__(self, strict: bool = False):
         self.strict = strict
@@ -18,7 +22,6 @@ class FEL_BaseExtractor(ABC):
         pass
 
     def _feature_type(self, cas: Cas):
-        # Hole Feature-Typ immer aus dem CAS-TypeSystem
         return cas.typesystem.get_type(T_FEATURE)
 
     def _add_feature(self, cas: Cas, name: str, value: Union[int, float, str]):

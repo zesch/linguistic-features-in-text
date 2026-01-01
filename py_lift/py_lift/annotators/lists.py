@@ -70,8 +70,8 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
     def __init__(self, language, ts=None):
         filename = self._get_filename_for_language(language)
         SEL_ListReader.__init__(self, filename)
-        SEL_BaseAnnotator.__init__(self, language, ts)
-        self.S = self.ts.get_type(T_STRUCTURE)
+        SEL_BaseAnnotator.__init__(self, language)
+        self.S = self.get_type(T_STRUCTURE)
 
     def _get_filename_for_language(self, language):
         lang_to_file = {
@@ -84,7 +84,7 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         except KeyError:
             raise ValueError(f"No list file defined for language '{language}'.")
 
-    def process(self, cas: Cas) -> bool:
+    def _process(self, cas: Cas) -> bool:
         finite_verb_postags = self.read_list()
         for token in cas.select(T_TOKEN):
             t_pos = cas.select_covered(type_=T_POS, covering_annotation=token)[0]
@@ -104,11 +104,11 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
     def __init__(self, language, ts=None):
         filename = Path(__file__).parent.parent.parent.parent / "shared_resources" / "resources" / "easy_words" / "en_BNC_easy_words.txt"
         SEL_ListReader.__init__(self, filename)
-        SEL_BaseAnnotator.__init__(self, language, ts)
+        SEL_BaseAnnotator.__init__(self, language)
 
-        self.EW = self.ts.get_type("org.lift.type.EasyWord")
+        self.EW = self.get_type("org.lift.type.EasyWord")
 
-    def process(self, cas: Cas) -> bool:
+    def _process(self, cas: Cas) -> bool:
         for lemma in cas.select(T_LEMMA):
             l_str = lemma.value
             # TODO punctuation currently counted as not easy word
@@ -127,10 +127,10 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
     STRUCTURE_NAME = "OOV_Token"
     global_oov_counter = Counter()
 
-    def __init__(self, language, case_sensitive = False, ts=None, verbose = False, extra_known_tokens=None):
+    def __init__(self, language, case_sensitive = False, verbose = False, extra_known_tokens=None):
         SEL_ListReader.__init__(self, self._get_path_for_language(language))
-        SEL_BaseAnnotator.__init__(self, language, ts)
-        self.S = self.ts.get_type(T_STRUCTURE)
+        SEL_BaseAnnotator.__init__(self, language)
+        self.S = self.get_type(T_STRUCTURE)
         self.verbose = verbose
         self.case_sensitive = case_sensitive
         self.extra_known_tokens = set(extra_known_tokens) if extra_known_tokens else set()
@@ -151,7 +151,7 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
                 return token.get_covered_text().isupper()
         return False
 
-    def process(self, cas: Cas) -> bool:
+    def _process(self, cas: Cas) -> bool:
 
         # store all sentence start offsets to speed up checks
         sentence_starts = {sentence.begin for sentence in cas.select(T_SENT)}

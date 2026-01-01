@@ -6,48 +6,94 @@ import polars as pl
 import inspect
 import re
 import string
+import os
+import pathlib
+from functools import lru_cache
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE, T_TOKEN, T_LEMMA, T_POS
 from types import ModuleType
-from typing import Type, List
+from typing import Type, List, Union, Optional
 from lingua import LanguageDetectorBuilder
 from importlib.resources import files
+
+
+# --- Singleton LIFT TypeSystem ------------------------------------------------
+
+@lru_cache(maxsize=1)
+def get_lift_typesystem() -> cassis.TypeSystem:
+    """Return the singleton LIFT TypeSystem instance.
+    This guarantees identity equality across the process.
+    """
+    with (files("py_lift.data") / "TypeSystem.xml").open("rb") as f:
+        ts = cassis.load_typesystem(f)
+    return ts
+
+
+# Backward-compatible alias (semantic: returns the cached singleton).
+def load_lift_typesystem() -> cassis.TypeSystem:
+    return get_lift_typesystem()
+
+def reset_lift_typesystem_cache() -> None:
+    """For tests: clear the singleton cache so the next call rebuilds the TS."""
+    get_lift_typesystem.cache_clear()
+
+
+# --- CAS helpers --------------------------------------------------------------
+
+def new_lift_cas() -> cassis.Cas:
+    """Create a new CAS that uses the singleton LIFT TypeSystem."""
+    return cassis.Cas(typesystem=get_lift_typesystem())
+
+
+def load_cas_from_xmi_with_lift_ts(source: Union[str, os.PathLike, bytes, bytearray]) -> cassis.Cas:
+    """Load a CAS from XMI, enforcing the singleton LIFT TypeSystem identity."""
+    ts = get_lift_typesystem()
+    # cassis.load_cas_from_xmi supports path-like or bytes and accepts typesystem=
+    if isinstance(source, (bytes, bytearray)):
+        return cassis.load_cas_from_xmi(source, typesystem=ts)
+    else:
+        with open(source, "rb") as fh:
+            return cassis.load_cas_from_xmi(fh, typesystem=ts)
+
+
+# --- Generic TypeSystem resolver (robust isinstance mapping) ------------------
+
+def load_typesystem(ts_or_path: Union[cassis.TypeSystem, str, os.PathLike]) -> cassis.TypeSystem:
+    """Return a TypeSystem from a path or pass-through an existing one.
+    Note: This loads a NEW TypeSystem when given a path; it is not the singleton.
+    Use get_lift_typesystem() for the LIFT TS shared across annotators.
+    """
+    if isinstance(ts_or_path, cassis.TypeSystem):
+        return ts_or_path
+    if isinstance(ts_or_path, (str, os.PathLike)):
+        with open(ts_or_path, "rb") as f:
+            return cassis.load_typesystem(f)
+    raise TypeError(
+        f"Unsupported typesystem argument of type {type(ts_or_path)!r}; "
+        f"expected cassis.TypeSystem, str, or os.PathLike."
+    )
+
+
+# --- Guards / diagnostics -----------------------------------------------------
+
+class TypeSystemMismatchError(TypeError):
+    pass
+
+
+def require_same_typesystem(cas: cassis.Cas, ts: Optional[cassis.TypeSystem] = None) -> None:
+    """Ensure CAS uses the exact same TypeSystem instance (identity) as the given or LIFT TS."""
+    expected = ts if ts is not None else get_lift_typesystem()
+    ts_cas = getattr(cas, "typesystem", None) or getattr(cas, "type_system", None)
+    if ts_cas is not expected:
+        raise TypeSystemMismatchError(
+            "CAS TypeSystem is not the LIFT TypeSystem instance. "
+            "Create the CAS with Cas(typesystem=get_lift_typesystem()) or pass "
+            "typesystem=get_lift_typesystem() when loading XMI."
+        )
 
 def detect_language(text: str) -> str:
     detector = LanguageDetectorBuilder.from_all_spoken_languages().build()
     return str(detector.detect_language_of(text).iso_code_639_1.name).lower()
-
-# def load_lift_typesystem() -> cassis.TypeSystem:
-#     return load_typesystem('py_lift/data/TypeSystem.xml')
-
-def load_lift_typesystem() -> cassis.TypeSystem:
-    with (files("py_lift.data") / "TypeSystem.xml").open("rb") as f:
-        return cassis.load_typesystem(f)
-
-def load_typesystem(typesystem: typing.Union[cassis.TypeSystem, str]) -> cassis.TypeSystem:
-    def load_typesystem_from_file(path):
-        with open(path, 'rb') as f:
-            return cassis.load_typesystem(f)
-
-    ts_typemap = {
-        pathlib.Path: load_typesystem_from_file,
-        str: load_typesystem_from_file,
-        cassis.TypeSystem: identity
-    }
-
-    return map_from_type(typesystem, ts_typemap)
-
-def map_from_type(x, type_to_mapper: dict):
-    T = type(x)
-    mapping_fn = type_to_mapper.get(T)
-
-    if mapping_fn is None:
-        raise ValueError
-
-    return mapping_fn(x)
-
-def identity(x):
-    return x
 
 def resolve_annotation(annotation_path: str, feature_seperator='/') -> typing.Tuple[str, str]:
     if feature_seperator == '.':
@@ -82,60 +128,6 @@ def read_tsv_to_dict(filename, key_column, value_column):
             result[key] = value
     return result
 
-def construct_cas(ts, tokens, lemmas, pos_tags) -> Cas:
-    text = ' '.join(tokens)
-
-    cas = cassis.Cas(typesystem=ts)
-    cas.sofa_string = text
-
-    begin = 0
-    for token, lemma, pos in zip(tokens, lemmas, pos_tags):
-        end = begin + len(token)
-        
-        # Token annotation
-        TokenType = ts.get_type(T_TOKEN)
-        token_ann = TokenType(begin=begin, end=end)
-        cas.add(token_ann)
-        
-        # Lemma annotation
-        LemmaType = ts.get_type(T_LEMMA)
-        lemma_ann = LemmaType(begin=begin, end=end)
-        lemma_ann.value = lemma
-        cas.add(lemma_ann)
-        
-        # POS annotation
-        POSType = ts.get_type(T_POS)
-        pos_ann = POSType(begin=begin, end=end)
-        pos_ann.PosValue = pos
-        cas.add(pos_ann)
-
-        begin += len(token) + 1 
-
-    return cas
-
-def assert_annotations(expected, annotations, key_attr, value_attr):
-    """
-    Checks that for each expected (key, value) pair there is an annotation 
-    where getattr(annotation, key_attr) == key and getattr(annotation, value_attr) == value.
-    
-    Args:
-        expected: List of (key, value) pairs.
-        annotations: Iterable of annotation objects.
-        value_attr: Name of the attribute in annotation holding the feature value.
-    """
-    actual = {}
-    for anno in annotations:
-        key_or_method = getattr(anno, key_attr)
-        key = key_or_method() if callable(key_or_method) else key_or_method
-
-        value_or_method = getattr(anno, value_attr)
-        value = value_or_method() if callable(value_or_method) else value_or_method
-
-        actual[key] = value
-    
-    for key, value in expected:
-        assert key in actual, f"Missing annotation for '{key}'"
-        assert actual[key] == value, f"For '{key}', expected '{value}' but got '{actual[key]}'"
 
 def get_all_subclasses(mymodule: ModuleType, MyBase: Type) -> List[Type]:
     return [

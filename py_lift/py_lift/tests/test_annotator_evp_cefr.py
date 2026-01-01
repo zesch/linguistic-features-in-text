@@ -1,5 +1,6 @@
 import pytest
-from py_lift.util import load_lift_typesystem, construct_cas
+from py_lift.util import load_lift_typesystem
+from py_lift.tests.util import construct_cas
 from py_lift.annotators.misc import SE_EvpCefrAnnotator
 from py_lift.dkpro import T_FEATURE
 

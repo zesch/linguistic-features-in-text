@@ -5,7 +5,7 @@ from py_lift.preprocessing import Spacy_Preprocessor
 from py_lift.annotators.misc import SE_SpellErrorAnnotator, SE_RWSE_Annotator
 from py_lift.dkpro import T_ANOMALY, T_RWSE
 from py_lift.tests.lift_fixtures import *
-from py_lift.util import construct_cas
+from py_lift.tests.util import construct_cas
 
 def test_spelling_annotator_de():
     text = "Das iste einex Biespeil fürr Texxt mit viehle Feler."
@@ -53,7 +53,7 @@ def test_rwse():
     cas.add(S(begin=0, end=len(cas.sofa_string)))
 
     confusion_sets = [["Beispiel","Besenstiel"],["gut","glut"]]
-    SE_RWSE_Annotator(model_name="bert-base-multilingual-uncased", confusion_sets=confusion_sets).process(cas)
+    SE_RWSE_Annotator(language="de", model_name="bert-base-multilingual-uncased", confusion_sets=confusion_sets).process(cas)
 
     try:
         ts.get_type(T_RWSE)

@@ -1,5 +1,6 @@
 import pytest
-from py_lift.util import load_lift_typesystem, construct_cas
+from py_lift.util import load_lift_typesystem
+from py_lift.tests.util import construct_cas
 from cassis import load_cas_from_xmi
 from py_lift.extractors import FE_TokensPerSentence, FEL_AnnotationCounter, FEL_Length, FEL_FeatureValueCounter
 from py_lift.tests.lift_fixtures import *
