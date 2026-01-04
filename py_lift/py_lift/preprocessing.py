@@ -1,32 +1,38 @@
+import logging
 import spacy
 import unicodedata
 from cassis import Cas
 from py_lift.dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
-from py_lift.util import load_lift_typesystem
+from py_lift.util import get_lift_typesystem
+
+logger = logging.getLogger(__name__)
 
 class Spacy_Preprocessor:
     # TODO really work with small models only?
     # TODO support more languages
     # TODO support custom models?
-    def __init__(self, language: str):
-        if language == "en":
-            self.nlp = spacy.load("en_core_web_md")
-        elif language == "de":
-            self.nlp = spacy.load("de_core_news_lg")
-        elif language == "fr":
-            self.nlp = spacy.load("fr_core_news_lg")
-        elif language == "sl":
-            self.nlp = spacy.load("sl_core_news_sm")
-        elif language == "tr":
-            self.nlp = spacy.load("tr_core_news_md")
+    def __init__(self, language: str, model_name: str | None = None):
+        self.language = language
+        if model_name is not None:
+            self.nlp = spacy.load(model_name)
         else:
-            raise ValueError(f"Language '{language}' not supported in Spacy_Preprocessor")
-        
-        self.ts = load_lift_typesystem()
+            if language == "en":
+                self.nlp = spacy.load("en_core_web_md")
+            elif language == "de":
+                self.nlp = spacy.load("de_core_news_lg")
+            elif language == "fr":
+                self.nlp = spacy.load("fr_core_news_lg")
+            elif language == "sl":
+                self.nlp = spacy.load("sl_core_news_sm")
+            elif language == "tr":
+                self.nlp = spacy.load("tr_core_news_md")
+            else:
+                raise ValueError(f"Language '{language}' not supported in Spacy_Preprocessor")
+        self.ts = get_lift_typesystem()
 
     def _clean_string(self, text: str) -> str:
         ''' Remove control characters and extra whitespace '''
-        cleaned = ''.join(ch for ch in text if unicodedata.category(ch)[0]!="C")
+        cleaned = ''.join(ch for ch in text if unicodedata.category(ch) != "Cc")
         unstretched = ' '.join(cleaned.split())
         return unstretched
 
@@ -67,10 +73,6 @@ class Spacy_Preprocessor:
                 )
             self.cas.add(cas_token)
             token_annos.append(cas_token)
-
-
-
-    
 
         # need another loop to ensure that all tokens are already in the CAS
         for token in doc:

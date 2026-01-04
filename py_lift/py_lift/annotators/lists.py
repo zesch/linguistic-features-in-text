@@ -62,6 +62,7 @@ class SEL_ListReader:
                 with io.TextIOWrapper(f, encoding='utf-8') as text_file:
                     return {stripped for raw in text_file if (stripped := raw.strip())}
 
+# TODO this need to be refactored to use importlib.resources with packaged lists
 @supported_languages('de', 'en', 'sl')
 class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 

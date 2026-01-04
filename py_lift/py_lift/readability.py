@@ -1,6 +1,7 @@
 from cassis import Cas
 from py_lift.decorators import supported_languages
 from py_lift.dkpro import T_FEATURE
+from py_lift.util import require_same_typesystem
 from textstat import textstat
 from py_lift.extractors import FEL_BaseExtractor
 from abc import abstractmethod
@@ -12,7 +13,7 @@ class FEL_ReadabilityScore(FEL_BaseExtractor):
     def __init__(self, language):
         self.language: str = language
         if hasattr(self, 'supported_languages'):
-            if self.language not in self.supported_languages:
+            if self.supported_languages and self.language not in self.supported_languages:
                 raise ValueError(
                     f"{self.language} is not a supported language."
                 )
@@ -26,9 +27,10 @@ class FEL_ReadabilityScore(FEL_BaseExtractor):
         pass
 
     def extract(self, cas: Cas) -> bool:
-        readability_score = self.score(cas.sofa_string)
+        require_same_typesystem(cas)
 
-        feature_name = self.name() + '_' + self.language
+        readability_score = float(self.score(cas.sofa_string))
+        feature_name: str = self.name() + '_' + self.language
 
         F = cas.typesystem.get_type(T_FEATURE)
         feature = F(name=feature_name, value=readability_score, begin=0, end=0)
@@ -39,6 +41,12 @@ class FEL_ReadabilityScore(FEL_BaseExtractor):
 class FEL_TextstatReadabilityScore(FEL_ReadabilityScore):
     def __init__(self, language, score_func, name, **kwargs):
         super().__init__(language, **kwargs)
+        
+        try:
+            textstat.set_lang(self.language)
+        except Exception:
+            raise ValueError(f"Textstat does not support the language '{self.language}'.")
+
         self._score_func: Callable[..., float] = score_func
         self._name: str = name
 
@@ -54,7 +62,7 @@ class FE_TextstatFleschIndex(FEL_TextstatReadabilityScore):
         super().__init__(
             language,
             textstat.flesch_reading_ease,
-            'Readability_Score_FleschKincaid',
+            'Readability_Score_FleschReadingEase',
         )
 
 @supported_languages('en', 'pl')
