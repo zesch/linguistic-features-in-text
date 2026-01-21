@@ -1429,6 +1429,18 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
               <name>org.lift.type.EasyWord</name>
               <supertypeName>uima.tcas.Annotation</supertypeName>
             </typeDescription>
+            
+            <typeDescription>
+              <name>org.lift.type.TreeStructure</name>
+              <supertypeName>uima.tcas.Annotation</supertypeName>
+              <features>
+                <featureDescription>
+                <name>maxDepth</name>
+                <description/>
+                    <rangeTypeName>uima.cas.Integer</rangeTypeName>
+                </featureDescription>            
+              </features>
+            </typeDescription>
 
             <typeDescription>
               <name>org.lift.type.AbstractnessConcreteness</name>

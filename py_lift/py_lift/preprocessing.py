@@ -76,15 +76,17 @@ class Spacy_Preprocessor:
 
         # need another loop to ensure that all tokens are already in the CAS
         for token in doc:
-            if token.head == token:
-                continue
-
             token_anno = token_annos[token.i]
+
+            # special handling for root tokens
+            governor = token_annos[token.head.i]
+            if token.head == token:
+                governor = token_anno
 
             cas_dep = D(
                 begin=token_anno.begin, 
                 end=token_anno.end, 
-                Governor=token_annos[token.head.i],
+                Governor=governor,
                 Dependent=token_annos[token.i], 
                 DependencyType=token.dep_,
                 flavor='basic'

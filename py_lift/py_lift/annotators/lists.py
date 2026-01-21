@@ -99,6 +99,40 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 
         return True
 
+@supported_languages('de')
+class SE_ModalVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
+
+    STRUCTURE_NAME = "ModalVerb"
+
+    def __init__(self, language, ts=None):
+        filename = self._get_filename_for_language(language)
+        SEL_ListReader.__init__(self, filename)
+        SEL_BaseAnnotator.__init__(self, language)
+        self.S = self.get_type(T_STRUCTURE)
+
+    def _get_filename_for_language(self, language):
+        lang_to_file = {
+            'de': '../shared_resources/resources/modal_verb_postags/modal_verb_postags_de_stts.txt',
+        }
+        try:
+            return lang_to_file[language]
+        except KeyError:
+            raise ValueError(f"No list file defined for language '{language}'.")
+
+    def _process(self, cas: Cas) -> bool:
+        finite_verb_postags = self.read_list()
+        for token in cas.select(T_TOKEN):
+            t_pos = cas.select_covered(type_=T_POS, covering_annotation=token)[0]
+            if t_pos.PosValue in finite_verb_postags:
+                structure = self.S(
+                    begin=token.get('begin'),
+                    end=token.get('end'),
+                    name=self.STRUCTURE_NAME
+                )
+                cas.add(structure)
+
+        return True
+
 @supported_languages('en')
 class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
 

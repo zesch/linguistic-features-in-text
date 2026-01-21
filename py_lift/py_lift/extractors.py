@@ -238,11 +238,11 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
             return float(v)
         except Exception as e:
             if self.strict:
-                raise
+                raise 
             logger.debug("Non-numeric feature at %s.%s: %s", self.annotation_type, self.feature_path, e)
             return None
 
-    def collect_values(self, cas: Cas) -> List[float]:
+    def collect_values(self, cas: Cas) -> List[int | float]:
         vals = []
         for anno in cas.select(self.annotation_type):
             fv = self._get_feature_value(anno)
@@ -260,9 +260,9 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
         max_val = max(vals)
         mean = sum(vals) / len(vals)
 
-        self._add_feature(cas, f"{self.annotation_type}_mean", mean)
-        self._add_feature(cas, f"{self.annotation_type}_min", min_val)
-        self._add_feature(cas, f"{self.annotation_type}_max", max_val)
+        self._add_feature(cas, f"{self.annotation_type}_{self.feature_path}_mean", mean)
+        self._add_feature(cas, f"{self.annotation_type}_{self.feature_path}_min", min_val)
+        self._add_feature(cas, f"{self.annotation_type}_{self.feature_path}_max", max_val)
         return True
     
 class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
@@ -296,3 +296,7 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
 class FE_AbstractnessStats(FEL_Min_Max_Mean):
     def __init__(self, strict: bool = False):
         super().__init__('org.lift.type.AbstractnessConcreteness', 'value', strict=strict)
+
+class FE_TreeMaxDepthStats(FEL_Min_Max_Mean):
+    def __init__(self, strict: bool = False):
+        super().__init__('org.lift.type.TreeStructure', 'maxDepth', strict=strict)

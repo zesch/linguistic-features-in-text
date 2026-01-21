@@ -7,7 +7,7 @@ from py_lift.util import load_lift_typesystem
 from py_lift.tests.util import construct_cas, assert_annotations
 from py_lift.tests.lift_fixtures import *
 from cassis import Cas
-from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_EasyWordAnnotator, SEL_ListReader, SE_OOV_Annotator
+from py_lift.annotators.lists import SE_FiniteVerbAnnotator, SE_ModalVerbAnnotator, SE_EasyWordAnnotator, SEL_ListReader, SE_OOV_Annotator
 
 def test_finite_verbs_annotator():
     ts = load_lift_typesystem()
@@ -34,6 +34,30 @@ def test_finite_verbs_annotator():
         value_attr="name"
     )
     
+def test_modal_verbs_annotator():
+    ts = load_lift_typesystem()
+    cas = Cas(typesystem=ts)
+    cas.sofa_string = "Ich kann ein Buch lesen und muss arbeiten."
+
+    tokens = ["Ich", "kann", "ein", "Buch", "lesen", "und", "muss", "arbeiten", "."]
+    lemmas = ["Ich", "können", "ein", "Buch", "lesen", "und", "müssen", "arbeiten", "."]
+    pos_tags = ["PPER", "VMFIN", "ART", "NN", "VVINF", "KON", "VMFIN", "VVINF", "$."]
+
+    cas = construct_cas(ts, tokens, lemmas, pos_tags)
+
+    SE_ModalVerbAnnotator("de").process(cas)
+    assert len(cas.select("org.lift.type.Structure")) == 2
+    results = [
+        ("kann", "ModalVerb"),
+        ("muss", "ModalVerb")
+    ]     
+    assert_annotations(
+        expected=results,
+        annotations=cas.select("org.lift.type.Structure"),
+        key_attr="get_covered_text",
+        value_attr="name"
+    )
+
 def test_easy_words_annotator(cas_en_simple):
 
     SE_EasyWordAnnotator("en").process(cas_en_simple)

@@ -16,11 +16,14 @@ def test_spacy_preprocessing():
     gold_pos = ["NN", "VAFIN", "ADV", "ADJD", "$.", "NN", "VAFIN", "ADJD", "$."]
     gold_sentences = [[0, 29], [30, 48]]
     gold_tok_index = [[0, 10], [11, 14], [15, 19], [20, 28], [28, 29], [30, 35], [36, 39], [40, 47], [47, 48]]
-    gold_dep = [[gold_tokens[1], gold_tokens[0], 'nsubj', 'basic'],
+    gold_dep = [
+                [gold_tokens[1], gold_tokens[0], 'nsubj', 'basic'],
+                [gold_tokens[1], gold_tokens[1], 'ROOT', 'basic'],
                 [gold_tokens[3], gold_tokens[2], 'cop', 'basic'],
                 [gold_tokens[1], gold_tokens[3], 'advmod', 'basic'],
                 [gold_tokens[1], gold_tokens[4], 'punct', 'basic'],
                 [gold_tokens[6], gold_tokens[5], 'nsubj', 'basic'],
+                [gold_tokens[6], gold_tokens[6], 'ROOT', 'basic'],
                 [gold_tokens[6], gold_tokens[7], 'cop', 'basic'],
                 [gold_tokens[6], gold_tokens[8], 'punct', 'basic']]
     
@@ -76,11 +79,13 @@ def test_spacy_prepro_en():
         ['.', 27, 28]]
     expected_dependencies = [
         ['is', 'This', 'nsubj', 'basic'],
+        ['is', 'is', 'ROOT', 'basic'],
         ['test', 'a', 'det', 'basic'],
         ['is', 'test','attr','basic'],
         ['is', '.', 'punct', 'basic'],
         ['one', 'A', 'det', 'basic'],
         ['one', 'small', 'amod', 'basic'],
+        ['one', 'one', 'ROOT', 'basic'],
         ['one', '.', 'punct', 'basic']]
     actual_token = []
     actual_sentences = []

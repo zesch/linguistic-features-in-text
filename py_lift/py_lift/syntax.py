@@ -914,7 +914,7 @@ class FE_CasToTree:
     def _register_stuff(self, cas, registry: StuffRegistry, sent):
         udapi_doc = Document()
         print("registration for sent %s " % (sent.get_covered_text()))
-        cas_in_str_form = cas_to_str(cas, sent)
+        cas_in_str_form: Unknown = cas_to_str(cas, sent)
         udapi_doc.from_conllu_string(cas_in_str_form)
         sct = 1
 

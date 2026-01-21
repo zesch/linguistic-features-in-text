@@ -219,6 +219,7 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
 
         return True
 
+# TODO add language decorator and load language-specific resources
 class SE_RWSE_Annotator(SEL_BaseAnnotator):
     """
         Checks all tokens in all sentences of the CAS object,

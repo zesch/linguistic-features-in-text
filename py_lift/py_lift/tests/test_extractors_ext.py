@@ -41,6 +41,11 @@ def typesystem() -> TypeSystem:
     )
     ts.create_feature(domainType=AC, name="value", rangeType="uima.cas.Double")
 
+    TS = ts.create_type(
+        name="org.lift.type.TreeStructure", supertypeName="uima.tcas.Annotation"
+    )
+    ts.create_feature(domainType=TS, name="maxDepth", rangeType="uima.cas.Integer")
+
     return ts
 
 
@@ -87,6 +92,11 @@ def cas(typesystem: TypeSystem) -> Cas:
     cas.add(AC(begin=5, end=7, value=1.0))
     cas.add(AC(begin=8, end=9, value=2.0))
     cas.add(AC(begin=10, end=14, value=3.0))
+
+    # TreeStructure annotations
+    TS = typesystem.get_type("org.lift.type.TreeStructure")
+    cas.add(TS(begin=0, end=len(text), maxDepth=3))
+    cas.add(TS(begin=0, end=len(text), maxDepth=4))
 
     return cas
 
@@ -209,9 +219,18 @@ def test_min_max_mean_on_abstractness(cas: Cas, typesystem: TypeSystem):
     assert mmm.extract(cas) is True
 
     feats = _get_feature_value_map(cas)
-    assert feats["org.lift.type.AbstractnessConcreteness_min"] == pytest.approx(1.0)
-    assert feats["org.lift.type.AbstractnessConcreteness_max"] == pytest.approx(4.0)
-    assert feats["org.lift.type.AbstractnessConcreteness_mean"] == pytest.approx(2.5)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_min"] == pytest.approx(1.0)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_max"] == pytest.approx(4.0)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_mean"] == pytest.approx(2.5)
+
+def test_min_max_mean_on_tree_max_depth(cas: Cas, typesystem: TypeSystem):
+    mmm = FEL_Min_Max_Mean("org.lift.type.TreeStructure", "maxDepth")
+    assert mmm.extract(cas) is True
+
+    feats = _get_feature_value_map(cas)
+    assert feats["org.lift.type.TreeStructure_maxDepth_min"] == pytest.approx(3.0)
+    assert feats["org.lift.type.TreeStructure_maxDepth_max"] == pytest.approx(4.0)
+    assert feats["org.lift.type.TreeStructure_maxDepth_mean"] == pytest.approx(3.5)
 
 
 def test_convenience_extractors(cas: Cas, typesystem: TypeSystem):
@@ -241,6 +260,6 @@ def test_convenience_extractors(cas: Cas, typesystem: TypeSystem):
     assert feats["Token_COUNT_PER_Sentence_COUNT"] == pytest.approx(5.0)
     assert feats["EasyWord_COUNT_PER_Token_COUNT"] == pytest.approx(0.4)
 
-    assert feats["org.lift.type.AbstractnessConcreteness_min"] == pytest.approx(1.0)
-    assert feats["org.lift.type.AbstractnessConcreteness_max"] == pytest.approx(4.0)
-    assert feats["org.lift.type.AbstractnessConcreteness_mean"] == pytest.approx(2.5)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_min"] == pytest.approx(1.0)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_max"] == pytest.approx(4.0)
+    assert feats["org.lift.type.AbstractnessConcreteness_value_mean"] == pytest.approx(2.5)

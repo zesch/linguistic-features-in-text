@@ -10,3 +10,4 @@ T_TOKEN        = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token"
 
 T_STRUCTURE    = 'org.lift.type.Structure'
 T_FEATURE      = 'org.lift.type.FeatureAnnotationNumeric'
+T_TREE         = 'org.lift.type.TreeStructure'
