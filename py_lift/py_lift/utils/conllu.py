@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from dkpro import *
+from py_lift.dkpro import *
 
 def cas_to_str(cas, sentence):
     
