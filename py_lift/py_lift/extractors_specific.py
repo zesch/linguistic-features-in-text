@@ -1,5 +1,5 @@
 from cassis import Cas
-from collections import Counter
+from collections import Counter, defaultdict
 from py_lift.extractors import FEL_BaseExtractor
 from typing import Callable, Any, Optional, List, Dict, Union, Tuple
 
@@ -77,39 +77,73 @@ class FE_DependencyAndTreeStats(FEL_BaseExtractor):
     """
     Extraktor für Abhängigkeitslängen- und Baumtiefen-Statistiken.
     Erwartet im CAS:
-      - DependencyLengthPerRel (rel, length, count)
-      - TreeStructure (maxDepth)
-      - MaxDependencyLength (value)
+      - de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency
+        (Governor, Dependent, DependencyType)
+      - de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token (order)
+      - org.lift.type.TreeStructure (maxDepth)
     """
 
     def __init__(
         self,
-        dep_length_type: str = "DependencyLengthPerRel",
-        tree_type: str = "TreeStructure",
-        max_dep_type: str = "MaxDependencyLength",
+        dep_type: str = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency",
+        token_type: str = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
+        tree_type: str = "org.lift.type.TreeStructure",
         strict: bool = False
     ):
         super().__init__(strict=strict)
-        self.dep_length_type = dep_length_type
+        self.dep_type = dep_type
+        self.token_type = token_type
         self.tree_type = tree_type
-        self.max_dep_type = max_dep_type
 
-    def _get_dependency_length_counter(self, cas) -> Dict[str, Counter]:
+    def _get_token_order(self, token):
+        try:
+            return int(token.get("begin"))
+        except Exception:
+            return None
+
+    def _get_token_by_xmi_id(self, cas, xmi_id):
+        for token in cas.select(self.token_type):
+            if getattr(token, "xmi_id", None) == xmi_id:
+                return token
+        return None
+
+    def _get_dependency_length_counter(self, cas, excluded_rels=["root", "punct"]) -> Dict[str, Counter]:
         counter_per_rel = {}
-        for anno in cas.select(self.dep_length_type):
-            rel = anno.get("rel")
-            length = int(anno.get("length"))
-            count = int(anno.get("count"))
-            if rel not in counter_per_rel:
-                counter_per_rel[rel] = Counter()
-            counter_per_rel[rel][length] += count
+        for dep in cas.select(self.dep_type):
+            try:
+                rel = dep.get("DependencyType")
+                if rel is None or rel.lower() in excluded_rels:
+                    continue
+                gov = dep.get("Governor")
+                depn = dep.get("Dependent")
+                # Falls gov/depn keine Annotation, sondern nur Referenz/ID:
+                gov_token = gov
+                depn_token = depn
+                # Falls es keine Annotation ist, sondern ein Referenzobjekt oder nur die ID:
+                if not hasattr(gov, "get"):
+                    gov_token = self._get_token_by_xmi_id(cas, gov.xmi_id if hasattr(gov, "xmi_id") else gov)
+                if not hasattr(depn, "get"):
+                    depn_token = self._get_token_by_xmi_id(cas, depn.xmi_id if hasattr(depn, "xmi_id") else depn)
+                gov_ord = self._get_token_order(gov_token)
+                depn_ord = self._get_token_order(depn_token)
+                if gov_ord is None or depn_ord is None:
+                    continue
+                diff = depn_ord - gov_ord
+                if rel not in counter_per_rel:
+                    counter_per_rel[rel] = Counter()
+                counter_per_rel[rel][diff] += 1
+            except Exception as e:
+                print("Exception:", e)
+                continue
         return counter_per_rel
+
+
 
     def _get_average_from_counter(self, mycounter):
         insts = 0
         totlen = 0
         for lng in mycounter:
-            totlen += mycounter[lng] * lng
+            totlen += mycounter[lng] * abs(lng)
             insts += mycounter[lng]
         try:
             avg_dep_len = round(float(totlen / insts), 2)
@@ -141,16 +175,37 @@ class FE_DependencyAndTreeStats(FEL_BaseExtractor):
         avg_all = self._get_average_from_counter(anydir)
         return (avg_left, avg_right, avg_all)
 
-    def _get_avg_max_dep_length(self, cas) -> float:
-        values = []
-        for anno in cas.select(self.max_dep_type):
+    def _get_max_dep_lengths_per_sentence(self, cas, excluded_rels=["root", "punct"]) -> list:
+        # Gruppiere Dependencies nach Satz (Governor/Dependent sollten im selben Satz liegen)
+        # Wir nutzen die begin/end-Offsets als Satz-Identifikator
+        # Annahme: Token haben begin/end, Dependency zeigt auf Token
+        sentence_map = defaultdict(list)
+        for dep in cas.select(self.dep_type):
             try:
-                v = float(anno.get("value"))
-                values.append(v)
+                rel = dep.get("DependencyType")
+                if rel is None or rel.lower() in excluded_rels:
+                    continue
+                gov = dep.get("Governor")
+                depn = dep.get("Dependent")
+                gov_ord = self._get_token_order(gov)
+                depn_ord = self._get_token_order(depn)
+                if gov_ord is None or depn_ord is None:
+                    continue
+                # Satz-ID: begin-offset des Governors (alternativ: begin-offset des Satzes, falls vorhanden)
+                sent_id = getattr(gov, "begin", None)
+                sentence_map[sent_id].append(abs(depn_ord - gov_ord))
             except Exception:
                 continue
-        if values:
-            return round(sum(values) / len(values), 2)
+        max_lengths = []
+        for sent_id, lens in sentence_map.items():
+            if lens:
+                max_lengths.append(max(lens))
+        return max_lengths
+
+    def _get_avg_max_dep_length(self, cas) -> float:
+        max_lengths = self._get_max_dep_lengths_per_sentence(cas)
+        if max_lengths:
+            return round(sum(max_lengths) / len(max_lengths), 2)
         else:
             return 0.0
 
@@ -168,14 +223,14 @@ class FE_DependencyAndTreeStats(FEL_BaseExtractor):
             return 0.0
 
     def extract(self, cas) -> bool:
-        # Dependency lengths
+        # Dependency lengths direkt aus Dependency-Annotation berechnen
         counts_per_rel = self._get_dependency_length_counter(cas)
         avg_left_dep_len, avg_right_dep_len, avg_all_dep_len = self._get_dependency_lengths_across_all_rels_in_doc(counts_per_rel)
         self._add_feature(cas, "Average_Dependency_Length_Left", avg_left_dep_len)
         self._add_feature(cas, "Average_Dependency_Length_Right", avg_right_dep_len)
         self._add_feature(cas, "Average_Dependency_Length_All", avg_all_dep_len)
 
-        # Average maximal dependency length
+        # Average maximal dependency length (berechnet pro Satz, dann gemittelt)
         avg_max_dep_len = self._get_avg_max_dep_length(cas)
         self._add_feature(cas, "Average_Maximal_Dependency_Length", avg_max_dep_len)
 
@@ -184,7 +239,6 @@ class FE_DependencyAndTreeStats(FEL_BaseExtractor):
         self._add_feature(cas, "Average_Tree_Depth", avg_tree_depth)
 
         return True
-
 
 class FE_Per1kTokenStats(FEL_BaseExtractor):
     """

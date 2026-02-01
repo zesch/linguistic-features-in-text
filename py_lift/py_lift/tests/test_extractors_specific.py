@@ -1,9 +1,26 @@
 import pytest
-from collections import namedtuple
+import cassis
+from cassis import Cas, TypeSystem
+
+from py_lift.dkpro import T_FEATURE
+
+from py_lift.extractors import (
+    FEL_AnnotationCounter,
+    FEL_FeatureValueCounter,
+    FEL_AnnotationRatio,
+    FEL_Length,
+    FEL_Min_Max_Mean,
+    FE_NumberOfSpellingAnomalies,
+    FE_NounPhrasesPerSentence,
+    FE_TokensPerSentence,
+    FE_EasyWordRatio,
+    FE_AbstractnessStats,
+)
 from py_lift.extractors_specific import FE_DependencyAndTreeStats, FE_Per1kTokenStats
+import pytest
+from collections import namedtuple, Counter, defaultdict
 
-
-# Dummy-Annotation und Dummy-CAS
+# Dummy-Annotation und Dummy-CAS für den Test
 DummyAnno = namedtuple('DummyAnno', ['get'])
 class DummyCAS:
     def __init__(self, data):
@@ -24,23 +41,16 @@ class DummyCAS:
     def get_type(self, featpath):
         return lambda **kwargs: kwargs
 
-# from dein_modul import FE_DependencyAndTreeStats, FE_Per1kTokenStats
-
 @pytest.fixture
 def cas_dep_and_tree():
     # Für FE_DependencyAndTreeStats
     return DummyCAS({
-        "DependencyLengthPerRel": [
-            {"rel": "nk", "length": -2, "count": 3},
-            {"rel": "nk", "length": 2, "count": 1},
-            {"rel": "sb", "length": -1, "count": 4},
-            {"rel": "sb", "length": 3, "count": 2},
+        "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency": [
+            {"Governor": DummyAnno(lambda k: {"begin": 10}[k]), "Dependent": DummyAnno(lambda k: {"begin": 12}[k]), "DependencyType": "nk"},
+            {"Governor": DummyAnno(lambda k: {"begin": 20}[k]), "Dependent": DummyAnno(lambda k: {"begin": 15}[k]), "DependencyType": "sb"},
+            {"Governor": DummyAnno(lambda k: {"begin": 30}[k]), "Dependent": DummyAnno(lambda k: {"begin": 32}[k]), "DependencyType": "nk"},
         ],
-        "MaxDependencyLength": [
-            {"value": 5},
-            {"value": 3}
-        ],
-        "TreeStructure": [
+        "org.lift.type.TreeStructure": [
             {"maxDepth": 7},
             {"maxDepth": 5}
         ]
@@ -66,18 +76,18 @@ def test_dependency_and_tree_stats(cas_dep_and_tree):
     assert result is True
     features = {f['name']: f['value'] for f in cas_dep_and_tree.features}
 
-    # Erwartete Werte:
-    # Left: abs(-2)*3 + abs(-1)*4 = 6+4=10, count: 3+4=7, avg = 10/7 = 1.43
-    # Right: 2*1 + 3*2 = 2+6=8, count: 1+2=3, avg = 8/3 = 2.67
-    # All: 10+8=18, 7+3=10, avg = 1.8
-    # MaxDependencyLength: (5+3)/2 = 4.0
-    # TreeStructure: (7+5)/2 = 6.0
+    # Berechnung:
+    # Dependency-Längen: (12-10)=2 (nk), (15-20)=-5 (sb), (32-30)=2 (nk)
+    # nk: [2,2], sb: [-5]
+    # left: abs(-5)=5, count=1, avg=5/1=5.0
+    # right: 2+2=4, count=2, avg=4/2=2.0
+    # all: 5+4=9, count=3, avg=9/3=3.0
+    # maxDepth: (7+5)/2=6.0
 
-    assert features["Average_Dependency_Length_Left"] == pytest.approx(1.43, abs=1e-2)
-    assert features["Average_Dependency_Length_Right"] == pytest.approx(2.67, abs=1e-2)
-    assert features["Average_Dependency_Length_All"] == pytest.approx(1.8, abs=1e-2)
-    assert features["Average_Maximal_Dependency_Length"] == pytest.approx(4.0, abs=1e-2)
-    assert features["Average_Tree_Depth"] == pytest.approx(6.0, abs=1e-2)
+    assert features["Average_Dependency_Length_Left"] == pytest.approx(5.0)
+    assert features["Average_Dependency_Length_Right"] == pytest.approx(2.0)
+    assert features["Average_Dependency_Length_All"] == pytest.approx(3.0)
+    assert features["Average_Tree_Depth"] == pytest.approx(6.0)
 
 def test_per_1k_token_stats(cas_per_1k):
     extractor = FE_Per1kTokenStats()

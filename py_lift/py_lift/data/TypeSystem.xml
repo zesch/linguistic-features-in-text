@@ -5450,6 +5450,197 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
 
         </typeDescription>
 
+
+        <typeDescription>
+
+            <name>custom.UniversalDependencies.POS</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>PosValue</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>source</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.syntax.UDependency</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Governor</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>Dependent</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>DependencyType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>flavor</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.crosslayermap</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>reflayer</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>index</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>nth</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+
+
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.syntax.TigerDependency</name>
+
+            <description/>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>Governor</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>Dependent</name>
+
+                    <description/>
+
+                    <rangeTypeName>de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>DependencyType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>flavor</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+
     </types>
 
 </typeSystemDescription>
