@@ -2,7 +2,7 @@ import logging
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE
 from py_lift.util import get_lift_typesystem
-from typing import Callable, Any, Optional, Union, List
+from typing import Callable, Any, Optional, List, Dict, Union, Tuple
 from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
@@ -264,7 +264,18 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
         self._add_feature(cas, f"{self.annotation_type}_{self.feature_path}_min", min_val)
         self._add_feature(cas, f"{self.annotation_type}_{self.feature_path}_max", max_val)
         return True
-    
+
+
+
+
+
+
+
+
+
+
+
+
 class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
     def __init__(self, strict: bool = False):
         super().__init__('SpellingAnomaly', strict=strict)
@@ -296,6 +307,22 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
 class FE_AbstractnessStats(FEL_Min_Max_Mean):
     def __init__(self, strict: bool = False):
         super().__init__('org.lift.type.AbstractnessConcreteness', 'value', strict=strict)
+
+
+class FE_AverageTokenLength(FEL_Length):
+    def __init__(self, strict: bool = False):
+        super().__init__('Token', strict=strict)
+    # Das Feature heißt: 'Token_length_mean'
+
+class FE_SentenceCount(FEL_AnnotationCounter):
+    def __init__(self, strict: bool = False):
+        super().__init__('Sentence', strict=strict)
+    # Das Feature heißt: 'Sentence_COUNT'
+
+class FE_TokenCount(FEL_AnnotationCounter):
+    def __init__(self, strict: bool = False):
+        super().__init__('Token', strict=strict)
+    # Das Feature heißt: 'Sentence_COUNT'
 
 class FE_TreeMaxDepthStats(FEL_Min_Max_Mean):
     def __init__(self, strict: bool = False):
