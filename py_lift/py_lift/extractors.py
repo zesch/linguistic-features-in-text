@@ -7,6 +7,19 @@ from abc import ABC, abstractmethod
 
 logger = logging.getLogger(__name__)
 
+_DEFAULT_EXTRACTOR_STRICT = False
+
+
+def set_default_extractor_strict(strict: bool) -> None:
+    """Configure the default strict mode for all extractors."""
+    global _DEFAULT_EXTRACTOR_STRICT
+    _DEFAULT_EXTRACTOR_STRICT = strict
+
+
+def get_default_extractor_strict() -> bool:
+    """Return the currently configured default strict mode for extractors."""
+    return _DEFAULT_EXTRACTOR_STRICT
+
 class FEL_BaseExtractor(ABC):
     """Marker base class for all extractors."""
 
@@ -14,8 +27,8 @@ class FEL_BaseExtractor(ABC):
     def ts(self):
         return get_lift_typesystem()
 
-    def __init__(self, strict: bool = False):
-        self.strict = strict
+    def __init__(self, strict: Optional[bool] = None):
+        self.strict = get_default_extractor_strict() if strict is None else strict
 
     @abstractmethod
     def extract(self, cas: Cas) -> bool:
@@ -50,7 +63,7 @@ class FEL_AnnotationCounter(FEL_BaseExtractor, FEL_BaseCounter):
         _type: str,
         unique: bool = False,
         custom_to_string: Optional[Callable[[Any], str]] = None,
-        strict: bool = False
+        strict: Optional[bool] = None
     ):
         super().__init__(strict=strict)
         self.type = _type
@@ -105,7 +118,7 @@ class FEL_FeatureValueCounter(FEL_BaseExtractor, FEL_BaseCounter):
         feature_path: str,
         feature_values: Optional[Union[str, List[str]]] = None,
         count_only_if_feature_present: bool = False,
-        strict: bool = False
+        strict: Optional[bool] = None
     ):
         super().__init__(strict=strict)
         self.type = _type
@@ -162,7 +175,7 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         self,
         counter_dividend: FEL_BaseCounter,
         counter_divisor: FEL_BaseCounter,
-        strict: bool = False,
+        strict: Optional[bool] = None,
         zero_division_policy: str = "zero"  # "zero", "nan", "skip", "raise"
     ):
         super().__init__(strict=strict)
@@ -194,7 +207,7 @@ class FEL_AnnotationRatio(FEL_BaseExtractor):
         return True
 
 class FEL_Length(FEL_BaseExtractor):
-    def __init__(self, annotation_type: str, strict: bool = False):
+    def __init__(self, annotation_type: str, strict: Optional[bool] = None):
         super().__init__(strict=strict)
         self.annotation_type = annotation_type
 
@@ -225,7 +238,7 @@ class FEL_Length(FEL_BaseExtractor):
         return True
 
 class FEL_Min_Max_Mean(FEL_BaseExtractor):
-    def __init__(self, annotation_type: str, feature_path: str, strict: bool = False):
+    def __init__(self, annotation_type: str, feature_path: str, strict: Optional[bool] = None):
         super().__init__(strict=strict)
         self.annotation_type = annotation_type
         self.feature_path = feature_path
@@ -277,11 +290,11 @@ class FEL_Min_Max_Mean(FEL_BaseExtractor):
 
 
 class FE_NumberOfSpellingAnomalies(FEL_AnnotationCounter):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('SpellingAnomaly', strict=strict)
 
 class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__(
             FEL_AnnotationCounter('NC', strict=strict),
             FEL_AnnotationCounter('Sentence', strict=strict),
@@ -289,7 +302,7 @@ class FE_NounPhrasesPerSentence(FEL_AnnotationRatio):
         )
 
 class FE_TokensPerSentence(FEL_AnnotationRatio):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__(
             FEL_AnnotationCounter('Token', strict=strict),
             FEL_AnnotationCounter('Sentence', strict=strict),
@@ -297,7 +310,7 @@ class FE_TokensPerSentence(FEL_AnnotationRatio):
         )
 
 class FE_EasyWordRatio(FEL_AnnotationRatio):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__(
             FEL_AnnotationCounter('EasyWord', strict=strict),
             FEL_AnnotationCounter('Token', strict=strict),
@@ -305,25 +318,25 @@ class FE_EasyWordRatio(FEL_AnnotationRatio):
         )
 
 class FE_AbstractnessStats(FEL_Min_Max_Mean):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('org.lift.type.AbstractnessConcreteness', 'value', strict=strict)
 
 
 class FE_AverageTokenLength(FEL_Length):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('Token', strict=strict)
     # Das Feature heißt: 'Token_length_mean'
 
 class FE_SentenceCount(FEL_AnnotationCounter):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('Sentence', strict=strict)
     # Das Feature heißt: 'Sentence_COUNT'
 
 class FE_TokenCount(FEL_AnnotationCounter):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('Token', strict=strict)
     # Das Feature heißt: 'Sentence_COUNT'
 
 class FE_TreeMaxDepthStats(FEL_Min_Max_Mean):
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__('org.lift.type.TreeStructure', 'maxDepth', strict=strict)

@@ -1,9 +1,9 @@
 from collections import Counter, defaultdict
-from typing import List, Dict, Set, Tuple
+from typing import List, Dict, Set, Tuple, Optional
 
 from cassis import Cas
 from py_lift.dkpro import T_SENT, T_TOKEN, T_DEP
-from py_lift.extractors import FEL_BaseExtractor
+from py_lift.extractors import FEL_BaseExtractor, get_default_extractor_strict
 
 # ------ STTS / Tiger Annahmen ------
 
@@ -130,7 +130,7 @@ class FE_DependencyAndTreeStats(FEL_BaseExtractor):
         dep_type: str = "de.tudarmstadt.ukp.dkpro.core.api.syntax.type.dependency.Dependency",
         token_type: str = "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
         tree_type: str = "org.lift.type.TreeStructure",
-        strict: bool = False
+        strict: Optional[bool] = None
     ):
         super().__init__(strict=strict)
         self.dep_type = dep_type
@@ -318,8 +318,8 @@ class FE_CountCategoryAnnotator:
          None),
     ]
 
-    def __init__(self, strict: bool = False):
-        self.strict = strict
+    def __init__(self, strict: Optional[bool] = None):
+        self.strict = get_default_extractor_strict() if strict is None else strict
 
     def _get_feature_value(self, fs, path: str):
         obj = fs
@@ -379,7 +379,7 @@ class FE_Per1kTokenStats(FEL_BaseExtractor):
         ("Personal_pronouns_per_1k_tokens", "PersonalPronounCount"),
     ]
 
-    def __init__(self, token_feature_name: str = "TokenCount", strict: bool = False):
+    def __init__(self, token_feature_name: str = "TokenCount", strict: Optional[bool] = None):
         super().__init__(strict=strict)
         self.token_feature_name = token_feature_name
 
@@ -438,7 +438,7 @@ class FE_LG_DocumentStats(FEL_BaseExtractor):
     Annahme: STTS-POS + Tiger-ähnliche Dependenzlabels (s.o.).
     """
 
-    def __init__(self, strict: bool = False):
+    def __init__(self, strict: Optional[bool] = None):
         super().__init__(strict=strict)
 
     # ---------- Hilfsfunktionen ----------

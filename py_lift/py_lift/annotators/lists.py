@@ -144,10 +144,12 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         self.EW = self.get_type("org.lift.type.EasyWord")
 
     def _process(self, cas: Cas) -> bool:
+        easy_words = self.read_list()
         for lemma in cas.select(T_LEMMA):
             l_str = lemma.value
             # TODO punctuation currently counted as not easy word
-            if l_str in self.read_list():
+            # TODO do we really read the list every time for each lemma?
+            if l_str in easy_words:
                 easy_word = self.EW(begin=lemma.get('begin'), end=lemma.get('end'))
                 cas.add(easy_word)
                 print("Found easy word: ", l_str)
