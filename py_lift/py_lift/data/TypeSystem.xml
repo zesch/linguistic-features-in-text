@@ -5640,6 +5640,164 @@ d) redundant/wrongly added negation word (G_Neg_neggen_Ad-->
 
         </typeDescription>
 
+        <typeDescription>
+
+            <name>org.dakoda.Stage</name>
+
+            <description>A clause-placement stage annotation on a finite verb span.</description>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>name</name>
+
+                    <description>Coarse stage label: one of ADV, INV, SEP, SVO, VEND.</description>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>fine</name>
+
+                    <description>Fine-grained stage label, e.g. SVO_core, INV_peri, SVO_noev, NO_SEP, !SVO.</description>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>origin</name>
+
+                    <description>Provenance of the annotation, e.g. gold or rule_based.</description>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>ctokref</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>coords</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>hybridlayer</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
+        <typeDescription>
+
+            <name>org.dakoda.StagedVerb</name>
+
+            <description>Per-finite-verb stage analysis info, anchored on the finite verb token span.</description>
+
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+
+            <features>
+
+                <featureDescription>
+
+                    <name>clauseType</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>finiteVerbIsSemroot</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>separatedVerbPrefix</name>
+
+                    <description/>
+
+                    <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>topology</name>
+
+                    <description>Configured topological fields with their tokens as sentence-relative ordinals, e.g. "VF:1|MF:3,4|NF:9".</description>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>semrootOrd</name>
+
+                    <description>Sentence-relative ordinal (udapi node.ord) of the semantic root token. Records the finite-verb-to-semroot link.</description>
+
+                    <rangeTypeName>uima.cas.Integer</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>clausalGovernorOrd</name>
+
+                    <description>Sentence-relative ordinal of the clausal governor of the semroot; 0 if none.</description>
+
+                    <rangeTypeName>uima.cas.Integer</rangeTypeName>
+
+                </featureDescription>
+
+                <featureDescription>
+
+                    <name>origin</name>
+
+                    <description>Provenance of the annotation, e.g. gold or rule_based.</description>
+
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+
+                </featureDescription>
+
+            </features>
+
+        </typeDescription>
+
 
     </types>
 
