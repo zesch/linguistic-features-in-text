@@ -37,5 +37,3 @@ We plan to implement the following types of structures:
 We also support various meta-features of linguistic complexity:
 * readability measures
 * type-token ratio (TTR)
-
-
