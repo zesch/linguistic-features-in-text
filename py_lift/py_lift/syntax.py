@@ -9,8 +9,6 @@ from typing import List, Dict, Union, Generator, Tuple
 from py_lift.dkpro import *
 from py_lift.util import read_list
 import statistics as stats
-from deprecated import deprecated
-
 
 # TODO should be in resource file
 # Di 24 Jun 2025 ( KW25 )
@@ -94,7 +92,7 @@ class FE_CasToTree:
         # TODO do we need the option of selecting from multiple different tagsets for a given language?
         supported_langs = ["de"]
         if language not in supported_langs:
-            raise ValueError(f"{self.language} is not a supported language.")
+            raise ValueError(f"{language} is not a supported language.")
         self.ts = ts
         self.layer = layer
         self.offset2label_map = {}
@@ -389,39 +387,6 @@ class FE_CasToTree:
                     else:
                         pass
         return bracket_candidates
-
-    @deprecated(version="0.8", reason="superseded by generic struct annotation omethod")
-    def _annotate_junctors(self, view, junctor_list):
-        """we have hardcoded syntax info here
-        we're using fine-grained (e.g. Tiger) syntax
-        """
-
-        deprels = view.select(T_DEP)
-
-        junctor_coords = []
-        for deprel in deprels:
-            if deprel.DependencyType.upper() == "JU":
-                dependent = deprel.Dependent
-                ds = dependent.get("begin")
-                de = dependent.get("end")
-                junctor_coords.append((ds, de))
-
-        tox_for_view = view.select(T_TOKEN)
-
-        for cand in junctor_coords:
-            for tok in tox_for_view:
-                if (
-                    tok.get_covered_text().lower() in junctor_list
-                    and tok.begin == cand[0]
-                    and tok.end == cand[1]
-                ):
-                    name = "JUNCTOR"
-                    F = self.ts.get_type(T_STRUCT)
-                    feature = F(name=name, begin=cand[0], end=cand[1])
-
-                    view.add(feature)
-                else:
-                    pass
 
     def extract(self, cas):
         # TODO find out author id ~ file name from  metadatastringfield  within cas
