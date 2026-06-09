@@ -14,10 +14,12 @@ def test_extractors(cas_en_simple_with_errors):
     print(df)
     assert df.shape == (2, 2)
 
-def test_subclass_finding():
-    import py_lift.extractors
-    assert len(get_all_subclasses(py_lift.extractors, FEL_AnnotationCounter)) == 1
-    assert len(get_all_subclasses(py_lift.extractors, FEL_AnnotationRatio)) == 3
+def test_subclass_finding(stable_subclass_module):
+    counters = get_all_subclasses(stable_subclass_module["module"], FEL_AnnotationCounter)
+    ratios = get_all_subclasses(stable_subclass_module["module"], FEL_AnnotationRatio)
+
+    assert set(counters) == stable_subclass_module["counter_subclasses"]
+    assert set(ratios) == stable_subclass_module["ratio_subclasses"]
 
 def test_language_detection():
     assert detect_language("Parlez-vous français?") == "fr"

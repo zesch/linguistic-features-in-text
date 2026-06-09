@@ -45,15 +45,36 @@ def new_lift_cas() -> cassis.Cas:
     return cassis.Cas(typesystem=get_lift_typesystem())
 
 
-def load_cas_from_xmi_with_lift_ts(source: Union[str, os.PathLike, bytes, bytearray]) -> cassis.Cas:
-    """Load a CAS from XMI, enforcing the singleton LIFT TypeSystem identity."""
+def load_cas_from_xmi_with_lift_ts(source: Union[str, os.PathLike]) -> cassis.Cas:
+    """Load a CAS from XMI, enforcing the singleton LIFT TypeSystem identity.
+
+    `source` can be either:
+    - a filesystem path (`str`/`os.PathLike`), or
+    - an XMI XML string (passed through to `cassis.load_cas_from_xmi`).
+    """
     ts = get_lift_typesystem()
-    # cassis.load_cas_from_xmi supports path-like or bytes and accepts typesystem=
-    if isinstance(source, (bytes, bytearray)):
-        return cassis.load_cas_from_xmi(source, typesystem=ts)
-    else:
+
+    # PathLike is always interpreted as a filesystem path.
+    if isinstance(source, os.PathLike):
         with open(source, "rb") as fh:
             return cassis.load_cas_from_xmi(fh, typesystem=ts)
+
+    # For plain strings, avoid probing the filesystem when it already looks like XML.
+    stripped = source.lstrip()
+    if stripped.startswith("<"):
+        return cassis.load_cas_from_xmi(source, typesystem=ts)
+
+    # Prefer existing paths; if path probing fails (e.g., very long pseudo-path
+    # strings), fall back to treating `source` as XML content.
+    try:
+        path_candidate = pathlib.Path(source)
+        if path_candidate.exists():
+            with open(path_candidate, "rb") as fh:
+                return cassis.load_cas_from_xmi(fh, typesystem=ts)
+    except (OSError, ValueError):
+        return cassis.load_cas_from_xmi(source, typesystem=ts)
+
+    return cassis.load_cas_from_xmi(source, typesystem=ts)
 
 
 # --- Generic TypeSystem resolver (robust isinstance mapping) ------------------

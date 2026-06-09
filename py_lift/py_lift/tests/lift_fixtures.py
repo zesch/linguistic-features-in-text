@@ -1,7 +1,9 @@
 import pytest
+from types import ModuleType
 from cassis import Cas
 from py_lift.util import load_lift_typesystem
 from py_lift.dkpro import T_TOKEN, T_SENT, T_LEMMA, T_POS
+from py_lift.extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
 
 @pytest.fixture
 def typesystem_xml():
@@ -103,3 +105,31 @@ def cas_en_simple_with_errors(typesystem, tokens_en, pos_en, lemmas_en, sentence
     cas.add_all(sentences_en)
 
     return cas
+
+
+@pytest.fixture
+def stable_subclass_module():
+    module = ModuleType("stable_test_module")
+
+    class CounterSubclassA(FEL_AnnotationCounter):
+        pass
+
+    class CounterSubclassB(FEL_AnnotationCounter):
+        pass
+
+    class RatioSubclass(FEL_AnnotationRatio):
+        pass
+
+    class NotASubclass:
+        pass
+
+    module.CounterSubclassA = CounterSubclassA
+    module.CounterSubclassB = CounterSubclassB
+    module.RatioSubclass = RatioSubclass
+    module.NotASubclass = NotASubclass
+
+    return {
+        "module": module,
+        "counter_subclasses": {CounterSubclassA, CounterSubclassB},
+        "ratio_subclasses": {RatioSubclass},
+    }

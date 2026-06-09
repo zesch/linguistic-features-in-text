@@ -59,7 +59,13 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
         # self.data_dict = read_tsv_to_dict(file_path, 'Word', 'AbstConc')
 
         from importlib.resources import files
-        import lift_resources_lists
+        try:
+            import lift_resources_lists
+        except ImportError as exc:
+            raise ImportError(
+                "SE_AbstractnessAnnotator requires the optional package 'lift-resources-lists'. "
+                "Install it from your internal package source before using this annotator."
+            ) from exc
         
         # Access a specific file
         data_dir = files('lift_resources_lists').joinpath('abstractness').joinpath(self.language)

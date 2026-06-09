@@ -1,8 +1,8 @@
 import logging
-import spacy
 import unicodedata
 from cassis import Cas
 from py_lift.dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
+from py_lift.model_setup import ensure_spacy_model
 from py_lift.util import get_lift_typesystem
 
 logger = logging.getLogger(__name__)
@@ -11,23 +11,20 @@ class Spacy_Preprocessor:
     # TODO really work with small models only?
     # TODO support more languages
     # TODO support custom models?
-    def __init__(self, language: str, model_name: str | None = None):
+    def __init__(
+        self,
+        language: str,
+        model_name: str | None = None,
+        auto_install_models: bool = False,
+        model_urls: dict[str, str] | None = None,
+    ):
         self.language = language
-        if model_name is not None:
-            self.nlp = spacy.load(model_name)
-        else:
-            if language == "en":
-                self.nlp = spacy.load("en_core_web_md")
-            elif language == "de":
-                self.nlp = spacy.load("de_core_news_lg")
-            elif language == "fr":
-                self.nlp = spacy.load("fr_core_news_lg")
-            elif language == "sl":
-                self.nlp = spacy.load("sl_core_news_sm")
-            elif language == "tr":
-                self.nlp = spacy.load("tr_core_news_md")
-            else:
-                raise ValueError(f"Language '{language}' not supported in Spacy_Preprocessor")
+        self.nlp = ensure_spacy_model(
+            language=language,
+            model_name=model_name,
+            auto_install=auto_install_models,
+            model_urls=model_urls,
+        )
         self.ts = get_lift_typesystem()
 
     def _clean_string(self, text: str) -> str:

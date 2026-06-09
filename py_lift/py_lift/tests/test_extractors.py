@@ -21,13 +21,13 @@ def test_abstractness_extractor():
     i = 0
     for feature in cas.select(T_FEATURE):
         print(feature)
-        if feature.get('name') == 'org.lift.type.AbstractnessConcreteness_mean':
+        if feature.get('name') == 'org.lift.type.AbstractnessConcreteness_value_mean':
             assert pytest.approx(feature.value) == 3.3868571428571426
             i += 1
-        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_min':
+        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_value_min':
             assert pytest.approx(feature.value) == 2.502
             i += 1
-        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_max':
+        elif feature.get('name') == 'org.lift.type.AbstractnessConcreteness_value_max':
             assert pytest.approx(feature.value) == 4.036
             i += 1
         else :
