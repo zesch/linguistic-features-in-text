@@ -9,7 +9,7 @@ from py_lift.utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 from py_lift.dkpro import *
-from py_lift.util import read_list
+from py_lift.utils.core import read_list
 import statistics as stats
 
 logger = logging.getLogger(__name__)
@@ -843,15 +843,18 @@ class FE_CasToTree:
 
         ###
 
-        try:
-            subjectless_finite_verbs = sum(registry.subj_less_verbs)
-            total_finite_verbs = (
-                subjectless_finite_verbs + sb4v_ctr[1] + sb4v_ctr[-1]
-            )
+        total_finite_verbs = sum(registry.finite_verb_counts)
+        finite_verbs_with_subject = sb4v_ctr[1] + sb4v_ctr[-1]
+        subjectless_finite_verbs = max(
+            0,
+            total_finite_verbs - min(finite_verbs_with_subject, total_finite_verbs),
+        )
+
+        if total_finite_verbs > 0:
             share_of_subjectless_finite_verbs = round(
                 float(subjectless_finite_verbs / total_finite_verbs), 2
             )
-        except:
+        else:
             share_of_subjectless_finite_verbs = 0.0
 
         self._add_feat_to_cas(

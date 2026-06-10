@@ -18,8 +18,9 @@ class FE_FreqBandRatios(FEL_BaseExtractor):
         
         # Count frequency bands
         band_counts = Counter(
-            freq.frequencyBand 
+            band
             for freq in cas.select('org.lift.type.Frequency')
+            if (band := freq.get('frequencyBand')) is not None
         )
         
         # Handle empty case
