@@ -4,6 +4,8 @@ from py_lift.preprocessing import Spacy_Preprocessor
 from py_lift.annotators.misc import SE_CoarsePosTagAnnotator
 from py_lift.dkpro import T_POS
 
+pytestmark = pytest.mark.requires_models
+
 def test_coarse_postag_annotator():
     text = "Ich bin ein Beispiel und sehe gut aus."
     spacy = Spacy_Preprocessor(language='de')

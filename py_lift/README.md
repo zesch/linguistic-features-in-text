@@ -84,6 +84,13 @@ Short release checklist:
     poetry run pytest
     ```
 
+Model-dependent tests (for example `py_lift/tests/test_preprocessing.py`) are
+marked as `requires_models` and skipped by default. Run them explicitly with:
+
+```bash
+poetry run pytest --run-model-tests
+```
+
 3. Build distribution artifacts:
 
     ```bash

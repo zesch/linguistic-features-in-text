@@ -7,6 +7,7 @@ from py_lift.dkpro import T_ANOMALY, T_RWSE
 from py_lift.tests.lift_fixtures import *
 from py_lift.tests.util import construct_cas
 
+@pytest.mark.requires_models
 def test_spelling_annotator_de():
     text = "Das iste einex Biespeil fürr Texxt mit viehle Feler."
     spacy = Spacy_Preprocessor(language='de')
@@ -38,6 +39,7 @@ def test_spelling_annotator_unknown_language(cas_en_simple):
     with pytest.raises(ValueError):
         SE_SpellErrorAnnotator("xy").process(cas_en_simple)
 
+@pytest.mark.requires_models
 def test_rwse():
     ts = load_lift_typesystem()
     cas = Cas(typesystem=ts)
