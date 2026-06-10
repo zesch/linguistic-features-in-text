@@ -70,7 +70,7 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
         # Access a specific file
         data_dir = files('lift_resources_lists').joinpath('abstractness').joinpath(self.language)
         model_path = data_dir / 'ratings_lrec16_koeper_ssiw.txt'
-        print(model_path)
+        logger.debug("Abstractness model path: %s", model_path)
 
         self.data_dict = read_tsv_to_dict(model_path, 'Word', 'AbstConc')        
 
@@ -212,8 +212,10 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
 
             # if fine_tag not in self.pos_mapping, default to '*'
             if fine_tag not in self.pmap:
-                # TODO proper logging?
-                print(f"Warning: fine grained POS tag '{fine_tag}' not found in mapping. Using '*' as coarse tag.")
+                logger.warning(
+                    "fine grained POS tag '%s' not found in mapping. Using '*' as coarse tag.",
+                    fine_tag,
+                )
                 fine_tag = "*"
 
             coarse_tag = self.pmap.get(fine_tag)

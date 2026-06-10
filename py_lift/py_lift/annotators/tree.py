@@ -13,6 +13,8 @@ from rwse_checker import rwse
 from pathlib import Path
 from typing import Union, List
 
+logger = logging.getLogger(__name__)
+
 class SE_TreeStructureAnnotator(SEL_BaseAnnotator):
     """
         # TODO
@@ -28,7 +30,7 @@ class SE_TreeStructureAnnotator(SEL_BaseAnnotator):
 
         for sentence in cas.select(T_SENT):
             tree = tb.build_tree(cas, sentence)
-            print(tree.draw())
+            logger.debug(tree.draw())
             
             anno = Tree(
                 begin=sentence.begin,

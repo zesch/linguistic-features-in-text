@@ -1,3 +1,5 @@
+import logging
+
 from cassis import Cas
 from collections import Counter
 from py_lift.decorators import supported_languages
@@ -9,6 +11,8 @@ import gzip
 import zipfile
 import io
 from py_lift.util import is_digits_or_punct, contains_punct_except_apostrophe
+
+logger = logging.getLogger(__name__)
 
 class SEL_ListReader:
     """Reader for text lists from plain text, gzip, or zip files."""
@@ -152,9 +156,9 @@ class SE_EasyWordAnnotator(SEL_BaseAnnotator, SEL_ListReader):
             if l_str in easy_words:
                 easy_word = self.EW(begin=lemma.get('begin'), end=lemma.get('end'))
                 cas.add(easy_word)
-                print("Found easy word: ", l_str)
+                logger.debug("Found easy word: %s", l_str)
             else:
-                print("Found not so easy word: ", l_str)
+                logger.debug("Found not so easy word: %s", l_str)
         return True
 
 

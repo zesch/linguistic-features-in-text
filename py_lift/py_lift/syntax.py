@@ -1,4 +1,6 @@
-from cassis import *
+import logging
+
+from cassis import Cas
 from udapi.core.node import Node
 import pprint as pp
 from udapi.core.document import Document
@@ -9,6 +11,8 @@ from typing import List, Dict, Union, Generator, Tuple
 from py_lift.dkpro import *
 from py_lift.util import read_list
 import statistics as stats
+
+logger = logging.getLogger(__name__)
 
 # TODO should be in resource file
 # Di 24 Jun 2025 ( KW25 )
@@ -317,17 +321,28 @@ class FE_CasToTree:
             ok_values = [item.lower() for item in constraints[CURR_FEAT]]
 
             cands = view.select(CURR_FEAT)
-            if CURR_FEAT != T_DEP:
-                for cand in cands:
-                    if cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT]).lower() in ok_values:
-                        matches[CURR_FEAT].add((cand.begin, cand.end))
+            for cand in cands:
+                value = cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT])
+                if not isinstance(value, str):
+                    continue
+                if value.lower() not in ok_values:
+                    continue
 
-            else:
-                for cand in cands:
-                    if cand.get(MAP_FEAT_TO_KEY_ATTRIB[CURR_FEAT]).lower() in ok_values:
-                        matches[CURR_FEAT].add(
-                            (cand.Dependent.begin, cand.Dependent.end)
-                        )
+                if CURR_FEAT != T_DEP:
+                    begin = getattr(cand, "begin", None)
+                    end = getattr(cand, "end", None)
+                    if begin is None or end is None:
+                        continue
+                    matches[CURR_FEAT].add((begin, end))
+                else:
+                    dependent = cand.get("Dependent")
+                    if dependent is None:
+                        continue
+                    begin = getattr(dependent, "begin", None)
+                    end = getattr(dependent, "end", None)
+                    if begin is None or end is None:
+                        continue
+                    matches[CURR_FEAT].add((begin, end))
 
         sublists = [matches[kee] for kee in matches.keys()]
         final_matches = set.intersection(*sublists)
@@ -433,9 +448,9 @@ class FE_CasToTree:
         except:
             share_of_conj_uses_without_left_clause = 0.0
 
-        print(
-            "Share_of_conj_uses_without_left_clause %s"
-            % share_of_conj_uses_without_left_clause
+        logger.debug(
+            "Share_of_conj_uses_without_left_clause %s",
+            share_of_conj_uses_without_left_clause,
         )
         self._add_feat_to_cas(
             cas,
@@ -451,7 +466,7 @@ class FE_CasToTree:
         normalized_conjunction_proportion = round(
             (REF_TEXT_SIZE * float(sum(registry.conjunction_counts) / doc_length)), 2
         )
-        print("CONJUNCTIONS_PER_1000 %s" % normalized_conjunction_proportion)
+        logger.debug("CONJUNCTIONS_PER_1000 %s", normalized_conjunction_proportion)
         self._add_feat_to_cas(
             cas,
             "Conjunctions_per_1k_tokens",
@@ -472,7 +487,7 @@ class FE_CasToTree:
         normalized_subordinator_proportion = round(
             (REF_TEXT_SIZE * float(sum(registry.subordinator_counts) / doc_length)), 2
         )
-        print("SUBORDINATORS_PER_1000 %s" % normalized_subordinator_proportion)
+        logger.debug("SUBORDINATORS_PER_1000 %s", normalized_subordinator_proportion)
         self._add_feat_to_cas(
             cas,
             "Subordinators_per_1k_tokens",
@@ -485,7 +500,7 @@ class FE_CasToTree:
         normalized_adposition_proportion = round(
             (REF_TEXT_SIZE * float(sum(registry.adposition_counts) / doc_length)), 2
         )
-        print("ADPOSITIONS_PER_1000 %s" % normalized_adposition_proportion)
+        logger.debug("ADPOSITIONS_PER_1000 %s", normalized_adposition_proportion)
         self._add_feat_to_cas(
             cas,
             "Adpositions_per_1k_tokens",
@@ -498,7 +513,7 @@ class FE_CasToTree:
         normalized_preposition_proportion = round(
             (REF_TEXT_SIZE * float(sum(registry.preposition_counts) / doc_length)), 2
         )
-        print("PREPOSITIONS_PER_1000 %s" % normalized_preposition_proportion)
+        logger.debug("PREPOSITIONS_PER_1000 %s", normalized_preposition_proportion)
         self._add_feat_to_cas(
             cas,
             "Prepositions_per_1k_tokens",
@@ -511,7 +526,7 @@ class FE_CasToTree:
         normalized_postposition_proportion = round(
             (REF_TEXT_SIZE * float(sum(registry.postposition_counts) / doc_length)), 2
         )
-        print("POSTPOSITIONS_PER_1000 %s" % normalized_postposition_proportion)
+        logger.debug("POSTPOSITIONS_PER_1000 %s", normalized_postposition_proportion)
         self._add_feat_to_cas(
             cas,
             "Postpositions_per_1k_tokens",
@@ -525,7 +540,9 @@ class FE_CasToTree:
             (REF_TEXT_SIZE * float(sum(registry.relative_pronoun_counts) / doc_length)),
             2,
         )
-        print("RELATIVE_PRONOUNS_PER_1000 %s" % normalized_relative_pronoun_proportion)
+        logger.debug(
+            "RELATIVE_PRONOUNS_PER_1000 %s", normalized_relative_pronoun_proportion
+        )
         self._add_feat_to_cas(
             cas,
             "Relative_pronouns_per_1k_tokens",
@@ -598,7 +615,9 @@ class FE_CasToTree:
             (REF_TEXT_SIZE * float(sum(registry.personal_pronoun_counts) / doc_length)),
             2,
         )
-        print("PERSONAL_PRONOUNS_PER_1000 %s" % normalized_personal_pronoun_proportion)
+        logger.debug(
+            "PERSONAL_PRONOUNS_PER_1000 %s", normalized_personal_pronoun_proportion
+        )
         self._add_feat_to_cas(
             cas,
             "Personal_pronouns_per_1k_tokens",
@@ -606,9 +625,9 @@ class FE_CasToTree:
             normalized_personal_pronoun_proportion,
         )
 
-        print(
-            "Dependency length distribution per relation type\n"
-            + pp.pformat(registry.dependency_length_distribution_per_rel_type)
+        logger.debug(
+            "Dependency length distribution per relation type\n%s",
+            pp.pformat(registry.dependency_length_distribution_per_rel_type),
         )
         (
             avg_left_dep_len,
@@ -618,17 +637,17 @@ class FE_CasToTree:
             registry.dependency_length_distribution_per_rel_type
         )
 
-        print("average dependency length leftward %s" % avg_left_dep_len)
+        logger.debug("average dependency length leftward %s", avg_left_dep_len)
         self._add_feat_to_cas(
             cas, "Average_Dependency_Length_Left", NUM_FEATURE, avg_left_dep_len
         )
 
-        print("average dependency length rightward %s" % avg_right_dep_len)
+        logger.debug("average dependency length rightward %s", avg_right_dep_len)
         self._add_feat_to_cas(
             cas, "Average_Dependency_Length_Right", NUM_FEATURE, avg_right_dep_len
         )
 
-        print("average dependency length all %s" % avg_all_dep_len)
+        logger.debug("average dependency length all %s", avg_all_dep_len)
         self._add_feat_to_cas(
             cas, "Average_Dependency_Length_All", NUM_FEATURE, avg_all_dep_len
         )
@@ -637,21 +656,22 @@ class FE_CasToTree:
             float(sum(registry.max_dep_lengths) / len(registry.max_dep_lengths)), 2
         )
 
-        print(
-            "average max dependency length all %s based on %s"
-            % (str(avg_max_dep_len), str(registry.max_dep_lengths))
+        logger.debug(
+            "average max dependency length all %s based on %s",
+            str(avg_max_dep_len),
+            str(registry.max_dep_lengths),
         )
         self._add_feat_to_cas(
             cas, "Average_Maximal_Dependency_Length", NUM_FEATURE, avg_max_dep_len
         )
 
-        print("sent lengths %s" % registry.sent_lengths)
+        logger.debug("sent lengths %s", registry.sent_lengths)
         avg_sent_len = round(
             float(sum(registry.sent_lengths)) / len(registry.sent_lengths), 2
         )
         self._add_feat_to_cas(cas, "Average_Sentence_Length", NUM_FEATURE, avg_sent_len)
 
-        print("tree_depths %s" % registry.tree_depths)
+        logger.debug("tree_depths %s", registry.tree_depths)
         avg_tree_depth = round(
             float(sum(registry.tree_depths)) / len(registry.tree_depths), 2
         )
@@ -663,7 +683,9 @@ class FE_CasToTree:
         proportion_s_without_fin_verb = round(
             float(no_fin_verb_count) / len(registry.sent_lengths), 2
         )
-        print("Proportion_S_without_finite_verb %s" % proportion_s_without_fin_verb)
+        logger.debug(
+            "Proportion_S_without_finite_verb %s", proportion_s_without_fin_verb
+        )
         self._add_feat_to_cas(
             cas,
             "Proportion_S_without_finite_verb",
@@ -673,7 +695,7 @@ class FE_CasToTree:
 
         ###
 
-        print("finite_verb_counts %s" % registry.finite_verb_counts)
+        logger.debug("finite_verb_counts %s", registry.finite_verb_counts)
         try:
             avg_finite_verbs = round(
                 float(sum(registry.finite_verb_counts))
@@ -688,7 +710,7 @@ class FE_CasToTree:
 
         ###
 
-        print("total_verb_counts %s" % registry.total_verb_counts)
+        logger.debug("total_verb_counts %s", registry.total_verb_counts)
         try:
             avg_verb_count = round(
                 float(sum(registry.total_verb_counts))
@@ -713,8 +735,9 @@ class FE_CasToTree:
         except:
             proportion_modal_verbs_out_of_all_verbs = 0.0
 
-        print(
-            "share of modal verbs %s" % (str(proportion_modal_verbs_out_of_all_verbs))
+        logger.debug(
+            "share of modal verbs %s",
+            str(proportion_modal_verbs_out_of_all_verbs),
         )
         self._add_feat_to_cas(
             cas,
@@ -729,7 +752,7 @@ class FE_CasToTree:
         proportion_s_without_verb = round(
             float(no_verb_count) / len(registry.sent_lengths), 2
         )
-        print("Proportion_S_without_verb %s" % proportion_s_without_verb)
+        logger.debug("Proportion_S_without_verb %s", proportion_s_without_verb)
         self._add_feat_to_cas(
             cas, "Proportion_S_without_verb", NUM_FEATURE, proportion_s_without_verb
         )
@@ -760,7 +783,7 @@ class FE_CasToTree:
         else:
             proportion_of_brackets_with_emtpy_midfields = 0.00
 
-        print("Proportion_of_missing_brackets %s" % proportion_of_missing_brackets)
+        logger.debug("Proportion_of_missing_brackets %s", proportion_of_missing_brackets)
         self._add_feat_to_cas(
             cas,
             "Proportion_of_missing_verbal_brackets",
@@ -768,7 +791,9 @@ class FE_CasToTree:
             proportion_of_missing_brackets,
         )
 
-        print("Proportion_of_switched_brackets %s" % proportion_of_switched_brackets)
+        logger.debug(
+            "Proportion_of_switched_brackets %s", proportion_of_switched_brackets
+        )
         self._add_feat_to_cas(
             cas,
             "Proportion_of_switched_brackets",
@@ -776,9 +801,9 @@ class FE_CasToTree:
             proportion_of_switched_brackets,
         )
 
-        print(
-            "Proportion_of_canonical_brackets %s"
-            % proportion_of_standard_sequenced_brackets
+        logger.debug(
+            "Proportion_of_canonical_brackets %s",
+            proportion_of_standard_sequenced_brackets,
         )
         self._add_feat_to_cas(
             cas,
@@ -787,9 +812,9 @@ class FE_CasToTree:
             proportion_of_standard_sequenced_brackets,
         )
 
-        print(
-            "Proportion_of_brackets_with_empty_midfields %s"
-            % proportion_of_brackets_with_emtpy_midfields
+        logger.debug(
+            "Proportion_of_brackets_with_empty_midfields %s",
+            proportion_of_brackets_with_emtpy_midfields,
         )
         self._add_feat_to_cas(
             cas,
@@ -819,8 +844,12 @@ class FE_CasToTree:
         ###
 
         try:
+            subjectless_finite_verbs = sum(registry.subj_less_verbs)
+            total_finite_verbs = (
+                subjectless_finite_verbs + sb4v_ctr[1] + sb4v_ctr[-1]
+            )
             share_of_subjectless_finite_verbs = round(
-                float(registry.subj_less_verbs / (sb4v_ctr[1] + sb4v_ctr[-1])), 2
+                float(subjectless_finite_verbs / total_finite_verbs), 2
             )
         except:
             share_of_subjectless_finite_verbs = 0.0
@@ -835,7 +864,7 @@ class FE_CasToTree:
         ###
 
         coord_between_V_ctr = Counter(registry.coordination_is_between_verbs)
-        print("coordination_is_between_verbs %s" % coord_between_V_ctr)
+        logger.debug("coordination_is_between_verbs %s", coord_between_V_ctr)
         try:
             share_of_verbal_coordinations = round(
                 float(
@@ -856,7 +885,7 @@ class FE_CasToTree:
 
         ###
 
-        print("lex_np_sizes %s" % registry.lex_np_sizes)
+        logger.debug("lex_np_sizes %s", registry.lex_np_sizes)
         try:
             avg_lex_np_size = round(
                 float(sum(registry.lex_np_sizes)) / len(registry.lex_np_sizes), 2
@@ -878,8 +907,8 @@ class FE_CasToTree:
 
     def _register_stuff(self, cas, registry: StuffRegistry, sent):
         udapi_doc = Document()
-        print("registration for sent %s " % (sent.get_covered_text()))
-        cas_in_str_form: Unknown = cas_to_str(cas, sent)
+        logger.debug("registration for sent %s ", sent.get_covered_text())
+        cas_in_str_form: str = cas_to_str(cas, sent)
         udapi_doc.from_conllu_string(cas_in_str_form)
         sct = 1
 
@@ -1010,9 +1039,12 @@ class FE_CasToTree:
             )
 
             (sent_wise_dep_len_dist, dir_lens) = self._get_dep_dist(tree)
-            print(
-                "directed lengths for sentence %s: %s, %s left and %s right "
-                % (sct, dir_lens, len(dir_lens["l"]), len(dir_lens["r"]))
+            logger.debug(
+                "directed lengths for sentence %s: %s, %s left and %s right ",
+                sct,
+                dir_lens,
+                len(dir_lens["l"]),
+                len(dir_lens["r"]),
             )
 
             # TODO _get_max_dep_length
@@ -1140,7 +1172,7 @@ class FE_CasToTree:
             return 1
         # return max(max([ abs(d.ord - d.parent.ord) for d in node.descendants if d.deprel.lower() not in excluded_rels]),1)
 
-    def _get_dep_dist(self, node, excluded_rels=["root"]) -> Dict:
+    def _get_dep_dist(self, node, excluded_rels=["root"]) -> Tuple[Dict, Dict[str, List[int]]]:
         """Update the document-level distribution of dependency lenghts per dependency type by processing the nodes in the tree.
         Dep length is the difference between the indices of the head and the dependent. Deps adjacent to their heads have a dep length of |1| , etc.
         The values can be pos and neg: they're positive if the dependent is to the right of the head, and negative if it's the other way around.
@@ -1194,7 +1226,7 @@ class FE_CasToTree:
         node: Node,
         finiteverbtags,
         subjlabels,
-    ) -> List[bool]:
+    ) -> List[int]:
         """
         For eachf finite verb in the sentence/tree determine the relative order of subject and finite verb.
         1 if subject follows verb; -1 if subject precedes verb; 0 if there is no subject for the finite verb in question.
@@ -1221,7 +1253,7 @@ class FE_CasToTree:
         """retrieve the rels of a particular conjunction"""
         conjrelctr = Counter()
         for d in node.descendants:
-            print("d.lemma %s curr_lemma %s" % (d.lemma, curr_lemma))
+            logger.debug("d.lemma %s curr_lemma %s", d.lemma, curr_lemma)
             if re.match(re.escape(d.lemma), curr_lemma):
                 conjrelctr[d.deprel] += 1
 
