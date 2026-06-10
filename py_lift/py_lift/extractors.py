@@ -1,7 +1,7 @@
 import logging
 from cassis import Cas
 from py_lift.dkpro import T_FEATURE
-from py_lift.util import get_lift_typesystem
+from py_lift.utils.core import get_lift_typesystem
 from typing import Callable, Any, Optional, List, Dict, Union, Tuple
 from abc import ABC, abstractmethod
 

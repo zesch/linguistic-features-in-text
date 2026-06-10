@@ -1,3 +1,5 @@
+import logging
+
 from cassis import *
 from cassis.typesystem import FeatureStructure
 from udapi.core.node import Node
@@ -7,6 +9,8 @@ from py_lift.utils.conllu import cas_to_str
 from collections import Counter
 from typing import List, Dict, Union, Generator, Tuple
 from py_lift.dkpro import *
+
+logger = logging.getLogger(__name__)
 
 class TreeBuilder:
 
@@ -132,7 +136,7 @@ class TreeBuilder:
         """retrieve the rels of a particular conjunction"""
         conjrelctr = Counter()
         for d in node.descendants:
-            print("d.lemma %s curr_lemma %s" % (d.lemma, curr_lemma))
+            logger.debug("d.lemma %s curr_lemma %s", d.lemma, curr_lemma)
             if re.match(re.escape(d.lemma), curr_lemma):
                 conjrelctr[d.deprel] += 1
 

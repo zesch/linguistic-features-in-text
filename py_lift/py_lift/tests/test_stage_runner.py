@@ -7,7 +7,7 @@ import pytest
 from py_lift.dkpro import T_STAGE, T_STAGED_VERB
 from py_lift.stage.runner import run
 from py_lift.tests.stage_fixtures import build_german_ctok_cas
-from py_lift.util import get_lift_typesystem
+from py_lift.utils.core import get_lift_typesystem
 
 logging.getLogger("stage_classification").setLevel(logging.ERROR)
 

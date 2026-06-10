@@ -10,7 +10,7 @@ from typing import Union, Set
 import gzip
 import zipfile
 import io
-from py_lift.util import is_digits_or_punct, contains_punct_except_apostrophe
+from py_lift.utils.core import is_digits_or_punct, contains_punct_except_apostrophe
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +93,7 @@ class SE_FiniteVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         finite_verb_postags = self.read_list()
         for token in cas.select(T_TOKEN):
             t_pos = cas.select_covered(type_=T_POS, covering_annotation=token)[0]
-            if t_pos.PosValue in finite_verb_postags:
+            if t_pos.get('PosValue') in finite_verb_postags:
                 structure = self.S(
                     begin=token.get('begin'),
                     end=token.get('end'),
@@ -127,7 +127,7 @@ class SE_ModalVerbAnnotator(SEL_BaseAnnotator, SEL_ListReader):
         finite_verb_postags = self.read_list()
         for token in cas.select(T_TOKEN):
             t_pos = cas.select_covered(type_=T_POS, covering_annotation=token)[0]
-            if t_pos.PosValue in finite_verb_postags:
+            if t_pos.get('PosValue') in finite_verb_postags:
                 structure = self.S(
                     begin=token.get('begin'),
                     end=token.get('end'),
@@ -187,15 +187,16 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
 
     def _uppercase_at_sentence_start(self, token, cas):
         """Check if token is at the beginning of a sentence and starts with uppercase."""
+        token_begin = token.get('begin')
         for sentence in cas.select(T_SENT):
-            if token.begin == sentence.begin:
+            if token_begin == sentence.get('begin'):
                 return token.get_covered_text().isupper()
         return False
 
     def _process(self, cas: Cas) -> bool:
 
         # store all sentence start offsets to speed up checks
-        sentence_starts = {sentence.begin for sentence in cas.select(T_SENT)}
+        sentence_starts = {sentence.get('begin') for sentence in cas.select(T_SENT)}
 
         known_tokens = self.read_list() | self.extra_known_tokens
         
@@ -203,6 +204,8 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
             known_tokens = {token.lower() for token in known_tokens}
 
         for token in cas.select(T_TOKEN):
+            token_begin = token.get('begin')
+            token_end = token.get('end')
             token_text = token.get_covered_text()
             check_token = token_text if self.case_sensitive else token_text.lower()
 
@@ -220,7 +223,7 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
 
             if self.case_sensitive:
                 # lowercase token if it is at the beginning of a sentence
-                if token.begin in sentence_starts and token_text[:1].isupper():
+                if token_begin in sentence_starts and token_text[:1].isupper():
                     if token_text in known_tokens:
                         continue # do not lower case known tokens
                     token_text = token_text.lower()                
@@ -229,7 +232,7 @@ class SE_OOV_Annotator(SEL_BaseAnnotator, SEL_ListReader):
                 if (self.verbose):
                     print(check_token)
                 SE_OOV_Annotator.global_oov_counter[check_token] += 1
-                feature = self.S(name=self.STRUCTURE_NAME, begin=token.begin, end=token.end)
+                feature = self.S(name=self.STRUCTURE_NAME, begin=token_begin, end=token_end)
                 cas.add(feature)
 
         return True

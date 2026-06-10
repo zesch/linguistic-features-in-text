@@ -3,7 +3,7 @@ import unicodedata
 from cassis import Cas
 from py_lift.dkpro import T_TOKEN, T_SENT, T_POS, T_DEP, T_LEMMA
 from py_lift.model_setup import ensure_spacy_model
-from py_lift.util import get_lift_typesystem
+from py_lift.utils.core import get_lift_typesystem
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import pytest
 from py_lift.tests.lift_fixtures import *
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from cassis import Cas
 from py_lift.readability import *
 

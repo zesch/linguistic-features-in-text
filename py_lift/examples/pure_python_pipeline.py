@@ -8,7 +8,7 @@ from py_lift.dkpro import T_ANOMALY
 from py_lift.extractors import FEL_AnnotationCounter
 from py_lift.preprocessing import Spacy_Preprocessor
 from py_lift.readability import FE_TextstatFleschIndex
-from py_lift.util import detect_language, df_features
+from py_lift.utils.core import detect_language, df_features
 
 
 def main() -> None:

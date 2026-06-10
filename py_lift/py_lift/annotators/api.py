@@ -5,7 +5,7 @@ from typing import ClassVar, FrozenSet, Optional, Sequence
 
 from cassis import Cas
 from abc import ABC, abstractmethod
-from py_lift.util import get_lift_typesystem
+from py_lift.utils.core import get_lift_typesystem
 from py_lift.decorators import normalize_language
 
 logger = logging.getLogger(__name__)

@@ -3,12 +3,12 @@ from cassis import Cas
 from cassis.typesystem import TypeNotFoundError
 
 from py_lift.decorators import supported_languages
-from py_lift.util import load_lift_typesystem, read_tsv_to_dict, require_same_typesystem
+from py_lift.utils.core import load_lift_typesystem, read_tsv_to_dict, require_same_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from py_lift.dkpro import T_TREE, T_SENT
 from py_lift.annotators.api import SEL_BaseAnnotator
-from py_lift.tree import TreeBuilder
+from py_lift.utils.tree import TreeBuilder
 from rwse_checker import rwse
 from pathlib import Path
 from typing import Union, List

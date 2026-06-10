@@ -1,6 +1,6 @@
 
 import pytest
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from py_lift.tests.util import construct_cas, assert_annotations
 from cassis import Cas
 from py_lift.annotators.misc import SE_AbstractnessAnnotator

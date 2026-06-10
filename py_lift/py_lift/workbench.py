@@ -4,7 +4,7 @@ from cassis import Cas
 from py_lift.dkpro import T_ANOMALY, T_POS
 from itertools import chain
 from py_lift.preprocessing import Spacy_Preprocessor
-from py_lift.util import get_all_subclasses, get_constructor_params, load_lift_typesystem, detect_language
+from py_lift.utils.core import get_all_subclasses, get_constructor_params, load_lift_typesystem, detect_language
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 import py_lift.annotators.misc as misc

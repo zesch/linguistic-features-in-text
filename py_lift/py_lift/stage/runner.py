@@ -25,7 +25,7 @@ from py_lift.annotators.stage import (
     SPACY_VIEW_PREFIX,
 )
 from py_lift.dkpro import T_STAGE, T_STAGED_VERB
-from py_lift.util import load_cas_from_xmi_with_lift_ts
+from py_lift.utils.core import load_cas_from_xmi_with_lift_ts
 
 logger = logging.getLogger(__name__)
 

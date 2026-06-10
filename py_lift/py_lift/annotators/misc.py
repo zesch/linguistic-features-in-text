@@ -5,7 +5,7 @@ from cassis import Cas
 from cassis.typesystem import TypeNotFoundError
 
 from py_lift.decorators import supported_languages
-from py_lift.util import load_lift_typesystem, read_tsv_to_dict, require_same_typesystem
+from py_lift.utils.core import load_lift_typesystem, read_tsv_to_dict, require_same_typesystem
 from spellchecker import SpellChecker
 from cassis.typesystem import TYPE_NAME_FS_ARRAY
 from py_lift.dkpro import T_TOKEN, T_ANOMALY, T_SUGGESTION, T_LEMMA, T_POS, T_RWSE, T_SENT
@@ -66,6 +66,9 @@ class SE_AbstractnessAnnotator(SEL_BaseAnnotator):
                 "SE_AbstractnessAnnotator requires the optional package 'lift-resources-lists'. "
                 "Install it from your internal package source before using this annotator."
             ) from exc
+
+        if self.language is None:
+            raise ValueError("language must be set for SE_AbstractnessAnnotator")
         
         # Access a specific file
         data_dir = files('lift_resources_lists').joinpath('abstractness').joinpath(self.language)
@@ -164,8 +167,9 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
             t_pos = next(iter(cas.select_covered(T_POS, lemma)), None)
             our_pos_value = None
             if t_pos is not None:
-                pos_value = getattr(t_pos, "PosValue", None)
-                our_pos_value = self.pos_tag_map.get(pos_value)
+                pos_value = t_pos.get("PosValue")
+                if isinstance(pos_value, str):
+                    our_pos_value = self.pos_tag_map.get(pos_value)
 
             if our_pos_value and our_pos_value in word_dict:
                 pos = our_pos_value
@@ -174,7 +178,9 @@ class SE_EvpCefrAnnotator(SEL_BaseAnnotator):
                 # Choose the “lowest” level by CEFR order
                 pos, level = min(word_dict.items(), key=lambda kv: self.cefr_rank(kv[1]))
 
-            cefr_word = self.T_evp_cefr(begin=lemma.begin, end=lemma.end, level=level, pos=pos)
+            lemma_begin = lemma.get("begin")
+            lemma_end = lemma.get("end")
+            cefr_word = self.T_evp_cefr(begin=lemma_begin, end=lemma_end, level=level, pos=pos)
             cas.add(cefr_word)
             changed = True
 
@@ -220,7 +226,7 @@ class SE_CoarsePosTagAnnotator(SEL_BaseAnnotator):
 
             coarse_tag = self.pmap.get(fine_tag)
             T = cas.typesystem.get_type(self.pmap['__META_TYPE_BASE__'] + coarse_tag)
-            anno = T(begin=pos.begin, end=pos.end, PosValue=fine_tag)
+            anno = T(begin=pos.get('begin'), end=pos.get('end'), PosValue=fine_tag)
             cas.add(anno)
             if self.remove_old:
                 cas.remove(pos)
@@ -255,8 +261,8 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
                 if (self.checker.in_confusion_sets(token_str)):
                     text_str = cas.sofa_string
 
-                    begin = tokens[i].begin
-                    end = tokens[i].end
+                    begin = tokens[i].get('begin')
+                    end = tokens[i].get('end')
 
                     prefix = text_str[:begin]
                     suffix = text_str[end:]
@@ -270,8 +276,8 @@ class SE_RWSE_Annotator(SEL_BaseAnnotator):
                     if token_str.lower() != corrected.lower():
                         # create new RWSE annotation
                         anno = RWSE(
-                            begin=token.begin,
-                            end=token.end,
+                            begin=token.get('begin'),
+                            end=token.get('end'),
                             suggestion=corrected,
                             certainty=certainty
                         )

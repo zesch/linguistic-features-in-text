@@ -3,7 +3,7 @@ import re
 import ast
 import sys
 from py_lift.dkpro import T_FEATURE
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from cassis import load_cas_from_xmi
 from py_lift.syntax import FE_CasToTree
 from pyconll.load import load_from_file

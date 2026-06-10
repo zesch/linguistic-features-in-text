@@ -6,7 +6,7 @@ import logging
 from py_lift.annotators.stage import SE_StageAnnotator
 from py_lift.dkpro import T_STAGE, T_STAGED_VERB
 from py_lift.tests.stage_fixtures import build_german_ctok_cas
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 
 # The vendored engine logs verbosely; keep test output clean.
 logging.getLogger("stage_classification").setLevel(logging.ERROR)

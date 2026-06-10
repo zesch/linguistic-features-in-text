@@ -2,7 +2,7 @@ import streamlit as st
 from cassis import Cas
 from py_lift.dkpro import T_ANOMALY, T_POS, T_TOKEN
 from py_lift.preprocessing import Spacy_Preprocessor
-from py_lift.util import load_lift_typesystem, detect_language
+from py_lift.utils.core import load_lift_typesystem, detect_language
 import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 from py_lift.annotators.frequency import SE_TokenZipfFrequency

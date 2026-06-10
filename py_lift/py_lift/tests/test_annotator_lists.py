@@ -2,8 +2,7 @@
 import pytest
 from pathlib import Path
 from py_lift.annotators.api import UnsupportedLanguageError
-from py_lift.preprocessing import Spacy_Preprocessor
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from py_lift.tests.util import construct_cas, assert_annotations
 from py_lift.tests.lift_fixtures import *
 from cassis import Cas
@@ -84,9 +83,12 @@ def test_list_reader():
     assert reader_gz.read_list() == {'Test', 'ist', 'ein', 'Das'}
 
 def test_oov_annotator():
-    text = "Das iste einex Biespeil fürr Texxt mit viehle Feler."
-    spacy = Spacy_Preprocessor(language='de')
-    cas = spacy.run(text)
+    ts = load_lift_typesystem()
+    tokens = ["Das", "iste", "einex", "Biespeil", "fürr", "Texxt", "mit", "viehle", "Feler", "."]
+    lemmas = ["Das", "iste", "einex", "Biespeil", "fürr", "Texxt", "mit", "viehle", "Feler", "."]
+    pos_tags = ["ART", "VVFIN", "ART", "NN", "APPR", "NN", "APPR", "PIAT", "NN", "$."]
+    cas = construct_cas(ts, tokens, lemmas, pos_tags)
+
     SE_OOV_Annotator("de").process(cas)
 
     assert len(cas.select("org.lift.type.Structure")) == 7

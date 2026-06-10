@@ -1,9 +1,11 @@
 
 import pytest
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from cassis import Cas
 from py_lift.preprocessing import Spacy_Preprocessor
 from py_lift.dkpro import T_TOKEN, T_POS, T_DEP, T_SENT
+
+pytestmark = pytest.mark.requires_models
 
 def test_spacy_preprocessing():
     ts = load_lift_typesystem()

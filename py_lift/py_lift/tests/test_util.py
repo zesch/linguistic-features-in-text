@@ -3,7 +3,7 @@ from py_lift.annotators.misc import SE_SpellErrorAnnotator
 from py_lift.extractors import FEL_AnnotationCounter, FEL_AnnotationRatio
 from py_lift.readability import FE_TextstatFleschIndex
 from py_lift.tests.lift_fixtures import *
-from py_lift.util import df_features, get_all_subclasses, detect_language
+from py_lift.utils.core import df_features, get_all_subclasses, detect_language
 
 def test_extractors(cas_en_simple_with_errors):
     SE_SpellErrorAnnotator('en').process(cas_en_simple_with_errors)

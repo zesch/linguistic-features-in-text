@@ -1,5 +1,5 @@
 import pytest
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from py_lift.tests.util import construct_cas
 from cassis import load_cas_from_xmi
 from py_lift.extractors import FE_EasyWordRatio, FE_AbstractnessStats

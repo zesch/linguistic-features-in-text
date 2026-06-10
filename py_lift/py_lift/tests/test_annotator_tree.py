@@ -1,9 +1,11 @@
 import pytest
 from py_lift.dkpro import T_TREE, T_DEP
 from py_lift.preprocessing import Spacy_Preprocessor
-from py_lift.util import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem
 from py_lift.annotators.tree import SE_TreeStructureAnnotator
 from cas_visualizer.visualizer import DependencyVisualizer
+
+pytestmark = pytest.mark.requires_models
 
 def test_tree_structure_annotator_german():
     """Test SE_TreeStructureAnnotator with German text."""
