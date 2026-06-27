@@ -1,6 +1,6 @@
 from cassis import Cas
 from py_lift.decorators import supported_languages, requires_types
-from py_lift.utils.core import load_lift_typesystem
+from py_lift.utils.core import load_lift_typesystem, is_digits_or_punct
 from wordfreq import zipf_frequency
 from py_lift.dkpro import T_TOKEN
 from py_lift.annotators.api import SEL_BaseAnnotator
@@ -62,11 +62,11 @@ class SE_TokenZipfFrequency(SEL_BaseAnnotator):
         F = self.get_type("org.lift.type.Frequency")
 
         for token in cas.select(T_TOKEN):
-            # TODO removed for now. This is language dependent and token.pos might not be set - need to check
-            # if token.pos.PosValue in ['PUNCT', 'SYM']:
-            #     continue
+            t_str = token.get_covered_text()
+            if is_digits_or_punct(t_str):
+                continue
 
-            freq = zipf_frequency(token.get_covered_text(), self.language)
+            freq = zipf_frequency(t_str, self.language)
             if 2 > freq > 0:
                 fb = 'f1'
             elif 3 > freq >= 2:
