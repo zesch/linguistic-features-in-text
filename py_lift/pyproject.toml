@@ -1,6 +1,6 @@
 [project]
-name = "py_lift"
-version = "0.1.0"
+name = "lift-linguistic-features-py"
+version = "0.1.1"
 description = "Linguistic feature extraction and annotation utilities for text."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
@@ -39,6 +39,11 @@ priority = "explicit"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+# Explicitly tell Poetry which package directory to include.
+# The source code lives in the `py_lift` package
+packages = [{ include = "py_lift", from = "." }]
 
 [tool.pytest.ini_options]
 pythonpath = [
