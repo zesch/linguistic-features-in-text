@@ -9,10 +9,10 @@ import polars as pl
 from cas_visualizer.visualizer import SpanVisualizer
 import py_lift.annotators.misc as misc
 import py_lift.annotators.frequency as frequency
-import py_lift.extractors
-import py_lift.readability
+import py_lift.extractors as extractors
+import py_lift.readability as readability
 from py_lift.annotators.api import SEL_BaseAnnotator
-from py_lift.extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Abstractness_min_max_avg
+from py_lift.extractors import FEL_AnnotationCounter, FEL_AnnotationRatio, FEL_Min_Max_Mean
 from py_lift.annotators.frequency import *
 from py_lift.readability import FEL_TextstatReadabilityScore
 
@@ -69,15 +69,16 @@ with st.sidebar:
 
 
 #with col_b:
-if "cas" in st.session_state:
-    my_cas = st.session_state["cas"]
+my_cas = st.session_state.get("cas")
+
+if my_cas is not None:
 
     classes_readability = get_all_subclasses(readability, FEL_TextstatReadabilityScore)
     classes_counters = get_all_subclasses(extractors, FEL_AnnotationCounter)
     classes_ratios = get_all_subclasses(extractors, FEL_AnnotationRatio)
-    classes_abstractness = get_all_subclasses(extractors, FEL_Abstractness_min_max_avg)
+    classes_min_max = get_all_subclasses(extractors, FEL_Min_Max_Mean)
 
-    name_to_FEs = {cls.__name__: cls for cls in chain(classes_readability, classes_counters, classes_ratios, classes_abstractness)}
+    name_to_FEs = {cls.__name__: cls for cls in chain(classes_readability, classes_counters, classes_ratios, classes_min_max)}
     selected_FE_names = st.multiselect("Choose one or more FEs", name_to_FEs.keys())
     selected_FEs = [name_to_FEs[name] for name in selected_FE_names]
 
@@ -95,32 +96,34 @@ if "cas" in st.session_state:
     except Exception as e:
         st.error(f"Error: {e}")
 
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
+    with col1:
 
-    span_vis = SpanVisualizer(ts)
-    span_vis.selected_span_type = SpanVisualizer.UNDERLINE
-    span_vis.allow_highlight_overlap = True
+        span_vis = SpanVisualizer(ts)
+        span_vis.selected_span_type = SpanVisualizer.UNDERLINE
+        span_vis.allow_highlight_overlap = True
 
-    match select_type:
-        case 'Abstractness':
-            span_vis.add_type(type_name='org.lift.type.AbstractnessConcreteness', feature_name='value')
-            print('abst')
-        case 'Spelling':
-            span_vis.add_type(T_ANOMALY)
-        case 'Token':
-            span_vis.add_type(T_TOKEN)
-        case 'Frequency':
-            span_vis.add_type(type_name='org.lift.type.Frequency', feature_name='frequencyBand')
-        case 'POS':
-            span_vis.add_type(type_name=T_POS, feature_name='PosValue')
+        match select_type:
+            case 'Abstractness':
+                span_vis.add_type(name='org.lift.type.AbstractnessConcreteness', feature='value')
+                print('abst')
+            case 'Spelling':
+                span_vis.add_type(T_ANOMALY)
+            case 'Token':
+                span_vis.add_type(T_TOKEN)
+            case 'Frequency':
+                span_vis.add_type(name='org.lift.type.Frequency', feature='frequencyBand')
+            case 'POS':
+                span_vis.add_type(name=T_POS, feature='PosValue')
 
 
-    html = span_vis.visualize(my_cas)
-    st.html(html)
+        html = span_vis.visualize(my_cas)
+        st.html(html)
 
-with col2:
-    rows = [{'name': anno.name, 'value': anno.value} for anno in my_cas.select('FeatureAnnotationNumeric')]
-    df = pl.DataFrame(rows)
-    st.dataframe(df)
+    with col2:
+        rows = [{'name': anno.name, 'value': anno.value} for anno in my_cas.select('FeatureAnnotationNumeric')]
+        df = pl.DataFrame(rows)
+        st.dataframe(df)
+else:
+    st.info("Run SEs first to generate a CAS before visualizing features.")
